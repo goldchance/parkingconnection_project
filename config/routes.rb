@@ -5,6 +5,16 @@ StagePark::Application.routes.draw do
 
    root :to => 'pages#home'
 
+    match 'home' => 'pages#home'
+    match 'daily' => 'pages#daily'
+    match 'monthly' => 'pages#monthly'
+    match 'privacy' => 'pages#privacy'
+    match 'airport' => 'pages#airport'
+    match 'contact' => 'pages#contact'
+    match 'about' => 'pages#about'
+    match 'dailysearch' => 'pages#dailysearch'
+    match 'jobs' => 'pages#jobs'
+    
   get "pages/home"
 
   get "pages/jobs"
