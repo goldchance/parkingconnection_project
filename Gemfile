@@ -15,6 +15,7 @@ gem "nested_form", :git => "git://github.com/ryanb/nested_form.git"
 gem 'json'
 gem 'fastercsv' # Only required on Ruby 1.8 and below
 gem 'rails_admin'
+gem "psych", "~> 1.3.4"
 # Gems used only for assets and not required
 # in production environments by default.
 
