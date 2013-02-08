@@ -1,0 +1,469 @@
+@charset "utf-8";
+body {
+	margin: 0px;
+	background-image: url(../images/bg_color.png);
+	background-repeat: repeat-x;
+}
+#container {
+	height: auto;
+	width: 960px;
+	font-family: Arial, Helvetica, sans-serif;
+	margin: auto;
+	padding: 0px;
+	font-size: 1.2em;
+	text-align: left;
+}
+
+
+#header {
+	margin-right: auto;
+	margin-left: auto;
+	height: 90px;
+	padding-top: 30px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+}
+
+#container #header #pc-logo {
+	float: left;
+	clear: both;
+	margin: 0px;
+	padding: 0px;
+	height: 60px;
+	width: 335px;
+
+}
+#container #header #pc-logo #pc-logo {
+	background-image: url(../images/PC_Logo.png);
+	background-repeat: no-repeat;
+	height: 60px;
+	width: 335px;
+	text-indent: -9999px;
+	display: block;
+	float: right;
+	margin: 0px;
+	padding: 0px;
+}
+
+#container #header #navbar {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 22px;
+	font-weight: bold;
+	color: #e6e6e6;
+	text-align: left;
+	padding-top: 18px;
+	float: left;
+	margin-left: 61px;
+}
+
+
+#container #header #navbar ul {
+	list-style-type: none;
+	display: inline;
+	margin: 0px;
+	padding: 0px;
+}
+
+#container #header #navbar ul li {
+	display: inline;
+	margin: 0px;
+	padding-right: 34px;
+	float: left;
+}
+
+#container #header #navbar ul li a:link {
+	font-weight: bold;
+	color: #e6e6e6;
+	text-decoration: none;
+	text-shadow: 0px 5px 10px #000000;
+}
+#container #header #navbar ul li a:visited {
+	color: #e6e6e6;
+}
+
+
+#container #header #navright {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 18px;
+	padding-top: 20px;
+	float: right;
+	width: auto;
+}
+#container #header #navright ul {
+	display: inline;
+	list-style-type: none;
+}
+#container #header #navright ul li {
+	display: inline;
+	margin: 0px;
+	padding-left: 30px;
+}
+#container #header #navright ul li a:link {
+	color: #e6e6e6;
+	text-decoration: none;
+	text-shadow: 0px 5px 10px #000000;
+}
+#container #header #navright ul li a:hover {
+	text-decoration: underline;
+}
+#container #header #navright ul li a:active {
+	color: #F00;
+}
+#container #header #navright ul li a:visited {
+	color: #e6e6e6;
+}
+
+
+#main {
+	min-height: 440px;
+	height: auto;
+	padding: 0px;
+	margin-top: 1px;
+	margin-right: auto;
+	margin-bottom: auto;
+	margin-left: auto;
+}
+
+
+
+#container #main #searchbox {
+	background-color: #FFF;
+	height: 475px;
+	width: 960px;
+	box-shadow: 0px 0px 8px 2px #000;
+	border-radius: 5px;
+	padding: 0px;
+	margin-top: 0px;
+	margin-right: auto;
+	margin-bottom: 0px;
+	margin-left: auto;
+	clear: left;
+}
+
+
+#footer {
+	margin-right: auto;
+	margin-left: auto;
+	padding-top: 45px;
+	height: 170px;
+	padding-bottom: 0px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	padding-right: 0px;
+	padding-left: 0px;
+	float: left;
+	width: 960px;
+}
+
+
+#container #footer #footnav {
+	color: #e6e6e6;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 18px;
+	margin: 0px;
+	position: relative;
+	padding-top: 0px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 328px;
+	width: 300px;
+	float: left;
+}
+
+
+#container #footer #footnav ul {
+	display: inline;
+	margin: 0px;
+	padding: 0px;
+}
+#container #footer #footnav ul li {
+	display: inline;
+}
+#container #footer #footnav ul li a:link {
+	color: #e6e6e6;
+	text-decoration: none;
+}
+#container #footer #footnav ul li a:hover {
+	text-decoration: underline;
+}
+#container #footer #footnav ul li a:active {
+	color: #F00;
+}
+#container #footer #footnav ul li a:visited {
+	color: #e6e6e6;
+}
+#container #footer #copyright p {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	color: #e6e6e6;
+	text-align: right;
+	float: right;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+	margin: 0px;
+	padding-top: 4px;
+}
+
+
+
+#container #main #searchbox #searchtop {
+	clear: left;
+	padding-left: 21px;
+	padding-top: 10px;
+	width: 939px;
+	background-image: url(../images/searchbar_gradient.png);
+	background-repeat: repeat-x;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	padding-bottom: 12px;
+	box-shadow: 0px 1px 8px 1px #000;
+	height: 28px;
+}
+#container #main #searchbox #searchtop form #wherebox {
+	height: 28px;
+	width: 200px;
+	border-radius: 5px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	text-indent: 6px;
+	color: #292a2a;
+	font-weight: normal;
+	float: left;
+}
+#container #main #searchbox #searchtop form input[type=text] {
+	width: 240px;
+	margin: 0px;
+	border: 0px solid #acacac;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	color: #2a2a2a;
+	font-weight: normal;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	-webkit-box-shadow: inset 0px 2px 3px #666,inset 0px -5px 3px 		#EEE;
+	-moz-box-shadow: inset 0px 2px 3px #666,inset 0px -5px 3px #EEE;
+	box-shadow: inset 0px 2px 3px #666,inset 0px -5px 3px #EEE;
+}
+#container #main #searchbox #searchtop form input:focus, textarea:focus {
+	outline: solid orange;
+	outline-width:1px;
+	-moz-outline-radius:5px;
+	-webkit-outline-radius:5px;
+	-o-outline-radius: 5px;
+	-ms-outline-radius: 5px;
+
+}
+#container #main #searchbox #searchtop form input[type=text].required {
+	padding-left:30px;
+	width:200px;
+}
+#container #main #searchbox #searchtop #from {
+	font-family: Arial, Helvetica, sans-serif;
+	padding-left: 8px;
+	width: 150px;
+	background-image: url(../images/calendar_icon.png);
+	background-repeat: no-repeat;
+	background-position: 96% 60%;
+	margin: 0px;
+	
+}
+
+
+#container #main #searchbox #searchtop #leftbox{
+	width: 160px;
+	height: 28px;
+	color: #FFF;
+	float: left;
+	margin-left: 8px;
+}
+#container #main #searchbox #searchtop #leftbox #from {
+	height: 28px;
+}
+#container #main #searchbox #searchtop #leftbox form h1 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 24px;
+	font-weight: bold;
+	color: #292a2a;
+	margin-bottom: 10px;
+	margin-top: auto;
+	margin-right: auto;
+	margin-left: auto;
+	padding: 0px;
+}
+#container #main #searchbox #searchtop #leftbox form p {
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: normal;
+	color: #989898;
+	font-size: 16px;
+	margin: 0px;
+	padding-top: 6px;
+}
+
+
+#container #main #searchbox #searchtop #leftbox input[type=text],
+#formbox2 #rightbox input[type=text] {
+	width: 150px;
+	background: #EEE;
+	border: 0px solid #acacac;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	color: #2a2a2a;
+	font-weight: normal;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	background: -webkit-linear-gradient(#FFF, #DDD);
+	background: -moz-linear-gradient(#FFF, #DDD);
+	background: -o-linear-gradient(#FFF, #DDD);
+	background: linear-gradient(#FFF, #DDD);
+	-pie-background: linear-gradient(#FFF, #DDD);
+	-webkit-box-shadow: inset 0px 2px 3px #666, inset 0px -5px 3px #EEE;
+	-moz-box-shadow: inset 0px 2px 3px #666, inset 0px -5px 3px #EEE;
+	box-shadow: inset 0px 2px 3px #666, inset 0px -5px 3px #EEE;
+	margin: 0px;
+}
+#container #main #searchbox #searchtop #leftbox input[type=text] #required,
+#formbox2 #rightbox input[type=text] #required {
+	padding-left: 30px;
+	width: 200px;
+	height: auto;
+}
+#container #main #searchbox #searchtop #leftbox input:focus ,textarea:focus,
+#formbox2 #rightbox input:focus ,textarea:focus {
+	outline: solid orange;
+	outline-width: 1px;
+	-moz-outline-radius: 5px;
+	-webkit-outline-radius: 5px;
+	-o-outline-radius: 5px;
+	-ms-outline-radius: 5px;
+}
+#formbox2 #rightbox {
+	width: 160px;
+	float: left;
+	height: auto;
+	margin-top: 0px;
+	margin-right: 4px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+}
+#formbox2 #rightbox #fieldSubLabel {
+	font-family: Arial, Helvetica, sans-serif;
+	color: #989898;
+	font-size: 16px;
+	font-style: normal;
+	font-weight: normal;
+	margin: 0px;
+	padding-top: 4px;
+	padding-left: 6px;
+}
+#container #main #searchbox #searchtop #leftbox #from , #formbox2 #rightbox #to{
+	font-family: Arial, Helvetica, sans-serif;
+	padding-left: 8px;
+	height: 28px;
+	width: 150px;
+	background-image: url(../images/calendar_icon.png);
+	background-repeat: no-repeat;
+	background-position: 96% 60%;
+	margin: 0px;
+	
+}
+
+div.ui-datepicker {
+	font-size: 14px;
+	-moz-box-shadow: 0px 0px 8px 2px rgba(0,0,0,0.5);
+	-webkit-box-shadow: 0px 0px 8px 2px rgba(0,0,0,0.5);
+	box-shadow: 0px 0px 8px 2px rgba(0,0,0,0.5);
+}
+#container #main #searchbox #searchtop #lefttimebox .selectbox-wrapper,
+#formbox2 #righttimebox .selectbox-wrapper {
+	background-color: #FFF;
+	border: 1px solid #ccc;
+	padding: 0px;
+	text-align: left;
+	max-height: 220px;
+	overflow: auto;
+	box-shadow: 0px 0px 4px 0px;
+	margin: 0px;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+/*Drop down list styles*/
+#container #main #searchbox #searchtop #lefttimebox .selectbox-wrapper ul,
+#formbox2 #righttimebox .selectbox-wrapper ul  {
+	list-style-type: none;
+	margin: 0px;
+	padding: 0px;
+}
+/* Selected item in dropdown list*/
+#container #main #searchbox #searchtop #lefttimebox .selectbox-wrapper ul li.selected,
+#formbox2 #righttimebox .selectbox-wrapper ul li.selected {
+	background-color: #cae3ff;
+}
+/* Hover state for dropdown list */
+#container #main #searchbox #searchtop #lefttimebox .selectbox-wrapper ul li.current,
+#formbox2 #righttimebox .selectbox-wrapper ul li.current{
+	background-color: #409bec;
+}
+/* Drop down list items style*/
+#container #main #searchbox #searchtop #lefttimebox .selectbox-wrapper ul li,
+#formbox2 #righttimebox .selectbox-wrapper ul li  {
+	list-style-type: none;
+	display: block;
+	cursor: pointer;
+	padding-top: 0px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 4px;
+	font-size: 12px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: normal;
+	margin: 0;
+	
+}
+/* Look and feel of select box */
+#container #main #searchbox #searchtop #lefttimebox .selectbox,
+#formbox2 #righttimebox .selectbox {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;/* Resize Font*/
+	width : 116px; /* Resize Width */
+	display : block;
+	cursor: pointer;
+	border: 0px;
+	background-image: url(../images/timeboxall_button.png);
+	height: 27px;
+	background-repeat: no-repeat;
+	text-indent: 12;
+	font-weight: bold;
+	padding-right: 0px;
+	padding-left: 8px;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	
+}
+#container #main #searchbox #searchtop #lefttimebox .selectbox:hover,
+#formbox2 #righttimebox .selectbox:hover{ 
+	background-position: 0 -29px; }
+
+#container #main #searchbox #searchtop #lefttimebox {
+	float: left;
+	width: 110px;
+	padding-right: 30px;
+	height: 30px;
+}
+#formbox2 #righttimebox {
+	float: left;
+	width: 100px;
+	height: 30px;
+}

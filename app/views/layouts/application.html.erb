@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ParkStage</title>
+  <%= stylesheet_link_tag    "application", :media => "all" %>
+  <%= javascript_include_tag "application" %>
+  <%= csrf_meta_tags %>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="description" content="Compare multiple parking sites at once. Choose where to park at the best rate." />
+    <meta name="keywords" content="Parking, cheap parking, hotel parking, parking rates, rates, daily parking, monthly parking, airport parking, event parking, compare parking rates, cheap parking rates, cheap daily parking, cheap monthly parking, cheap airport parking, parking reservations, discount parking, parking deals, find parking prices, san francisco, new york, chicago, boston, baltimore" />
+<title>ParkingCONNECT - Cheap Parking, Daily Parking, Monthly Parking, Airport Parking, Compare Parking Rates</title>
+<script type="text/xml">
+<!--
+<oa:widgets>
+  <oa:widget wid="2149022" binding="#OAWidget" />
+</oa:widgets>
+-->
+</script>
+<script src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.0/themes/base/jquery-ui.css" />
+<link href="/css/pc.css" rel="stylesheet" type="text/css" />
+<link href="/css/loginbox.css" rel="stylesheet" type="text/css" />
+<link href="/css/dailybox.css" rel="stylesheet" type="text/css" />
+<link href="/css/datestyle.css" rel="stylesheet" type="text/css" />
+<link href="/css/timebox.css" rel="stylesheet" type="text/css" />
+<link href="/css/compare.css" rel="stylesheet" type="text/css" />
+<style>
+  .ui-autocomplete-loading {
+    background: white url('images/ui-anim_basic_16x16.gif') right center no-repeat;
+  }
+  #city { width: 25em; }
+  </style>
+  <script>
+  $(function() {
+    function log( message ) {
+      $( "<div>" ).text( message ).prependTo( "#log" );
+      $( "#log" ).scrollTop( 0 );
+    }
+ 
+    $( "#wherebox" ).autocomplete({
+      source: function( request, response ) {
+        $.ajax({
+          url: "http://ws.geonames.org/searchJSON",
+          dataType: "jsonp",
+          data: {
+            featureClass: "P",
+            style: "full",
+            maxRows: 12,
+            name_startsWith: request.term
+          },
+          success: function( data ) {
+            response( $.map( data.geonames, function( item ) {
+              return {
+                label: item.name + (item.adminName1 ? ", " + item.adminName1 : "") + ", " + item.countryName,
+                value: item.name
+              }
+            }));
+          }
+        });
+      },
+      minLength: 2,
+      select: function( event, ui ) {
+        log( ui.item ?
+          "Selected: " + ui.item.label :
+          "Nothing selected, input was " + this.value);
+      },
+      open: function() {
+        $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+      },
+      close: function() {
+        $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+      }
+    });
+  });
+  </script>
+<script>
+  $(function() {
+    $( ".datepicker" ).datepicker({
+    });
+  });
+  </script>
+  <%= yield :head %>
+</head>
+<body>
+  <div id="container">
+    <%= yield %>
+  </div>
+</body>
+</html>

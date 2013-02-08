@@ -1,0 +1,144 @@
+@charset "utf-8";
+#formbox2 {
+	width: 596px;
+	height: auto;
+}
+#formbox2 h1 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 24px;
+	color: #292a2a;
+	font-weight: bold;
+	margin: 0px;
+	padding-top: 0px;
+	padding-right: 0px;
+	padding-left: 0px;
+	padding-bottom: 6px;
+	height: auto;
+}
+#formbox2 #fromlabel h1 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	color: #292a2a;
+	width: 298px;
+	height: 12px;
+	padding-right: 6px;
+	float: left;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+	margin: 0px;
+}
+#formbox2 #untillabel h1 {
+	font-family: Arial, Helvetica, sans-serif;
+	color: #292a2a;
+	font-size: 14px;
+	font-weight: bold;
+	width: 120px;
+	display: block;
+	float: left;
+	margin: 0px;
+	padding-right: 6px;
+	height: 12px;
+}
+
+
+
+#formbox2 #leftbox {
+	width: 160px;
+	height: auto;
+	margin-top: 0px;
+	margin-right: 4px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	float: left;
+	clear: left;
+	color: #FFF;
+}
+
+
+#formbox2 #leftbox #fieldSubLabel {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	font-style: normal;
+	font-weight: normal;
+	color: #989898;
+	margin: 0px;
+	padding-top: 4px;
+	padding-left: 6px;
+}
+#formbox2 #leftbox input[type=text],
+#formbox2 #rightbox input[type=text] {
+	width: 150px;
+	background: #EEE;
+	border: 0px solid #acacac;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	color: #2a2a2a;
+	font-weight: normal;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	background: -webkit-linear-gradient(#FFF, #DDD);
+	background: -moz-linear-gradient(#FFF, #DDD);
+	background: -o-linear-gradient(#FFF, #DDD);
+	background: linear-gradient(#FFF, #DDD);
+	-pie-background: linear-gradient(#FFF, #DDD);
+	-webkit-box-shadow: inset 0px 2px 3px #666, inset 0px -5px 3px #EEE;
+	-moz-box-shadow: inset 0px 2px 3px #666, inset 0px -5px 3px #EEE;
+	box-shadow: inset 0px 2px 3px #666, inset 0px -5px 3px #EEE;
+	margin: 0px;
+}
+#formbox2 #leftbox input[type=text] #required,
+#formbox2 #rightbox input[type=text] #required {
+	padding-left: 30px;
+	width: 200px;
+	height: auto;
+}
+#formbox2 #leftbox input:focus ,textarea:focus,
+#formbox2 #rightbox input:focus ,textarea:focus {
+	outline: solid orange;
+	outline-width: 1px;
+	-moz-outline-radius: 5px;
+	-webkit-outline-radius: 5px;
+	-o-outline-radius: 5px;
+	-ms-outline-radius: 5px;
+}
+#formbox2 #rightbox {
+	width: 160px;
+	float: left;
+	height: auto;
+	margin-top: 0px;
+	margin-right: 4px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+}
+#formbox2 #rightbox #fieldSubLabel {
+	font-family: Arial, Helvetica, sans-serif;
+	color: #989898;
+	font-size: 16px;
+	font-style: normal;
+	font-weight: normal;
+	margin: 0px;
+	padding-top: 4px;
+	padding-left: 6px;
+}
+#formbox2 #leftbox #from , #formbox2 #rightbox #to{
+	font-family: Arial, Helvetica, sans-serif;
+	padding-left: 8px;
+	height: 28px;
+	width: 150px;
+	background-image: url(../images/calendar_icon.png);
+	background-repeat: no-repeat;
+	background-position: 96% 60%;
+	margin: 0px;
+	
+}
+
+div.ui-datepicker {
+	font-size: 14px;
+	-moz-box-shadow: 0px 0px 8px 2px rgba(0,0,0,0.5);
+	-webkit-box-shadow: 0px 0px 8px 2px rgba(0,0,0,0.5);
+	box-shadow: 0px 0px 8px 2px rgba(0,0,0,0.5);
+	margin-top: 2px;
+}

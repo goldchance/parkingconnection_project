@@ -1,0 +1,33 @@
+@charset "utf-8";
+#container #main #searchbox #formbox3 {
+	height: 120px;
+	width: 600px;
+	padding-top: 36px;
+	padding-left: 40px;
+	margin: 0px;
+	clear: left;
+}
+#container #main #searchbox #formbox3 #findbtn {
+	height: 34px;
+	width: 596px;
+	margin: 0px;
+}
+#container #main #searchbox #formbox3 #findbtn .button2{
+	width: 108px;
+	height: 34px;
+	text-indent: -9999px;
+	background-image: url(../images/findparkingall_button.png);
+	background-repeat: no-repeat;
+	border: 0px;
+	display: block;
+	padding: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+}
+
+#container #main #searchbox #formbox3 #findbtn .button2:hover 
+{ background-position: 0 -34px; }
+#container #main #searchbox #formbox3 #findbtn .button2:active 
+{ background-position: 0 -68px; }

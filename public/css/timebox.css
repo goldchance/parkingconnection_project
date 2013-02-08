@@ -1,0 +1,92 @@
+@charset "utf-8";
+/* Drop down styles*/
+#formbox2 #lefttimebox .selectbox-wrapper,
+#formbox2 #righttimebox .selectbox-wrapper {
+	background-color: #FFF;
+	border: 1px solid #ccc;
+	padding: 0px;
+	text-align: left;
+	max-height: 220px;
+	overflow: auto;
+	box-shadow: 0px 0px 4px 0px;
+	margin: 0px;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+/*Drop down list styles*/
+#formbox2 #lefttimebox .selectbox-wrapper ul,
+#formbox2 #righttimebox .selectbox-wrapper ul  {
+	list-style-type: none;
+	margin: 0px;
+	padding: 0px;
+}
+/* Selected item in dropdown list*/
+#formbox2 #lefttimebox .selectbox-wrapper ul li.selected,
+#formbox2 #righttimebox .selectbox-wrapper ul li.selected {
+	background-color: #cae3ff;
+}
+/* Hover state for dropdown list */
+#formbox2 #lefttimebox .selectbox-wrapper ul li.current,
+#formbox2 #righttimebox .selectbox-wrapper ul li.current{
+	background-color: #409bec;
+}
+/* Drop down list items style*/
+#formbox2 #lefttimebox .selectbox-wrapper ul li,
+#formbox2 #righttimebox .selectbox-wrapper ul li  {
+	list-style-type: none;
+	display: block;
+	cursor: pointer;
+	padding-top: 0px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 4px;
+	font-size: 12px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: normal;
+	margin: 0;
+	
+}
+/* Look and feel of select box */
+#formbox2 #lefttimebox .selectbox,
+#formbox2 #righttimebox .selectbox {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;/* Resize Font*/
+	width : 116px; /* Resize Width */
+	display : block;
+	cursor: pointer;
+	border: 0px;
+	background-image: url(../images/timeboxall_button.png);
+	height: 27px;
+	background-repeat: no-repeat;
+	text-indent: 12;
+	font-weight: bold;
+	padding-right: 0px;
+	padding-left: 8px;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	
+}
+#formbox2 #lefttimebox .selectbox:hover,
+#formbox2 #righttimebox .selectbox:hover{ 
+	background-position: 0 -29px; }
+
+#formbox2 #lefttimebox {
+	float: left;
+	width: 110px;
+	padding-right: 30px;
+	height: 30px;
+}
+#formbox2 #righttimebox {
+	float: left;
+	width: 100px;
+	height: 30px;
+}
