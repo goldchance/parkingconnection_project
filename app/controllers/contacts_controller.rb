@@ -14,7 +14,11 @@ class ContactsController < ApplicationController
   def create
     @contact = Contact.new(params[:contact])
     if @contact.save
-      redirect_to @contact, :notice => "Successfully created contact."
+    if request.xhr?
+    render :text=>params[:value]    
+    else
+          redirect_to @contact, :notice => "Successfully created contact."
+        end
     else
       render :action => 'new'
     end
