@@ -16,7 +16,7 @@ class ContactsController < ApplicationController
     if @contact.save
     if request.xhr?
     #render :js => "$('#my_div').html('#{escape_javascript(render(:partial => 'article'))}');"
-      render :js => "$('.loginform').fadeOut();  $('#result').fadeIn();"
+      render :js => "$('.loginform').fadeOut();  $('.result').fadeIn();"
     else
           redirect_to @contact, :notice => "Successfully created contact."
         end

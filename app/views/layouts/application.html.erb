@@ -99,7 +99,7 @@
     });
   $(function() {
     $("#email_submit").click(function() {
-      $("#result").hide();
+      $(".result").hide();
       return false;
     });
     
@@ -112,7 +112,7 @@
 <body>
 <div id="container">
  <div id="header">
-    <div id="pc-logo"><a href="index.html" title="Parking CONNECT" target="_self" id="pc-logo">ParkingConnect</a> </div><!-- end logo -->
+    <div id="pc-logo"><a href="/" title="Parking CONNECT" target="_self" id="pc-logo">ParkingConnect</a> </div><!-- end logo -->
     <div id="navbar">
    	  <ul>
    	    <li><a href="/daily.html" title="Daily Parking" 		target="_self">Daily</a></li>
@@ -132,20 +132,24 @@
   <button type="submit" class="button"/></button>
   <p>enter email address</p>
 </form><br />
-<p id="result" style="display:none;">
+<p class="result" style="display:none;">
   Thanks, your email have been added
 </p>
   <p>Also, any feedback is much appreciated! We’re all about building a product that people love!</p></div></li>
        <li><a href="#" class="lightbox" name="box2">My Trips</a><div class="backdrop"></div>
 	<div class="box2 box" style="display:none;"><div class="close" name="box2">X</div>
     <h1>My Trips section coming soon!</h1><p>Our My Trips page is currently under construction. In the meantime, feel free to sign up below to recieve updates about our site!</p><br />
-    <form class="loginform" action="#">
+     <form class="loginform" action="/contacts" method="post" data-remote='true'>
 
-  <input type="text" id="myname" />
-  <button type="submit" class="button" id="email_submit"/></button>
+  <input type="text" id="myname" name="contact[email]"  class="required email" />
+  <button type="submit" class="button"/></button>
   <p>enter email address</p>
 </form><br />
-    <p>Also, any feedback is much appreciated! We’re all about building a product that people love!</p></div></li>
+<p class="result" style="display:none;">
+  Thanks, your email have been added
+</p>
+
+       <p>Also, any feedback is much appreciated! We’re all about building a product that people love!</p></div></li>
       </ul>
     </div><!-- end navright -->
   </div><!-- end header -->
