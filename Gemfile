@@ -15,8 +15,6 @@ gem "nested_form", :git => "git://github.com/ryanb/nested_form.git"
 gem 'json'
 gem 'fastercsv' # Only required on Ruby 1.8 and below
 gem 'rails_admin'
-gem 'capybara'
-gem "capybara-webkit"
 gem 'hpricot'
 #gem 'scrubyt'
 #gem 'gdata_19'
@@ -38,6 +36,8 @@ group :development do
   gem 'sqlite3'
   gem 'nifty-generators'
 
+gem 'capybara'
+gem "capybara-webkit"
 end
 group :assets do
   gem 'sass-rails',   '~> 3.2.3'
