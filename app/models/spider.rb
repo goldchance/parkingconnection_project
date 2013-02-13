@@ -16,7 +16,6 @@ class Spider
     Capybara.app_host = "https://www.parkingpanda.com"
     
     visit("https://www.parkingpanda.com/Search/?location=#{location}&monthly=true&daily=false")
-    sleep(5)  
     
     all(:xpath, "//div[@class='location-details']/h2").each do |item|
       object = Hash.new

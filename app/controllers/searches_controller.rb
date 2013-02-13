@@ -10,24 +10,23 @@ class SearchesController < ApplicationController
    #   render :js => "$('.loginform').fadeOut();  $('.result').fadeIn();"
   
  #end
- respond_to do |format|
-      format.html # index.html.erb
-      format.js 
- end
+ view = ActionView::Base.new(ActionController::Base.view_paths, {})
+view.render(:file => "index.html.erb", :locals => params)
+# respond_to do |format|
+#     format.html # index.html.erb
+#     format.js 
+#end
  end
   
  def monthly_search
   a = Spider.new
   @list =  a.get_results(params[:wherebox])
-  #if request.xhr?
-    #render :js => "$('#search_results').html('#{escape_javascript(render(:partial => 'list'))}');"
-   #   render :js => "$('.loginform').fadeOut();  $('.result').fadeIn();"
-  
- #end
- respond_to do |format|
+ view = ActionView::Base.new(ActionController::Base.view_paths, {})
+view.render(:file => "/searches/monthly.erb") 
+  respond_to do |format|
       format.html # index.html.erb
       format.js 
- end
+  end
  end
 
  

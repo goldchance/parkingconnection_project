@@ -1,0 +1,17 @@
+<% if @list.present?  %>
+  <table>
+
+  <% @list.each do |item| %>
+    <tr>
+      <fieldset class="ui-corner-all">
+        <legend> <%= item["location"] %></legend>
+      <%= item["main"] %> 
+      <%= item["price"] %> 
+      </fieldset>
+    </tr>
+  <% end %>
+  </table>
+<% else %>
+   
+    <p> nothing match your request ... </p>
+<% end %>
