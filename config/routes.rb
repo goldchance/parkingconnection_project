@@ -7,6 +7,8 @@ StagePark::Application.routes.draw do
 
    root :to => 'pages#home'
 
+    match 'daily_search' => 'searches#daily_search'
+    match 'monthly_search' => 'searches#monthly_search'
     match 'home' => 'pages#home'
     match 'daily' => 'pages#daily'
     match 'monthly' => 'pages#monthly'

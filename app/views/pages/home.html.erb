@@ -11,11 +11,13 @@
     </div><!-- end content -->
     <div id="searchbox">
     <div id="navselected" style="margin-left:398px;"></div><!-- end navselected -->
-    <div id="formbox"><form action="" method="get">
+    <div id="formbox"><form action="/daily_search.js" method="get" data-remote='true'>
       <label for="wherebox"><h1>Where</h1></label>
         <input type="text" name="wherebox" id="wherebox" tabindex="1" />
         <p>enter city, address, or landmark</p>
-    </form>
+      
+<input type="submit" class="button2"/></button>
+      </form>
     </div><!-- end formbox -->
     <div id="formbox2">
 <h1>When</h1>
@@ -146,8 +148,12 @@
 <div id="formbox3">
 
 	<div id="findbtn">
-<button type="submit" class="button2"/></button>
+<input type="submit" class="button2"/></button>
 	</div><!-- end findparkingbtn -->
 </div><!-- end formbox3 -->
-    </div><!-- end searchbox -->
+<div id="search_results">
+no results
+</div>  
+
+</div><!-- end searchbox -->
 

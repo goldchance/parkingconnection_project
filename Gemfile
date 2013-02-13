@@ -5,7 +5,7 @@ gem 'therubyracer'
 gem 'devise'
 gem "ckeditor", "3.7.3"
 gem 'cancan'
-gem 'paperclip'
+#gem 'paperclip'
 gem 'taps'
 gem 'heroku'
 gem 'libv8', '~> 3.11.8'
@@ -15,6 +15,19 @@ gem "nested_form", :git => "git://github.com/ryanb/nested_form.git"
 gem 'json'
 gem 'fastercsv' # Only required on Ruby 1.8 and below
 gem 'rails_admin'
+gem 'capybara'
+gem "capybara-webkit"
+gem 'hpricot'
+#gem 'scrubyt'
+#gem 'gdata_19'
+gem 'mechanize'
+#gem 'firewatir'
+#gem 'commonwatir'
+
+#gem 'gdata_19'
+#gem 'gdata', :git => 'git://github.com/agentrock/gdata.git'
+#gem 'watir'
+#gem 'watir-webdriver'
 gem "psych", "~> 1.3.4"
 # Gems used only for assets and not required
 # in production environments by default.

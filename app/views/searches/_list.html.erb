@@ -1,0 +1,15 @@
+<% if @list.present?  %>
+  <table>
+
+  <% @list.each do |item| %>
+    <tr>
+      <td><%= item["location"] %> </td>
+      <td><%= item["main"] %> </td>
+      <td><%= item["price"] %> </td>
+    </tr>
+  <% end %>
+  </table>
+<% else %>
+   
+    <p> nothing match your request ... </p>
+<% end %>

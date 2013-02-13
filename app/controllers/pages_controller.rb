@@ -25,4 +25,8 @@ class PagesController < ApplicationController
 
   def dailysearch
   end
+  
+  def daily_search
+    @links = Spider.search("miami")
+  end
 end
