@@ -1,7 +1,8 @@
+<% @results = Result.all %>
 <% if @list.present?  %>
   <table>
 
-  <% @list.each do |item| %>
+  <% @results.each do |item| %>
     <tr>
       <fieldset class="ui-corner-all">
         <legend> <%= item["location"] %></legend>

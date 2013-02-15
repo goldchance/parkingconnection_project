@@ -1,0 +1,28 @@
+<% title "Result" %>
+
+<p>
+  <strong>Owner:</strong>
+  <%= @result.owner %>
+</p>
+<p>
+  <strong>Location:</strong>
+  <%= @result.location %>
+</p>
+<p>
+  <strong>Address:</strong>
+  <%= @result.address %>
+</p>
+<p>
+  <strong>Price:</strong>
+  <%= @result.price %>
+</p>
+<p>
+  <strong>Desc:</strong>
+  <%= @result.desc %>
+</p>
+
+<p>
+  <%= link_to "Edit", edit_result_path(@result) %> |
+  <%= link_to "Destroy", @result, :confirm => 'Are you sure?', :method => :delete %> |
+  <%= link_to "View All", results_path %>
+</p>

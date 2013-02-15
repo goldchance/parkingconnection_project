@@ -1,0 +1,13 @@
+one:
+  owner: MyString
+  location: MyString
+  address: MyString
+  price: MyString
+  desc: MyString
+
+two:
+  owner: MyString
+  location: MyString
+  address: MyString
+  price: MyString
+  desc: MyString

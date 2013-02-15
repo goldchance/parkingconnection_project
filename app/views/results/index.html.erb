@@ -1,0 +1,25 @@
+<% title "Results" %>
+
+<table>
+  <tr>
+    <th>Owner</th>
+    <th>Location</th>
+    <th>Address</th>
+    <th>Price</th>
+    <th>Desc</th>
+  </tr>
+  <% for result in @results %>
+    <tr>
+      <td><%= result.owner %></td>
+      <td><%= result.location %></td>
+      <td><%= result.address %></td>
+      <td><%= result.price %></td>
+      <td><%= result.desc %></td>
+      <td><%= link_to "Show", result %></td>
+      <td><%= link_to "Edit", edit_result_path(result) %></td>
+      <td><%= link_to "Destroy", result, :confirm => 'Are you sure?', :method => :delete %></td>
+    </tr>
+  <% end %>
+</table>
+
+<p><%= link_to "New Result", new_result_path %></p>

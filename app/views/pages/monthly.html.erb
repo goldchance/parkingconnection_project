@@ -30,6 +30,19 @@
 <div id="search_results">
   no results
 </div>
+<table>
+
+  <% @results = Result.find_all_by_desc("monthly") %>
+  <% @results.each do |item| %>
+    <tr>
+      <fieldset class="ui-corner-all">
+        <legend> <%= item["location"] %></legend>
+      <%= item["address"] %> 
+      <%= item["price"] %>
+      </fieldset>
+    </tr>
+  <% end %>
+  </table>
 </div><!-- end formbox -->
     </div><!-- end searchbox -->
 

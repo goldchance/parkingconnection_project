@@ -28,6 +28,7 @@ gem 'mysql2', "~> 0.3.11"
 #gem 'watir'
 #gem 'watir-webdriver'
 gem "psych", "~> 1.3.4"
+gem 'delayed_job_active_record'
 # Gems used only for assets and not required
 # in production environments by default.
 
