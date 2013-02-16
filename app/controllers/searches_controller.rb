@@ -17,8 +17,7 @@ class SearchesController < ApplicationController
  end
   
  def monthly_search
-  a = Spider.new
-  @list =  a.delay.get_results(params[:wherebox], 'monthly')
+  Spider.monthly_search(params[:wherebox])
   respond_to do |format|
       format.html # index.html.erb
       format.js 

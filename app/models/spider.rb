@@ -9,7 +9,26 @@ class Spider
       
   include Capybara::DSL
   
-  def get_results_gottaprk(location,type)
+    
+  def self.monthly_search(location)
+    spy=Spider.new
+    spy.get_results_gottapark(location,"monthly")
+    spy.get_results_pandaparking(location, "monthly")
+  end
+  
+  def self.daily_search(location)
+    spy=Spider.new
+    spy.get_results_gottapark(location,"monthly")
+    spy.get_results_pandaparking(location, "monthly")
+  end
+  
+  def self.airports_search(location)
+    spy=Spider.new
+    spy.get_results_gottapark(location,"monthly")
+    spy.get_results_pandaparking(location, "monthly")
+  end
+  
+  def get_results_gottapark(location,type)
      results=[]
     Capybara.run_server = false
     Capybara.current_driver = :webkit
@@ -49,7 +68,7 @@ class Spider
   
   
   
-  def get_results(location,type)
+  def get_results_pandaparking(location,type)
     results=[]
     Capybara.run_server = false
     Capybara.current_driver = :webkit
