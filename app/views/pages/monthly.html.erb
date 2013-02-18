@@ -33,6 +33,7 @@
 <table>
 
   <% @results = Result.find_all_by_desc("monthly") %>
+  <p>Found <%= @results.size %> place(s): </p>
   <% @results.each do |item| %>
     <tr>
       <fieldset class="ui-corner-all">
