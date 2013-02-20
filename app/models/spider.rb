@@ -11,9 +11,11 @@ class Spider
   
   def self.daily_search(params)
     #begin
+      Result.delete_all
       spy=Spider.new
       spy.get_results_gottapark(params,"daily")
-     # spy.get_results_pandaparking(params, "daily")
+      spy.get_results_pandaparking(params, "daily")
+      spy.get_results_centralpark(params, "daily")
    # rescue Exception => e  
     #  puts e.message  
      # puts e.backtrace.inspect  
@@ -72,7 +74,6 @@ class Spider
       end
 
     end
-  Result.delete_all
   results.each do |o|
       item = Result.new
       item.address = o["location"]
@@ -100,7 +101,7 @@ class Spider
     Capybara.current_driver = :webkit
     Capybara.app_host = "https://www.parkingpanda.com"
     if type != 'daily'
-      visit("https://www.parkingpanda.com/Search/?location=#{city}&monthly=true&daily=false")
+      visit("https://www.parkingpanda.com/Search/?location=#{city}&start=#{params[:from]}&end=#{params[:to]}3&monthly=true&daily=false")
     else
       visit("https://www.parkingpanda.com/Search/?location=#{city}&monthly=false&daily=true")
     end
@@ -126,7 +127,6 @@ class Spider
         #object.save
       end
     end
-  Result.delete_all
     results.each do |o|
       item = Result.new
       item.address = o["location"]
@@ -144,7 +144,8 @@ class Spider
 #-------------------------------------  www.centralparking.com -------------------------------------------------  
                                                
                                                
-def get_results_centralpark(location,type)
+def get_results_centralpark(params,type)
+    location = params[:wherebox]
     results=[]
     arr = location.split(",")
     city = arr[0].strip.gsub(" ","-")
