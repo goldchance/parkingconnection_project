@@ -3,8 +3,7 @@ class SearchesController < ApplicationController
   # GET /searches.json
  
  def daily_search
-  a = Spider.new
-  @list =  a.delay.get_results(params[:wherebox],'daily')
+  Spider.daily_search(params)
   #if request.xhr?
     #render :js => "$('#search_results').html('#{escape_javascript(render(:partial => 'list'))}');"
    #   render :js => "$('.loginform').fadeOut();  $('.result').fadeIn();"

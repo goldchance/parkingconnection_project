@@ -6,40 +6,57 @@ require "capybara/dsl"
 require "capybara-webkit"
 
 class Spider
-      
+  TIME_VALUE={ }    
   include Capybara::DSL
   
-    
+  def self.daily_search(params)
+    #begin
+      spy=Spider.new
+      spy.get_results_gottapark(params,"daily")
+     # spy.get_results_pandaparking(params, "daily")
+   # rescue Exception => e  
+    #  puts e.message  
+     # puts e.backtrace.inspect  
+    #end
+  end
+ 
   def self.monthly_search(location)
-    spy=Spider.new
-    spy.get_results_gottapark(location,"monthly")
-    spy.get_results_pandaparking(location, "monthly")
-    spy.get_results_centralpark(location, "monthly")
+    begin 
+      spy=Spider.new
+      spy.get_results_pandaparking(location, "monthly")
+      spy.get_results_centralpark(location, "monthly")
+    rescue Exception => e  
+      puts e.message  
+      puts e.backtrace.inspect  
+    end
   end
   
-  def self.daily_search(location)
-    spy=Spider.new
-    spy.get_results_gottapark(location,"monthly")
-    spy.get_results_pandaparking(location, "monthly")
-  end
-  
+    
   def self.airports_search(location)
     spy=Spider.new
     spy.get_results_gottapark(location,"monthly")
     spy.get_results_pandaparking(location, "monthly")
   end
 #-------------------------------------------- www.gottaprk.com -------------------------------------  
-  def get_results_gottapark(location,type)
+  def get_results_gottapark(params,type)
      results=[]
-    
-    arr = location.split(",")
-    city = arr[0].strip.gsub(" ","-")
-    state = arr[1].strip 
+    location=params[:wherebox]
+    if location.present?
+     arr = location.split(",")
+     city = arr[0].strip.gsub(" ","-")
+     state = arr[1].strip
+    end
     Capybara.run_server = false
     Capybara.current_driver = :webkit
     Capybara.app_host = "http://www.gottapark.com/"
     visit("http://www.gottapark.com/")
     fill_in "search_key", :with =>"#{location}"
+    fill_in "date_from", :with =>"#{params[:from].gsub("/","-")}"
+    #fill_in "time_from", :with =>"#{params[:items]}"
+    select "#{params[:Items]}", :from=>"time_from"
+    fill_in "date_to", :with =>"#{params[:to].gsub("/","-")}"
+    #fill_in "time_to", :with =>"#{params[:items2]}"
+    select "#{params[:Items2]}", :from=>"time_to"
     find(:xpath,'//div[@id="homeboxbutton"]/input').click
     all(:xpath,'//div[@id="smallsearchbox"]/div/div[@class="details"]/p[@class="address"]').each do |item|
        object = Hash.new
@@ -47,15 +64,15 @@ class Spider
       results<<object
     end
    
-    all(:xpath,'//div[@id="smallsearchbox"]/div/div[@class="details"]/p[@class="price"]').each_with_index do |item|
+    all(:xpath,'//p[@class="price"]').each_with_index do |item,index|
     if results[index-1].present?
       #  object.location = slice[0].text
         object = results[index-1]
-        object["price"]= item.text
+        object["price"]= item.text[0..-3]
       end
 
     end
-  
+  Result.delete_all
   results.each do |o|
       item = Result.new
       item.address = o["location"]
@@ -73,7 +90,8 @@ class Spider
   
 #------------------------------------  www.pandaparking.com --------------------------------------------
   
-  def get_results_pandaparking(location,type)
+  def get_results_pandaparking(params,type)
+    location = params[:wherebox]
     results=[]
     arr = location.split(",")
     city = arr[0].strip.gsub(" ","-")
