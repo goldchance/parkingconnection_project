@@ -130,7 +130,7 @@ body {
 	background-color: #FFF;
 		
 	height: auto;
-	min-height: 475px;
+	min-height: 440px;
 	width: 960px;
 	box-shadow: 0px 0px 8px 2px #000;
 	border-radius: 5px;

@@ -9,7 +9,7 @@ gem 'cancan'
 gem 'taps'
 gem 'heroku'
 gem 'libv8', '~> 3.11.8'
-gem 'pg'
+# gem 'pg'
 #gem "nested_form", :git => "git://github.com/madebydna/nested_form.git"
 gem "nested_form", :git => "git://github.com/ryanb/nested_form.git"
 gem 'json'
@@ -31,6 +31,11 @@ gem "psych", "~> 1.3.4"
 gem 'delayed_job_active_record'
 # Gems used only for assets and not required
 # in production environments by default.
+#
+# gem 'debugger'
+# gem 'pry-debugger'
+gem 'faye-rails'
+gem 'thin'
 
 group :development do
 
@@ -47,6 +52,7 @@ group :assets do
   # gem 'therubyracer', :platforms => :ruby
 
   gem 'uglifier', '>= 1.0.3'
+  gem 'spinjs-rails'
 end
 
 gem 'jquery-rails'

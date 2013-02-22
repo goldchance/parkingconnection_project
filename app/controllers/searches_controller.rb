@@ -3,7 +3,7 @@ class SearchesController < ApplicationController
   # GET /searches.json
  
  def daily_search
-  Spider.daily_search(params)
+  Spider.delay.daily_search(params)
   #if request.xhr?
     #render :js => "$('#search_results').html('#{escape_javascript(render(:partial => 'list'))}');"
    #   render :js => "$('.loginform').fadeOut();  $('.result').fadeIn();"
@@ -16,10 +16,10 @@ class SearchesController < ApplicationController
  end
   
  def monthly_search
-  Spider.delay.monthly_search(params[:wherebox])
+  Spider.delay.monthly_search(params)
   respond_to do |format|
-      format.html # index.html.erb
-      format.js 
+    format.html # index.html.erb
+    format.js
   end
  end
 

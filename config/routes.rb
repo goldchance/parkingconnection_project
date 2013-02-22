@@ -1,4 +1,9 @@
 StagePark::Application.routes.draw do
+  faye_server '/faye', :timeout => 25 do
+    map '/searches/**' => FayeController
+    # map :default => :block
+  end
+
   resources :results
 
   mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'

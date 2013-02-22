@@ -10,26 +10,38 @@ class Spider
   include Capybara::DSL
   
   def self.daily_search(params)
-    #begin
+    begin
       Result.delete_all
       spy=Spider.new
       spy.get_results_gottapark(params,"daily")
       spy.get_results_pandaparking(params, "daily")
       spy.get_results_centralpark(params, "daily")
-   # rescue Exception => e  
-    #  puts e.message  
-     # puts e.backtrace.inspect  
-    #end
+      result_string = ApplicationController.new.render_to_string(:partial => 'pages/results', :locals => { result_type: "daily" })
+      message = {:channel => "/searches",
+                 :data => { result_string: result_string}}
+      uri = URI.parse("http://localhost:3000/faye")
+      Net::HTTP.post_form(uri, :message => message.to_json)
+   rescue Exception => e  
+     puts e.message  
+     puts e.backtrace.inspect  
+    end
   end
  
-  def self.monthly_search(location)
+  def self.monthly_search(params)
     begin 
+      Result.delete_all
       spy=Spider.new
-      spy.get_results_pandaparking(location, "monthly")
-      spy.get_results_centralpark(location, "monthly")
-    rescue Exception => e  
-      puts e.message  
-      puts e.backtrace.inspect  
+      spy.get_results_pandaparking(params, "monthly")
+      # spy.get_results_centralpark(location, "monthly")
+      # FayeController.publish('/searches', {result_string: result_string})
+      result_string = ApplicationController.new.render_to_string(:partial => 'pages/results', :locals => { result_type: "monthly" })
+      message = {:channel => "/searches",
+                 :data => { result_string: result_string}}
+      uri = URI.parse("http://localhost:3000/faye")
+      Net::HTTP.post_form(uri, :message => message.to_json)
+    rescue Exception => e
+      puts e.message
+      puts e.backtrace
     end
   end
   
@@ -101,10 +113,17 @@ class Spider
     Capybara.current_driver = :webkit
     Capybara.app_host = "https://www.parkingpanda.com"
     if type != 'daily'
-      visit("https://www.parkingpanda.com/Search/?location=#{city}&start=#{params[:from]}&end=#{params[:to]}3&monthly=true&daily=false")
+      # visit("https://www.parkingpanda.com/Search/?location=#{city}&start=#{params[:from]}&end=#{params[:to]}3&monthly=true&daily=false")
+      visit "https://www.parkingpanda.com"
+      fill_in "ctl00$container$txtSearch", :with =>"#{city}, #{state}, USA"
+      fill_in "ctl00$container$txtSearchStartDate", :with => "02/23/2013"
+      find(:xpath, '//input[@name="ctl00$container$btnSearch"]').click
+      find(:xpath,'//a[@id="lnkMonthlyParking"]').click
+      sleep 5
     else
       visit("https://www.parkingpanda.com/Search/?location=#{city}&monthly=false&daily=true")
     end
+
     all(:xpath, "//div[@class='location-details']/h2").each do |item|
      #object = Result.new
      #object.address = item.text

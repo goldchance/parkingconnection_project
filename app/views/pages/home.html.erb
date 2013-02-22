@@ -193,9 +193,6 @@
 <option value="47">11:00 pm</option>
 <option value="48">11:30 pm</option>	
 <option value="49">11:59 pm</option>	
-<div id="search_results">
-no results
-</div> 
 <%
 =end
 %>
@@ -210,20 +207,10 @@ no results
 	</div><!-- end findparkingbtn -->
 </div><!-- end formbox3 -->
 </form>
+<div id="search_results">
+no results
+</div> 
  
-<table >
-
-  <% @results = Result.find_all_by_desc("daily") %>
-  <% @results.each do |item| %>
-    <tr>
-      <fieldset class="ui-corner-all">
-        <legend> <%= item["location"] %></legend>
-      <%= item["address"] %> 
-      <%= item["price"] %> 
-      </fieldset>
-    </tr>
-  <% end %>
-  </table>
 
 </div><!-- end searchbox -->
 
