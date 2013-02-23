@@ -125,14 +125,14 @@ class Spider
       find(:xpath, '//input[@name="ctl00$container$btnSearch"]').click
       if all(:xpath,'//a[@id="lnkMonthlyParking"]').size>0
 	all(:xpath,'//a[@id="lnkMonthlyParking"]').first.click
-	
+	puts "motnh succ"
 	sleep 5
 	pickup_panda("monthly")
       end
       
     else
       visit("https://www.parkingpanda.com/Search/?location=#{city}&monthly=false&daily=true")
-      
+      puts "d"
       sleep 5
       pickup_panda("daily")
     end
