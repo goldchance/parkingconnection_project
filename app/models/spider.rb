@@ -32,7 +32,7 @@ class Spider
       Result.delete_all
       spy=Spider.new
       spy.get_results_pandaparking(params, "monthly")
-      # spy.get_results_centralpark(location, "monthly")
+      spy.get_results_centralpark(params, "monthly")
       # FayeController.publish('/searches', {result_string: result_string})
       result_string = ApplicationController.new.render_to_string(:partial => 'pages/results', :locals => { result_type: "monthly" })
       message = {:channel => "/searches",
@@ -127,13 +127,20 @@ class Spider
 	all(:xpath,'//a[@id="lnkMonthlyParking"]').first.click
 	
 	sleep 5
-	pickup_panda("monthly")
+	#debugger
+  if all(:css, "span.location-rate").size>0
+   if all(:css, "span.location-rate").first.text=="monthly"
+      pickup_panda("monthly")
+   end
+  end
+  
       end
       
     else
       visit("https://www.parkingpanda.com/Search/?location=#{city}&monthly=false&daily=true")
       
       sleep 5
+	#debugger
       pickup_panda("daily")
     end
 
@@ -201,21 +208,27 @@ def get_results_centralpark(params,type)
       list << url[:href]
       
     end
-    
+    #debugger
     list.each do |url|
       
       visit("http://#{city_short}.centralparking.com#{url}")
       object = Hash.new
       if all(:css,"dl.info dd").size>0
-	object["location"] = all(:css,"dl.info dd").first.text
+	      object["location"] = all(:css,"dl.info dd").first.text
       end
       if all(:css,"dl.info dd").size>0
-	object["main"] = all(:css,"dl.info dd").first.text
+	      object["main"] = all(:css,"dl.info dd").first.text
       end
-      if all(:css, "table.layout-table-1 tr td").size>3
-	object["price"] = all(:css, "table.layout-table-1 tr td")[3].text
+      if type == 'daily'
+        if all(:css, "table.layout-table-1 tr td").size>3
+	        object["price"] = all(:css, "table.layout-table-1 tr td")[3].text
+        end
+      else
+        if all(:css, "div.monthly-parking-rates p").size>0
+         object["price"] = all(:css, "div.monthly-parking-rates p")[0].text
+        end
       end
-	results<<object
+	  results<<object
     end
     results.each do |o|
       item = Result.new

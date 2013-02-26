@@ -42,8 +42,9 @@ group :development do
   gem 'sqlite3'
   gem 'nifty-generators'
 
-gem 'capybara'
-gem "capybara-webkit"
+  gem 'capybara'
+  gem "capybara-webkit"
+  gem "ruby-debug19"
 end
 group :assets do
   gem 'sass-rails',   '~> 3.2.3'
