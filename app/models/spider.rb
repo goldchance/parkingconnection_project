@@ -46,11 +46,61 @@ class Spider
   end
   
     
-  def self.airports_search(location)
-    spy=Spider.new
-    spy.get_results_gottapark(location,"monthly")
-    spy.get_results_pandaparking(location, "monthly")
+  def self.airport_search(params)
+     begin 
+      Result.delete_all
+      spy=Spider.new
+      spy.get_results_airportparkingreservations(params)
+      # FayeController.publish('/searches', {result_string: result_string})
+      result_string = ApplicationController.new.render_to_string(:partial => 'pages/results', :locals => { result_type: "airport" })
+      message = {:channel => "/searches",
+                 :data => { result_string: result_string}}
+      uri = URI.parse("http://localhost:3000/faye")
+      Net::HTTP.post_form(uri, :message => message.to_json)
+    rescue Exception => e
+      puts e.message
+      puts e.backtrace
+    end
+    
   end
+#-----------------------------------------------------------------------------------------------
+  def get_results_airportparkingreservations(params)
+   begin 
+    results=[]
+    url = params[:wherebox_airp_full]
+    Capybara.run_server = false
+    Capybara.current_driver = :webkit
+    Capybara.app_host = "http://www.airportparkingreservations.com/"
+    visit(url)
+    sleep 5
+    all(:css, "div.sr-v3-left div.headline").each do |item|
+      object = Hash.new
+      object["location"]= item.text
+      results<<object
+    end
+
+       
+    all(:css, "div.sr-v3-right div.reserve-box em.price").each_with_index do |item,index|
+      if results[index-1].present?
+      #  object.location = slice[0].text
+        object = results[index-1]
+        object["price"]= item.text
+      end
+    end
+  results.each do |o|
+      item = Result.new
+      item.address = o["location"]
+      item.location = o["location"]
+      item.price = o["price"]
+      item.desc="airport"
+      item.save
+    end
+  rescue Exception => e  
+     puts e.message  
+     puts e.backtrace.inspect  
+    end
+  end
+  
 #-------------------------------------------- www.gottaprk.com -------------------------------------  
   def get_results_gottapark(params,type)
    begin 

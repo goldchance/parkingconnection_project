@@ -16,6 +16,7 @@ StagePark::Application.routes.draw do
 
     match 'daily_search' => 'searches#daily_search'
     match 'monthly_search' => 'searches#monthly_search'
+    match 'airport_search' => 'searches#airport_search'
     match 'home' => 'pages#home'
     match 'daily' => 'pages#daily'
     match 'monthly' => 'pages#monthly'

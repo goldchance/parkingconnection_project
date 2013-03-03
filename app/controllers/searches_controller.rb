@@ -23,6 +23,14 @@ class SearchesController < ApplicationController
   end
  end
 
+ def airport_search
+  Spider.delay.airport_search(params)
+  respond_to do |format|
+    format.html # index.html.erb
+    format.js
+  end
+ end
+
  
  def index
     @searches = Search.all

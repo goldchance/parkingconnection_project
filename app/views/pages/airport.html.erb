@@ -10,12 +10,24 @@
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
     </div><!-- end content -->
     <div id="searchbox">
+  <div class="toggler" style="position:fixed; top:100px;">
+    <div id="effect" class="ui-widget-content ui-corner-all" style="display:none;">
+      <%= render "airport_list"%>
+  </div>
+</div>
     <div id="navselected" style="margin-left:612px;"></div><!-- end navselected -->
-    <div id="formbox"><form action="" method="get">
+    <div id="formbox"><form action="/airport_search.js" method="get" data-remote='true'>
       <label for="wherebox"><h1>Where</h1></label>
-        <input type="text" name="wherebox" id="wherebox" tabindex="1" />
+        <input type="text" name="wherebox_airp" id="wherebox_airp" tabindex="1" />
         <p>enter airport name or code</p>
-    </form>
+        <input type="hidden" name="wherebox_airp_full" id="wherebox_airp_full" tabindex="1" value="" />
+        
+        <div id="formbox3">
+      <div id="findbtn">
+        <input type="submit" class="button2"/></button>
+      </div><!-- end findparkingbtn -->
+    </div>
+  </form>
     </div><!-- end formbox -->
     <div id="formbox2">
 <h1>When</h1>
@@ -142,5 +154,9 @@
 	</select>
   </div><!-- end timebox left -->
 </div><!-- end formbox2 -->
+<div id="search_results">
+  no results
+</div>
+
     </div><!-- end searchbox -->
 

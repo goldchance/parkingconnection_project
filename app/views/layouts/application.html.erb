@@ -36,7 +36,18 @@
   #city { width: 25em; }
   </style>
  <script>
-  $(function() {
+   $(function() {
+     
+  $( ".airport-select" ).click(function() {
+    $("#wherebox_airp").val($(this).html());
+    $("#wherebox_airp_full").val($(this).attr("href"));
+    $("#effect" ).toggle( "slide", {}, 500 );
+  return false;
+});
+$( "#wherebox_airp" ).click(function() {
+  $( "#effect" ).toggle( "slide", {}, 500 );
+  return false;
+});
     $( ".button" )
       .button()
         });
@@ -56,7 +67,42 @@
       $( "<div>" ).text( message ).prependTo( "#log" );
       $( "#log" ).scrollTop( 0 );
     }
- 
+    $( "#wherebox_airxx" ).autocomplete({
+      source: function( request, response ) {
+        $.ajax({
+          url: "http://ws.geonames.org/searchJSON?country=US",
+          dataType: "jsonp",
+          data: {
+            featureCode: "AIRP",
+            style: "full",
+            maxRows: 12,
+            //lang: "iata",
+            name_startsWith: request.term
+          },
+          success: function( data ) {
+            response( $.map( data.geonames, function( item ) {
+              return {
+                label: item.name + (item.adminName1 ? ", " + item.adminName1 : "") + ", "+ item.alternatenName + "," + item.countryName,
+               // label: item.name + (item.alternateName ? ", " + item.alternateName : "")  + ", "+item.adminName2 + "," + item.adminName3 +","+ item.adminName4 + "," + item.countryName,
+                value: item.name +","+ item.adminCode1
+              }
+            }));
+          }
+        });
+      },
+      minLength: 2,
+      select: function( event, ui ) {
+        log( ui.item ?
+          "Selected: " + ui.item.label :
+          "Nothing selected, input was " + this.value);
+      },
+      open: function() {
+        $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+      },
+      close: function() {
+        $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+      }
+    });
     $( "#wherebox" ).autocomplete({
       source: function( request, response ) {
         $.ajax({
