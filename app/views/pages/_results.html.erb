@@ -4,7 +4,7 @@
   <% results.each do |item| %>
     <tr>
       <fieldset class="ui-corner-all">
-        <legend> <%= item["location"] %></legend>
+        <legend> <%=link_to "#{item["location"]}", "#{item.href}", :target => "_blank" %></legend>
       <%= item["address"] %> 
       <%= item["price"] %>
       </fieldset>

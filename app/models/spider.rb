@@ -108,11 +108,29 @@ def get_results_parkingconnection(params)
         object["price"] = item.text
       end
     end
-  results.each do |o|
+  
+    all(:css, "p.facilityID").each_with_index do |item,index|
+      if results[index-1].present?
+      #  object.location = slice[0].text
+        object = results[index-1]
+        object["facilityid"] = item.text
+      end
+    end
+    
+    all(:css, "p.unitID").each_with_index do |item,index|
+      if results[index-1].present?
+      #  object.location = slice[0].text
+        object = results[index-1]
+        object["unitid"] = item.text
+      end
+    end
+    
+    results.each do |o|
       item = Result.new
       item.address = o["location"]
       item.location = o["main"]
       item.price = o["price"]
+      item.href = "https://www.airportparkingconnection.com/apc/api/Checkout.aspx?dpnLocations=#{short_name}&txtCheckinDt=3%2F4%2F2013&dpnCheckInTime=12%3A00+AM&txtCheckoutDt=3%2F10%2F2013&dpnCheckOutTime=12%3A00+AM&UnitID=#{o["unitid"]}&FacilityID=#{o["facilityid"]}&sendbutton2="
       item.desc="airport"
       item.save
     end
@@ -147,11 +165,20 @@ def get_results_parkingconnection(params)
         object["price"]= item.text
       end
     end
+
+  all(:css, "a.more-info").each_with_index do |item,index|
+      if results[index-1].present?
+      #  object.location = slice[0].text
+        object = results[index-1]
+        object["href"]= "http://www.airportparkingreservations.com#{item[:href]}"
+      end
+    end
   results.each do |o|
       item = Result.new
       item.address = o["location"]
       item.location = o["location"]
       item.price = o["price"]
+      item.href = o["href"]
       item.desc="airport"
       item.save
     end
@@ -236,12 +263,33 @@ def get_results_cheapairportparking(params)
         object = results[index-1]
         object["price"]= item.text[0..-3]
       end
+    end
+    
+    all(:css, "p.title a").each_with_index do |item,index|
+    if results[index-1].present?
+      #  object.location = slice[0].text
+        object = results[index-1]
+        object["main"]= item.text
+      end
+    end
+
+
+    all(:css, "p.address").each_with_index do |item,index|
+    if results[index-1].present?
+      #  object.location = slice[0].text
+        object = results[index-1]
+        path=item.text.split(",").first.gsub(" ","-")
+        object["href"]= "http://www.gottapark.com/parking/#{city}/#{path}"
+      end
 
     end
-  results.each do |o|
+
+    
+    results.each do |o|
       item = Result.new
       item.address = o["location"]
-      item.location = o["location"]
+      item.location = o["main"]
+      item.href = o["href"]
       item.price = o["price"]
       if type =='daily'
        item.desc="daily"
