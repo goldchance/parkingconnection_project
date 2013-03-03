@@ -51,6 +51,7 @@ class Spider
       Result.delete_all
       spy=Spider.new
       spy.get_results_airportparkingreservations(params)
+      spy.get_results_parkingconnection(params)
       # FayeController.publish('/searches', {result_string: result_string})
       result_string = ApplicationController.new.render_to_string(:partial => 'pages/results', :locals => { result_type: "airport" })
       message = {:channel => "/searches",
@@ -63,7 +64,66 @@ class Spider
     end
     
   end
-#-----------------------------------------------------------------------------------------------
+#------------------------------------airport search methods -----------------------------------------------------------
+  #--------------------  http://www.parkingconnection.com/
+def get_results_parkingconnection(params)
+   begin 
+    results=[]
+    city=params[:wherebox_airp].split(" (")[0].gsub(" ","-")
+    short_name = params[:wherebox_airp].split(" (")[1].gsub("(","").gsub(")","")
+    Capybara.run_server = false
+    Capybara.current_driver = :webkit
+    Capybara.app_host = "http://www.airportparkingreservations.com/"
+    url="http://www.parkingconnection.com/locations/#{city}-#{short_name}-airport-parking/?dpnLocations=#{short_name}&txtCheckinDt=3/4/2013&dpnCheckInTime=12:00AM&txtCheckoutDt=3/10/2013&dpnCheckOutTime=12:00AM&UnitID&FacilityID&sendbutton2"
+    #url="http://www.parkingconnection.com/locations/albany-alb-airport-parking/?dpnLocations=ALB&txtCheckinDt=3/4/2013&dpnCheckInTime=12:00AM&txtCheckoutDt=3/10/2013&dpnCheckOutTime=12:00AM&UnitID&FacilityID&sendbutton2"
+    visit(url)
+    sleep 5
+    all(:css,"div.locationLot h3").each do |item|
+      object = Hash.new
+      object["main"]= item.text
+      results<<object
+    end
+
+       
+    all(:css, "div.locationLot span").each_with_index do |item,index|
+      if results[index-1].present?
+      #  object.location = slice[0].text
+        object = results[index-1]
+        object["main"] << item.text
+      end
+    end
+    
+    all(:css, "p.locationAddress").each_with_index do |item,index|
+      if results[index-1].present?
+      #  object.location = slice[0].text
+        object = results[index-1]
+        object["location"] = item.text
+      end
+    end
+
+    all(:css, "div.locationLot div.rateInfoContainer div.rate").each_with_index do |item,index|
+      if results[index-1].present?
+      #  object.location = slice[0].text
+        object = results[index-1]
+        object["price"] = item.text
+      end
+    end
+  results.each do |o|
+      item = Result.new
+      item.address = o["location"]
+      item.location = o["main"]
+      item.price = o["price"]
+      item.desc="airport"
+      item.save
+    end
+  rescue Exception => e  
+     puts e.message  
+     puts e.backtrace.inspect  
+    end
+  end
+
+
+
   def get_results_airportparkingreservations(params)
    begin 
     results=[]
@@ -100,6 +160,47 @@ class Spider
      puts e.backtrace.inspect  
     end
   end
+ #------------------------------------------------------- 
+def get_results_cheapairportparking(params)
+   begin 
+    results=[]
+    short_name = params[:wherebox_airp].split(" ")[1].gsub("(","").gsub(")","")
+    url = params[:wherebox_airp_full]
+    Capybara.run_server = false
+    Capybara.current_driver = :webkit
+    Capybara.app_host = "http://www.airportparkingreservations.com/"
+    "http://www.cheapairportparking.org/parking/find.php?airport=#{short_name}&FromDate=03%2F05%2F2013&from_time=1&ToDate=03%2F06%2F2013&to_time=15"
+    visit(url)
+    sleep 5
+    all(:css, "div.sr-v3-left div.headline").each do |item|
+      object = Hash.new
+      object["location"]= item.text
+      results<<object
+    end
+
+       
+    all(:css, "div.sr-v3-right div.reserve-box em.price").each_with_index do |item,index|
+      if results[index-1].present?
+      #  object.location = slice[0].text
+        object = results[index-1]
+        object["price"]= item.text
+      end
+    end
+  results.each do |o|
+      item = Result.new
+      item.address = o["location"]
+      item.location = o["location"]
+      item.price = o["price"]
+      item.desc="airport"
+      item.save
+    end
+  rescue Exception => e  
+     puts e.message  
+     puts e.backtrace.inspect  
+    end
+  end
+
+  
   
 #-------------------------------------------- www.gottaprk.com -------------------------------------  
   def get_results_gottapark(params,type)
