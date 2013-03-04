@@ -86,41 +86,41 @@ def get_results_parkingconnection(params)
 
        
     all(:css, "div.locationLot span").each_with_index do |item,index|
-      if results[index-1].present?
+      if results[index].present?
       #  object.location = slice[0].text
-        object = results[index-1]
+        object = results[index]
         object["main"] << item.text
       end
     end
     
     all(:css, "p.locationAddress").each_with_index do |item,index|
-      if results[index-1].present?
+      if results[index].present?
       #  object.location = slice[0].text
-        object = results[index-1]
+        object = results[index]
         object["location"] = item.text
       end
     end
 
     all(:css, "div.locationLot div.rateInfoContainer div.rate").each_with_index do |item,index|
-      if results[index-1].present?
+      if results[index].present?
       #  object.location = slice[0].text
-        object = results[index-1]
+        object = results[index]
         object["price"] = item.text
       end
     end
   
     all(:css, "p.facilityID").each_with_index do |item,index|
-      if results[index-1].present?
+      if results[index].present?
       #  object.location = slice[0].text
-        object = results[index-1]
+        object = results[index]
         object["facilityid"] = item.text
       end
     end
     
     all(:css, "p.unitID").each_with_index do |item,index|
-      if results[index-1].present?
+      if results[index].present?
       #  object.location = slice[0].text
-        object = results[index-1]
+        object = results[index]
         object["unitid"] = item.text
       end
     end
@@ -159,17 +159,17 @@ def get_results_parkingconnection(params)
 
        
     all(:css, "div.sr-v3-right div.reserve-box em.price").each_with_index do |item,index|
-      if results[index-1].present?
+      if results[index].present?
       #  object.location = slice[0].text
-        object = results[index-1]
+        object = results[index]
         object["price"]= item.text
       end
     end
 
   all(:css, "a.more-info").each_with_index do |item,index|
-      if results[index-1].present?
+      if results[index].present?
       #  object.location = slice[0].text
-        object = results[index-1]
+        object = results[index]
         object["href"]= "http://www.airportparkingreservations.com#{item[:href]}"
       end
     end
@@ -207,9 +207,9 @@ def get_results_cheapairportparking(params)
 
        
     all(:css, "div.sr-v3-right div.reserve-box em.price").each_with_index do |item,index|
-      if results[index-1].present?
+      if results[index].present?
       #  object.location = slice[0].text
-        object = results[index-1]
+        object = results[index]
         object["price"]= item.text
       end
     end
@@ -258,26 +258,26 @@ def get_results_cheapairportparking(params)
     end
    
     all(:xpath,'//p[@class="price"]').each_with_index do |item,index|
-    if results[index-1].present?
+    if results[index].present?
       #  object.location = slice[0].text
-        object = results[index-1]
+        object = results[index]
         object["price"]= item.text[0..-3]
       end
     end
     
     all(:css, "p.title a").each_with_index do |item,index|
-    if results[index-1].present?
+    if results[index].present?
       #  object.location = slice[0].text
-        object = results[index-1]
+        object = results[index]
         object["main"]= item.text
       end
     end
 
 
     all(:css, "p.address").each_with_index do |item,index|
-    if results[index-1].present?
+    if results[index].present?
       #  object.location = slice[0].text
-        object = results[index-1]
+        object = results[index]
         path=item.text.split(",").first.gsub(" ","-")
         object["href"]= "http://www.gottapark.com/parking/#{city}/#{path}"
       end
@@ -323,27 +323,20 @@ def get_results_cheapairportparking(params)
       fill_in "ctl00$container$txtSearchStartDate", :with => "02/23/2013"
       find(:xpath, '//input[@name="ctl00$container$btnSearch"]').click
       if all(:xpath,'//a[@id="lnkMonthlyParking"]').size>0
-	all(:xpath,'//a[@id="lnkMonthlyParking"]').first.click
-	
-	sleep 5
-	#debugger
-  if all(:css, "span.location-rate").size>0
-   if all(:css, "span.location-rate").first.text=="monthly"
-      pickup_panda("monthly")
-   end
-  end
-  
+	      all(:xpath,'//a[@id="lnkMonthlyParking"]').first.click
+	      sleep 5
+        if all(:css, "span.location-rate").size>0
+          if all(:css, "span.location-rate").first.text=="monthly"
+            pickup_panda("monthly")
+          end
+        end
       end
       
     else
       visit("https://www.parkingpanda.com/Search/?location=#{city}&monthly=false&daily=true")
-      
       sleep 5
-	#debugger
       pickup_panda("daily")
     end
-
-    
     rescue Exception => e  
      puts e.message  
      puts e.backtrace.inspect  
@@ -360,9 +353,9 @@ def pickup_panda(desc)
       results<<object
     end
     all(:xpath, "//div[@class='location-details']/p").each_slice(2).with_index do |slice,index|
-      if results[index-1].present?
+      if results[index].present?
       #  object.location = slice[0].text
-        object = results[index-1]
+        object = results[index]
         object["main"]= slice[0].text
       end
     end
@@ -374,10 +367,19 @@ def pickup_panda(desc)
         #object.save
       end
     end
+    all(:css, "div.location-reserve a.btn.btn-parking").each_with_index do |item,index|
+      if results[index].present?
+        #object.price = item.text
+        object = results[index]
+        object["href"]= "https://www.parkingpanda.com#{item[:href]}"
+        #object.save
+      end
+    end
     results.each do |o|
       item = Result.new
       item.address = o["location"]
       item.location = o["main"]
+      item.href = o["href"]
       item.price = o["price"]
       item.desc=desc
       item.save
@@ -412,6 +414,7 @@ def get_results_centralpark(params,type)
       
       visit("http://#{city_short}.centralparking.com#{url}")
       object = Hash.new
+      object["href"]= "http://#{city_short}.centralparking.com#{url}"
       if all(:css,"dl.info dd").size>0
 	      object["location"] = all(:css,"dl.info dd").first.text
       end
@@ -434,6 +437,7 @@ def get_results_centralpark(params,type)
       item.address = o["location"]
       item.location = o["main"]
       item.price = o["price"]
+      item.href = o["href"]
       if type =='daily'
        item.desc="daily"
       else
