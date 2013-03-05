@@ -80,9 +80,9 @@ def get_results_parkingconnection(params)
     sleep 5
     all(:css,"div.locationLot").each do |lot|
       object = Hash.new
-      object["main"] = lot.find(:css,"h3").text
-      object["main"] << lot.find(:css,"span").text
-      object["location"] = lot.find(:css,"p.locationAddress").text
+      object["location"] = lot.find(:css,"h3").text
+      object["location"] << lot.find(:css,"span").text
+      object["address"] = lot.find(:css,"p.locationAddress").text
       object["price"] = lot.find(:css,"div.rateInfoContainer div.rate").text
       if lot.all(:css,"div.rateInfoContainer div.lotInfo div.reserveLotButtonNotAvailable").size > 0
         object["href"] = lot.find(:css,"div.rateInfoContainer div.lotInfo ul li.noBorder a")[:href]
@@ -98,8 +98,8 @@ def get_results_parkingconnection(params)
 
     results.each do |o|
       item = Result.new
-      item.address = o["location"]
-      item.location = o["main"]
+      item.location = o["location"]
+      item.address = o["address"]
       item.price = o["price"]
       item.href = o["href"]
       item.desc="airport"
@@ -125,6 +125,7 @@ def get_results_parkingconnection(params)
     all(:css, "div.sr-v3-left div.headline").each do |item|
       object = Hash.new
       object["location"]= item.text
+      
       results<<object
     end
 
@@ -144,12 +145,20 @@ def get_results_parkingconnection(params)
         object["href"]= "http://www.airportparkingreservations.com#{item[:href]}"
       end
     end
+  results.each do |r|
+    visit(r["href"])
+    r["address"] = "#{find(:css, "span.street-address").text}, #{find(:css, "span.locality").text}"
+    if all(:css, "li.jcarousel-item img").size > 0
+      r["urlimage"] = all(:css, "li.jcarousel-item img").first[:src]
+    end
+  end
   results.each do |o|
       item = Result.new
-      item.address = o["location"]
+      item.address = o["address"]
       item.location = o["location"]
       item.price = o["price"]
       item.href = o["href"]
+      item.urlimage = o["urlimage"]
       item.desc="airport"
       item.save
     end
