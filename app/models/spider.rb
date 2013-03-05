@@ -74,63 +74,34 @@ def get_results_parkingconnection(params)
     Capybara.run_server = false
     Capybara.current_driver = :webkit
     Capybara.app_host = "http://www.airportparkingreservations.com/"
-    url="http://www.parkingconnection.com/locations/#{city}-#{short_name}-airport-parking/?dpnLocations=#{short_name}&txtCheckinDt=3/4/2013&dpnCheckInTime=12:00AM&txtCheckoutDt=3/10/2013&dpnCheckOutTime=12:00AM&UnitID&FacilityID&sendbutton2"
+    url="http://www.parkingconnection.com/locations/#{city}-#{short_name}-airport-parking/?dpnLocations=#{short_name}&txtCheckinDt=#{params[:from]}&dpnCheckInTime=#{params[:Items]}&txtCheckoutDt=#{params[:to]}&dpnCheckOutTime=#{params[:Items2]}&UnitID&FacilityID&sendbutton2"
     #url="http://www.parkingconnection.com/locations/albany-alb-airport-parking/?dpnLocations=ALB&txtCheckinDt=3/4/2013&dpnCheckInTime=12:00AM&txtCheckoutDt=3/10/2013&dpnCheckOutTime=12:00AM&UnitID&FacilityID&sendbutton2"
     visit(url)
     sleep 5
-    all(:css,"div.locationLot h3").each do |item|
+    all(:css,"div.locationLot").each do |lot|
       object = Hash.new
-      object["main"]= item.text
+      object["main"] = lot.find(:css,"h3").text
+      object["main"] << lot.find(:css,"span").text
+      object["location"] = lot.find(:css,"p.locationAddress").text
+      object["price"] = lot.find(:css,"div.rateInfoContainer div.rate").text
+      if lot.all(:css,"div.rateInfoContainer div.lotInfo div.reserveLotButtonNotAvailable").size > 0
+        object["href"] = lot.find(:css,"div.rateInfoContainer div.lotInfo ul li.noBorder a")[:href]
+      else
+        facilityid = lot.find(:css,"div.rateInfoContainer div.lotInfo div.reserveLotButton p.facilityID").text
+        unitid = lot.find(:css,"div.rateInfoContainer div.lotInfo div.reserveLotButton p.unitID").text
+        object["href"] = "https://www.airportparkingconnection.com/apc/api/Checkout.aspx?dpnLocations=#{short_name}&txtCheckinDt=#{params[:from]}&dpnCheckInTime=#{params[:Items]}&txtCheckoutDt=#{params[:to]}&dpnCheckOutTime=#{params[:Items2]}&UnitID=#{unitid}&FacilityID=#{facilityid}&sendbutton2="
+      end
       results<<object
     end
 
-       
-    all(:css, "div.locationLot span").each_with_index do |item,index|
-      if results[index].present?
-      #  object.location = slice[0].text
-        object = results[index]
-        object["main"] << item.text
-      end
-    end
     
-    all(:css, "p.locationAddress").each_with_index do |item,index|
-      if results[index].present?
-      #  object.location = slice[0].text
-        object = results[index]
-        object["location"] = item.text
-      end
-    end
 
-    all(:css, "div.locationLot div.rateInfoContainer div.rate").each_with_index do |item,index|
-      if results[index].present?
-      #  object.location = slice[0].text
-        object = results[index]
-        object["price"] = item.text
-      end
-    end
-  
-    all(:css, "p.facilityID").each_with_index do |item,index|
-      if results[index].present?
-      #  object.location = slice[0].text
-        object = results[index]
-        object["facilityid"] = item.text
-      end
-    end
-    
-    all(:css, "p.unitID").each_with_index do |item,index|
-      if results[index].present?
-      #  object.location = slice[0].text
-        object = results[index]
-        object["unitid"] = item.text
-      end
-    end
-    
     results.each do |o|
       item = Result.new
       item.address = o["location"]
       item.location = o["main"]
       item.price = o["price"]
-      item.href = "https://www.airportparkingconnection.com/apc/api/Checkout.aspx?dpnLocations=#{short_name}&txtCheckinDt=3%2F4%2F2013&dpnCheckInTime=12%3A00+AM&txtCheckoutDt=3%2F10%2F2013&dpnCheckOutTime=12%3A00+AM&UnitID=#{o["unitid"]}&FacilityID=#{o["facilityid"]}&sendbutton2="
+      item.href = o["href"]
       item.desc="airport"
       item.save
     end
@@ -375,11 +346,21 @@ def pickup_panda(desc)
         #object.save
       end
     end
+    all(:css, "div.location-image img").each_with_index do |item,index|
+      if results[index].present?
+        #object.price = item.text
+        object = results[index]
+        object["urlimage"]= item[:src]
+        #object.save
+      end
+    end
+    
     results.each do |o|
       item = Result.new
       item.address = o["location"]
       item.location = o["main"]
       item.href = o["href"]
+      item.urlimage = o["urlimage"]
       item.price = o["price"]
       item.desc=desc
       item.save

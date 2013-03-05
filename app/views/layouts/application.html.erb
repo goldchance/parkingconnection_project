@@ -140,10 +140,12 @@ $( "#wherebox_airp" ).click(function() {
   });
   </script>
   <script>
-    $(document).ready(function() {
+    
+        $(document).ready(function() {
 
-    });
-  $(function() {
+        });
+    $(function() {
+
     $("#email_submit").click(function() {
       $(".result").hide();
       return false;
@@ -151,6 +153,10 @@ $( "#wherebox_airp" ).click(function() {
     
     $( ".datepicker" ).datepicker({
     });
+
+ //  $("img").error(function () {
+ //    $(this).unbind("error").attr("src", "default.jpg");
+ //  });
   });
   </script>
   <%= yield :head %>
