@@ -233,7 +233,7 @@ def get_results_cheapairportparking(params)
     find(:xpath,'//div[@id="homeboxbutton"]/input').click
     all(:xpath,'//div[@id="smallsearchbox"]/div/div[@class="details"]/p[@class="address"]').each do |item|
        object = Hash.new
-       object["location"]= item.text
+       object["address"]= item.text
       results<<object
     end
    
@@ -249,7 +249,7 @@ def get_results_cheapairportparking(params)
     if results[index].present?
       #  object.location = slice[0].text
         object = results[index]
-        object["main"]= item.text
+        object["location"]= item.text
       end
     end
 
@@ -260,17 +260,24 @@ def get_results_cheapairportparking(params)
         object = results[index]
         path=item.text.split(",").first.gsub(" ","-")
         object["href"]= "http://www.gottapark.com/parking/#{city}/#{path}"
-      end
-
+          
     end
 
+    end
+    results.each do |r|
+      visit(r["href"])
+      if all(:css, "img#lp_photo").size>0
+        r["urlimage"] = all(:css, "img#lp_photo").first[:src]
+      end
+    end
     
     results.each do |o|
       item = Result.new
-      item.address = o["location"]
-      item.location = o["main"]
+      item.address = o["address"]
+      item.location = o["location"]
       item.href = o["href"]
       item.price = o["price"]
+      item.urlimage = o["urlimage"]
       if type =='daily'
        item.desc="daily"
       else
@@ -330,13 +337,14 @@ def pickup_panda(desc)
      #object.address = item.text
        object = Hash.new
        object["location"]= item.text
+       object["address"] = item.text
       results<<object
     end
     all(:xpath, "//div[@class='location-details']/p").each_slice(2).with_index do |slice,index|
       if results[index].present?
       #  object.location = slice[0].text
         object = results[index]
-        object["main"]= slice[0].text
+        object["address"] << ", #{slice[0].text}"
       end
     end
     all(:xpath, "//span[@class='location-price']").each_with_index do |item,index|
@@ -366,8 +374,8 @@ def pickup_panda(desc)
     
     results.each do |o|
       item = Result.new
-      item.address = o["location"]
-      item.location = o["main"]
+      item.address = o["address"]
+      item.location = o["location"]
       item.href = o["href"]
       item.urlimage = o["urlimage"]
       item.price = o["price"]
@@ -406,11 +414,12 @@ def get_results_centralpark(params,type)
       object = Hash.new
       object["href"]= "http://#{city_short}.centralparking.com#{url}"
       if all(:css,"dl.info dd").size>0
-	      object["location"] = all(:css,"dl.info dd").first.text
+	      object["address"] = all(:css,"dl.info dd").first.text
       end
-      if all(:css,"dl.info dd").size>0
-	      object["main"] = all(:css,"dl.info dd").first.text
-      end
+      
+        if all(:css, "div.column_1-5.left h1").size>0
+         object["location"] = all(:css, "div.column_1-5.left h1").first.text
+        end
       if type == 'daily'
         if all(:css, "table.layout-table-1 tr td").size>3
 	        object["price"] = all(:css, "table.layout-table-1 tr td")[3].text
@@ -419,13 +428,15 @@ def get_results_centralpark(params,type)
         if all(:css, "div.monthly-parking-rates p").size>0
          object["price"] = all(:css, "div.monthly-parking-rates p")[0].text
         end
+
       end
+
 	  results<<object
     end
     results.each do |o|
       item = Result.new
-      item.address = o["location"]
-      item.location = o["main"]
+      item.address = o["address"]
+      item.location = o["location"]
       item.price = o["price"]
       item.href = o["href"]
       if type =='daily'
