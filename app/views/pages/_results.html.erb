@@ -12,16 +12,19 @@
         <table style="width:100%;">
           <tr>
             <td style="width:85%;">
-              <%= item["address"] %>
+              <span style="color:gray;"><%= item["address"] %> </span>
               <br />
-              <table>
-                <tr>
+              <table style="width:80%;">
+                <tr >
                     <hr style="width:600px;">
                   <td>
-                    <%= link_to  "#{item.source}", item.href  , :style=> "text-decoration:none;"%>
+                    <%= link_to  "#{item.source}", item.href  , :style=> "text-color:light-blue; text-decoration:none;"%>
                   </td>
                   <td>
-                    <p> <strong><%= item["price"] %> </strong></span> </p>
+                    <p> <strong><%= item["price"] %> </strong> </p>
+                </td>
+                  <td>
+                    <%= link_to "reserve", item.href %>
                   </td>
                 </tr>
               </table>
