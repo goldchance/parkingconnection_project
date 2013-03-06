@@ -103,6 +103,7 @@ def get_results_parkingconnection(params)
       item.price = o["price"]
       item.href = o["href"]
       item.desc="airport"
+      item.source = "www.parkingconnection.com"
       item.save
     end
   rescue Exception => e  
@@ -160,6 +161,7 @@ def get_results_parkingconnection(params)
       item.href = o["href"]
       item.urlimage = o["urlimage"]
       item.desc="airport"
+      item.source = "www.airportparkingreservations.com"
       item.save
     end
   rescue Exception => e  
@@ -283,6 +285,7 @@ def get_results_cheapairportparking(params)
       else
        item.desc="monthly"
       end 
+      item.source = "www.gottapark.com"
       item.save
     end
   rescue Exception => e  
@@ -380,6 +383,7 @@ def pickup_panda(desc)
       item.urlimage = o["urlimage"]
       item.price = o["price"]
       item.desc=desc
+      item.source = "www.parkingpanda.com"
       item.save
     end
 end
@@ -444,6 +448,7 @@ def get_results_centralpark(params,type)
       else
        item.desc="monthly"
       end 
+      item.source = "www.centralparking.com"
       item.save
     end
     rescue Exception => e  

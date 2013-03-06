@@ -12,8 +12,19 @@
         <table style="width:100%;">
           <tr>
             <td style="width:85%;">
-              <p><%= item["address"] %> </p>
-              <p> <%= item["price"] %> </p>
+              <%= item["address"] %>
+              <br />
+              <table>
+                <tr>
+                    <hr style="width:600px;">
+                  <td>
+                    <%= link_to  "#{item.source}", item.href  , :style=> "text-decoration:none;"%>
+                  </td>
+                  <td>
+                    <p> <strong><%= item["price"] %> </strong></span> </p>
+                  </td>
+                </tr>
+              </table>
             </td>
             <td style="width:15%;" class="">
               <% if item["urlimage"].nil? %>

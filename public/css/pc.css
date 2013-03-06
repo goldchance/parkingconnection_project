@@ -265,3 +265,8 @@ body {
 	margin: 0px;
 	padding-top: 4px;
 }
+
+#airport_list_table ul {list-style-type: none;}
+#airport_list_table ul li a:link {text-decoration:none;}
+#airport_list_table ul li a:hover {text-decoration:underline;}
+
