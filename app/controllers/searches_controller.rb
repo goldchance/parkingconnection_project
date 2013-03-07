@@ -4,6 +4,7 @@ class SearchesController < ApplicationController
  
  def daily_search
   Spider.delay.daily_search(params)
+ # @json = Result.all.to_gmaps4rails
   #if request.xhr?
     #render :js => "$('#search_results').html('#{escape_javascript(render(:partial => 'list'))}');"
    #   render :js => "$('.loginform').fadeOut();  $('.result').fadeIn();"

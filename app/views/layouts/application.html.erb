@@ -161,6 +161,25 @@ $( "#wherebox_airp" ).click(function() {
   });
   </script>
   <%= yield :head %>
+<script type="text/javascript" charset="utf-8">
+$(function() {
+ 
+//hide the empty container
+$(".map_container").hide();
+ 
+$("#ajax").click(function(){
+ 
+  $.getJSON('/results', function(json){
+    $(".map_container").show();
+    Gmaps.loadMaps();
+    Gmaps.map.addMarkers(json);
+  })
+  })
+ 
+});
+</script>
+
+
 </head>
 <body>
 <div id="spinner">
@@ -210,9 +229,13 @@ $( "#wherebox_airp" ).click(function() {
   </div><!-- end header -->
   <div id="main">
     <%= yield %>
+   
+  <%= yield :scripts %>
+    <%= yield :map_det %>
       </div><!-- end main -->
      <div id="footer">
-      <div id="footnav">
+    
+       <div id="footnav">
         <ul>
           <li><a href="/about.html" title="About Us" target="_self">About</a> |</li>
           <li><a href="/privacy.html" title="Privacy" target="_self">Privacy</a> |</li>

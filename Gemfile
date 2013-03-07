@@ -5,6 +5,7 @@ gem 'therubyracer'
 gem 'devise'
 gem "ckeditor", "3.7.3"
 gem 'cancan'
+gem 'gmaps4rails'
 #gem 'paperclip'
 gem 'taps'
 gem 'heroku'

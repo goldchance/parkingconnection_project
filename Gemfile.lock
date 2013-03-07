@@ -109,6 +109,7 @@ GEM
     font-awesome-sass-rails (3.0.0.1)
       railties (>= 3.1.1)
       sass-rails (>= 3.1.1)
+    gmaps4rails (1.5.6)
     haml (3.1.8)
     heroku (2.35.0)
       heroku-api (~> 0.3.7)
@@ -290,6 +291,7 @@ DEPENDENCIES
   devise
   fastercsv
   faye-rails
+  gmaps4rails
   heroku
   hpricot
   jquery-rails
