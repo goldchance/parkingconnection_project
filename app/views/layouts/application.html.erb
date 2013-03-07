@@ -30,12 +30,47 @@
 
 
 <style>
+.photo {
+    width: 300px;
+    text-align: center;
+  }
+  .photo .ui-widget-header {
+    margin: 1em 0;
+  }
+  .map {
+    width: 350px;
+    height: 350px;
+  }
+  .ui-tooltip {
+    max-width: 350px;
+  }
   .ui-autocomplete-loading {
     background: white url('images/ui-anim_basic_16x16.gif') right center no-repeat;
   }
   #city { width: 25em; }
   </style>
- <script>
+  <script>
+$(function() {
+    $( document ).tooltip({
+      items: "img, [data-geo], [title]",
+      content: function() {
+        var element = $( this );
+        if ( element.is( "[data-geo]" ) ) {
+          var text = element.text();
+          return "<img class='map' alt='" + text +
+            "' src='http://maps.google.com/maps/api/staticmap?" +
+            "zoom=11&size=350x350&maptype=terrain&sensor=true&center=" +
+            text + "'>";
+        }
+        if ( element.is( "[title]" ) ) {
+          return element.attr( "title" );
+        }
+        if ( element.is( "img" ) ) {
+          return element.attr( "alt" );
+        }
+      }
+    });
+  });
    $(function() {
      
   $( ".airport-select" ).click(function() {
@@ -228,6 +263,7 @@ $("#ajax").click(function(){
     </div><!-- end navright -->
   </div><!-- end header -->
   <div id="main">
+ <h3><a href="http://maps.google.com/maps?q=miami,+usa&amp;z=11" data-geo="data-geo">4227 Spenard Rd, Anchorage </a></h3>
     <%= yield %>
    
   <%= yield :scripts %>
