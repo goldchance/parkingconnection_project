@@ -1,10 +1,25 @@
-<table id="results" style="width:100%;">
+<!-- this is the css for the results -->
+<style type"text/css">
+<--
+.found-text{
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:16px;
+	font-weight:bold;
+	margin-left:20px;
+	color:#4b4b4b;
+}
+
+-->
+</style>
+<!-- end css for the results -->
+
+<table id="results" >
     <tbody>
   <% results = Result.find_all_by_desc(result_type) %>
-  <p>Found <%= results.size %> place(s): </p>
+  <p><%= results.size %> Parking Location(s) Found</p>
   <% results.each do |item| %>
     <tr>
-      <td style="width:100%;">
+      <td>
       <fieldset class="ui-corner-all ui-widget ui-widget-content " style="margin:10px;">
         <legend>   <h4 style="width:800px; " class=" ui-corner-all ui-widget-header"> <%=link_to "#{item["location"]}", "#{item.href}", 
           :target => "_blank", :style=>"text-decoration:none;" %> </h4>
@@ -12,7 +27,7 @@
         <table style="width:100%;">
           <tr>
             <td style="width:85%;">
-              <span style="color:gray;">`
+              <span style="color:gray;">
                 <a href="<%= item.href %>" data-geo="data-geo" target="_blank"><%= item["address"] %></a>
               </span>
               <br />
@@ -45,4 +60,4 @@
   <% end %>
     </tbody>
   </table>
- 
+
