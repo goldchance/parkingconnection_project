@@ -269,4 +269,21 @@ body {
 #airport_list_table ul {list-style-type: none;}
 #airport_list_table ul li a:link {text-decoration:none;}
 #airport_list_table ul li a:hover {text-decoration:underline;}
-
+.photo {
+    width: 300px;
+    text-align: center;
+  }
+  .photo .ui-widget-header {
+    margin: 1em 0;
+  }
+  .map {
+    width: 350px;
+    height: 350px;
+  }
+  .ui-tooltip {
+    max-width: 350px;
+  }
+  .ui-autocomplete-loading {
+    background: white url('images/ui-anim_basic_16x16.gif') right center no-repeat;
+  }
+  #city { width: 25em; }

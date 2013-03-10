@@ -12,16 +12,15 @@
         <table style="width:100%;">
           <tr>
             <td style="width:85%;">
-              <span style="color:gray;">
-                
- <h3><a href="http://maps.google.com/maps?q=miami,+usa&amp;z=11" data-geo="data-geo"><%= item["address"] %></a></h3>
-                <%= item["address"] %> </span>
+              <span style="color:gray;">`
+                <a href="<%= item.href %>" data-geo="data-geo" target="_blank"><%= item["address"] %></a>
+              </span>
               <br />
               <table style="width:80%;">
                 <tr >
                     <hr style="width:600px;">
                   <td>
-                    <%= link_to  "#{item.source}", item.href  , :style=> "text-color:light-blue; text-decoration:none;"%>
+                    <%= link_to  "#{item.source}", item.href  , :target =>"_blank", :style=> "text-color:light-blue; text-decoration:none;"%>
                   </td>
                   <td>
                     <p> <strong><%= item["price"] %> </strong> </p>

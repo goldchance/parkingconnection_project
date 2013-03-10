@@ -77,7 +77,7 @@ def get_results_parkingconnection(params)
     url="http://www.parkingconnection.com/locations/#{city}-#{short_name}-airport-parking/?dpnLocations=#{short_name}&txtCheckinDt=#{params[:from]}&dpnCheckInTime=#{params[:Items]}&txtCheckoutDt=#{params[:to]}&dpnCheckOutTime=#{params[:Items2]}&UnitID&FacilityID&sendbutton2"
     #url="http://www.parkingconnection.com/locations/albany-alb-airport-parking/?dpnLocations=ALB&txtCheckinDt=3/4/2013&dpnCheckInTime=12:00AM&txtCheckoutDt=3/10/2013&dpnCheckOutTime=12:00AM&UnitID&FacilityID&sendbutton2"
     visit(url)
-    sleep 5
+    sleep 1
     all(:css,"div.locationLot").each do |lot|
       object = Hash.new
       object["location"] = lot.find(:css,"h3").text
@@ -122,7 +122,7 @@ def get_results_parkingconnection(params)
     Capybara.current_driver = :webkit
     Capybara.app_host = "http://www.airportparkingreservations.com/"
     visit(url)
-    sleep 5
+    sleep 1
     all(:css, "div.sr-v3-left div.headline").each do |item|
       object = Hash.new
       object["location"]= item.text
@@ -180,7 +180,7 @@ def get_results_cheapairportparking(params)
     Capybara.app_host = "http://www.airportparkingreservations.com/"
     "http://www.cheapairportparking.org/parking/find.php?airport=#{short_name}&FromDate=03%2F05%2F2013&from_time=1&ToDate=03%2F06%2F2013&to_time=15"
     visit(url)
-    sleep 5
+    sleep 1
     all(:css, "div.sr-v3-left div.headline").each do |item|
       object = Hash.new
       object["location"]= item.text

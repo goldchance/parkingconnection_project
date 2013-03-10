@@ -8,6 +8,6 @@ def gmaps4rails_address
 end
 
 def gmaps4rails_infowindow
-  "<h5>#{location}</h5>" << "<h5>#{address}</h5>"
+  "<h5>#{location}</h5>" << "<h5>#{address}</h5>" <<"<p>#{price}</p>" <<"<a href=#{href} target='_blank' >#{source} </a>"
 end
 end
