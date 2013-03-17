@@ -12,10 +12,66 @@
 -->
 </style>
 <!-- end css for the results -->
+<table id="results" >
+    <tbody>
 
+
+<%  Result.find_all_by_desc(result_type).group_by{ |s| [s.latitude, s.longitude]}.each do |hash| %>
+  
+  <tr>
+    <td>
+  <fieldset class="ui-corner-all ui-widget ui-widget-content " style="margin:10px;">
+        <legend>   <h4 style="width:800px; " class=" ui-corner-all ui-widget-header"> <%=link_to "#{hash[1].first.location}", "#", 
+          :target => "_blank", :style=>"text-decoration:none;" %> </h4>
+        </legend>
+        <table style="width:100%;">
+          <tr>
+            <td style="width:85%;">
+              <span style="color:gray;">
+                <a href="#" data-geo="data-geo" target="_blank"><%= hash[1].first.address %></a>
+              </span>
+              <br />
+              <hr style="width:600px;">
+              <table style="width:80%;">
+                <% hash[1].each do |place| %>
+                <tr >
+                  <td>
+                    <%= link_to  "#{place.source}", place.href  , :target =>"_blank", :style=> "text-color:light-blue; text-decoration:none;"%>
+                  </td>
+                  <td>
+                    <p> <strong><%= place["price"] %> </strong> </p>
+                </td>
+                  <td>
+                    <%= link_to "reserve", place.href , :target =>"_blank" %>
+                  </td>
+                </tr>
+              <% end %>
+              </table>
+            </td>
+            <td style="width:15%;" class="">
+              <% urlimage = "default.jpg" %>
+              <% hash[1].each do |place| %>
+                <% if place.urlimage != nil %>
+                  <% urlimage = place.urlimage %>
+                <% end %>
+              <% end %>
+              <%= image_tag("#{urlimage}", :size=>"100x100")%> 
+            
+            </td>
+        </table>
+      </fieldset>
+    <% end %>
+    </td>
+  </tr>
+</tbody>
+</table>
+<%
+=begin
+%>
 <table id="results" >
     <tbody>
   <% results = Result.find_all_by_desc(result_type) %>
+    
   <p><%= results.size %> Parking Location(s) Found</p>
   <% results.each do |item| %>
     <tr>
@@ -31,9 +87,9 @@
                 <a href="<%= item.href %>" data-geo="data-geo" target="_blank"><%= item["address"] %></a>
               </span>
               <br />
+                <hr style="width:600px;">
               <table style="width:80%;">
                 <tr >
-                    <hr style="width:600px;">
                   <td>
                     <%= link_to  "#{item.source}", item.href  , :target =>"_blank", :style=> "text-color:light-blue; text-decoration:none;"%>
                   </td>
@@ -60,4 +116,6 @@
   <% end %>
     </tbody>
   </table>
-
+<%
+=end
+%>
