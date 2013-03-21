@@ -52,6 +52,7 @@ class Spider
       spy=Spider.new
       spy.get_results_airportparkingreservations(params)
       spy.get_results_parkingconnection(params)
+      spy.get_results_airportparking(params)
       # FayeController.publish('/searches', {result_string: result_string})
       result_string = ApplicationController.new.render_to_string(:partial => 'pages/results', :locals => { result_type: "airport" })
       message = {:channel => "/searches",
@@ -65,6 +66,81 @@ class Spider
     
   end
 #------------------------------------airport search methods -----------------------------------------------------------
+
+def get_results_airportparking(params)
+
+ list = YAML.load(File.open("output.yml"))
+#debugger 
+begin 
+    results=[]
+    city=params[:wherebox_airp].split(" (")[0].gsub(" ","-")
+    short_name = params[:wherebox_airp].split(" (")[1].gsub("(","").gsub(")","").upcase
+    Capybara.run_server = false
+    Capybara.current_driver = :webkit
+    Capybara.app_host = "http://www.airportparking.com/"
+    
+    url="https://www.airportparking.com/airports/#{list["#{short_name}"]}"
+    visit(url)
+    sleep 1
+    within("#updatefrm") do
+      fill_in 'park_from', :with => "#{params[:from]}"
+      fill_in 'park_to', :with => "#{params[:to]}"
+    end
+    find_button('UPDATE SEARCH').click
+    sleep 1
+    links=[]
+    all(:css,"div.lot").each do |lot|
+      if lot.all(:css, "#reserve_button").size >0
+        if lot.all(:css, "#reserve_button").first.text == "RESERVE"
+          links << "#{lot.find(:css, "span.lot-title a")[:href]}"
+        end
+      end
+    end
+    links.each do |link|
+    begin 
+      object = Hash.new
+      visit(link)
+      sleep 5
+      object["urlimage"] = all(:css, "div#photos img").first[:src]
+      
+      all(:css, "#details_container form button").first.click
+      sleep 10
+      #debugger
+      
+      object["location"] = all(:css,"div#review_reservation_container div#lot_title").first.text
+     if all(:css,"div#review_reservation_container div#price_breakdown_container div").size> 0 
+      object["address"] = all(:css,"div#review_reservation_container div#price_breakdown_container div")[4].text
+      object["address"] << all(:css,"div#review_reservation_container div#price_breakdown_container div")[5].text
+     elsif
+      object["address"] = all(:css,"#review_reservation_container div.span6.offset1 div")[4].text
+      object["address"] << all(:css,"div#review_reservation_container div.span6.offset1 div")[5].text
+     end
+      object["price"] = all(:css,"span.reservation-subtotal-amount").first.text
+      object["href"] = current_url
+      results<<object
+    end
+    end
+    
+
+    results.each do |o|
+      item = Result.new
+      item.location = o["location"]
+      item.address = o["address"]
+      item.price = o["price"]
+      item.href = o["href"]
+      item.urlimage = o["urlimage"]
+      item.desc="airport"
+      item.source = "www.airportparking.com"
+      item.save
+    end
+  rescue Exception => e  
+     puts e.message  
+     puts e.backtrace.inspect  
+    end
+  end
+
+
+
   #--------------------  http://www.parkingconnection.com/
 def get_results_parkingconnection(params)
    begin 

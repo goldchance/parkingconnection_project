@@ -44,12 +44,7 @@ $(function() {
             "zoom=11&size=350x350&maptype=terrain&sensor=true&center=" +
             text + "&markers="+text+  "'>";
         }
-        if ( element.is( "[title]" ) ) {
-          return element.attr( "title" );
-        }
-        if ( element.is( "img" ) ) {
-          return element.attr( "alt" );
-        }
+       
       }
     });
   });
