@@ -102,7 +102,6 @@ begin
       visit(link)
       sleep 5
       object["urlimage"] = all(:css, "div#photos img").first[:src]
-      
       all(:css, "#details_container form button").first.click
       sleep 10
       #debugger
@@ -120,20 +119,8 @@ begin
       results<<object
     end
     end
-    
-
-    results.each do |o|
-      item = Result.new
-      item.location = o["location"]
-      item.address = o["address"]
-      item.price = o["price"]
-      item.href = o["href"]
-      item.urlimage = o["urlimage"]
-      item.desc="airport"
-      item.source = "www.airportparking.com"
-      item.save
-    end
-  rescue Exception => e  
+    save_results(results,"airport","www.airportparking.com")    
+   rescue Exception => e  
      puts e.message  
      puts e.backtrace.inspect  
     end
@@ -169,19 +156,7 @@ def get_results_parkingconnection(params)
       end
       results<<object
     end
-
-    
-
-    results.each do |o|
-      item = Result.new
-      item.location = o["location"]
-      item.address = o["address"]
-      item.price = o["price"]
-      item.href = o["href"]
-      item.desc="airport"
-      item.source = "www.parkingconnection.com"
-      item.save
-    end
+    save_results(results,"airport","www.parkingconnection.com")    
   rescue Exception => e  
      puts e.message  
      puts e.backtrace.inspect  
@@ -229,17 +204,7 @@ def get_results_parkingconnection(params)
       r["urlimage"] = all(:css, "li.jcarousel-item img").first[:src]
     end
   end
-  results.each do |o|
-      item = Result.new
-      item.address = o["address"]
-      item.location = o["location"]
-      item.price = o["price"]
-      item.href = o["href"]
-      item.urlimage = o["urlimage"]
-      item.desc="airport"
-      item.source = "www.airportparkingreservations.com"
-      item.save
-    end
+  save_results(results,"airport","www.airportparkingreservations.com")    
   rescue Exception => e  
      puts e.message  
      puts e.backtrace.inspect  
@@ -271,15 +236,8 @@ def get_results_cheapairportparking(params)
         object["price"]= item.text
       end
     end
-  results.each do |o|
-      item = Result.new
-      item.address = o["location"]
-      item.location = o["location"]
-      item.price = o["price"]
-      item.desc="airport"
-      item.save
-    end
-  rescue Exception => e  
+    save_results(results,"airport","www.cheapairportparking.org")    
+     rescue Exception => e  
      puts e.message  
      puts e.backtrace.inspect  
     end
@@ -342,28 +300,14 @@ def get_results_cheapairportparking(params)
     end
 
     end
+   
     results.each do |r|
       visit(r["href"])
       if all(:css, "img#lp_photo").size>0
         r["urlimage"] = all(:css, "img#lp_photo").first[:src]
       end
     end
-    
-    results.each do |o|
-      item = Result.new
-      item.address = o["address"]
-      item.location = o["location"]
-      item.href = o["href"]
-      item.price = o["price"]
-      item.urlimage = o["urlimage"]
-      if type =='daily'
-       item.desc="daily"
-      else
-       item.desc="monthly"
-      end 
-      item.source = "www.gottapark.com"
-      item.save
-    end
+    save_results(results,type,"www.gottapark.com")    
   rescue Exception => e  
      puts e.message  
      puts e.backtrace.inspect  
@@ -450,18 +394,7 @@ def pickup_panda(desc)
         #object.save
       end
     end
-    
-    results.each do |o|
-      item = Result.new
-      item.address = o["address"]
-      item.location = o["location"]
-      item.href = o["href"]
-      item.urlimage = o["urlimage"]
-      item.price = o["price"]
-      item.desc=desc
-      item.source = "www.parkingpanda.com"
-      item.save
-    end
+    save_results(results,desc,"www.parkingpanda.com")    
 end
 #-------------------------------------  www.centralparking.com -------------------------------------------------  
                                                
@@ -489,7 +422,6 @@ def get_results_centralpark(params,type)
     end
     #debugger
     list.each do |url|
-      
       visit("http://#{city_short}.centralparking.com#{url}")
       object = Hash.new
       object["href"]= "http://#{city_short}.centralparking.com#{url}"
@@ -513,20 +445,7 @@ def get_results_centralpark(params,type)
 
 	  results<<object
     end
-    results.each do |o|
-      item = Result.new
-      item.address = o["address"]
-      item.location = o["location"]
-      item.price = o["price"]
-      item.href = o["href"]
-      if type =='daily'
-       item.desc="daily"
-      else
-       item.desc="monthly"
-      end 
-      item.source = "www.centralparking.com"
-      item.save
-    end
+    save_results(results,type,"www.centralparking.com")    
     rescue Exception => e  
      puts e.message  
      puts e.backtrace.inspect  
@@ -536,9 +455,20 @@ end
   
   
 #---------------------------------------------------------------------------------------------------------------  
-  def self.search(params)
-   agent = Mechanize.new
-  page = agent.get("https://www.parkingpanda.com/Search/?location=Miami&start=2/11/2013#location=Miami%2C%20FL%2C%20USA&start=2/11/2013&monthly=false&daily=true")
- 
- end
+def save_results(results,type,source) 
+    results.each do |o|
+      item = Result.new
+      item.address = o["address"]
+      item.location = o["location"]
+      item.price = o["price"]
+      if o["urlimage"].present? 
+        item.urlimage = o["urlimage"]
+      end
+      item.href = o["href"]
+      item.desc= type
+      item.source = source
+      item.save
+    end
+end
+
 end
