@@ -33,8 +33,8 @@ gem 'delayed_job_active_record'
 # Gems used only for assets and not required
 # in production environments by default.
 #
- gem 'debugger'
- gem 'pry-debugger'
+# gem 'debugger'
+# gem 'pry-debugger'
 gem 'faye-rails'
 gem 'thin'
 
