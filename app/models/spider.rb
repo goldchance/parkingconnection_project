@@ -50,9 +50,9 @@ class Spider
      begin 
       Result.delete_all
       spy=Spider.new
-      #spy.get_results_airportparkingreservations(params)
-      #spy.get_results_parkingconnection(params)
-      #spy.get_results_airportparking(params)
+      spy.get_results_airportparkingreservations(params)
+      spy.get_results_parkingconnection(params)
+      spy.get_results_airportparking(params)
       spy.get_results_aboutairportparking(params)
       # FayeController.publish('/searches', {result_string: result_string})
       result_string = ApplicationController.new.render_to_string(:partial => 'pages/results', :locals => { result_type: "airport" })
