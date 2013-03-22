@@ -175,6 +175,7 @@ begin
       visit(link)
       object["urlimage"] = all(:css, "div#photos img").first[:src]
       all(:css, "#details_container form button").first.click
+      sleep 3
       #debugger
       
       object["location"] = all(:css,"div#review_reservation_container div#lot_title").first.text
