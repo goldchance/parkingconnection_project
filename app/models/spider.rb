@@ -50,9 +50,10 @@ class Spider
      begin 
       Result.delete_all
       spy=Spider.new
-      spy.get_results_airportparkingreservations(params)
-      spy.get_results_parkingconnection(params)
-      spy.get_results_airportparking(params)
+      #spy.get_results_airportparkingreservations(params)
+      #spy.get_results_parkingconnection(params)
+      #spy.get_results_airportparking(params)
+      spy.get_results_aboutairportparking(params)
       # FayeController.publish('/searches', {result_string: result_string})
       result_string = ApplicationController.new.render_to_string(:partial => 'pages/results', :locals => { result_type: "airport" })
       message = {:channel => "/searches",
@@ -66,8 +67,80 @@ class Spider
     
   end
 #------------------------------------airport search methods -----------------------------------------------------------
+def get_results_aboutairportparking(params)
 
-def get_results_airportparking(params)
+#debugger 
+begin 
+    results=[]
+    city=params[:wherebox_airp].split(" (")[0].gsub(" ","-")
+    short_name = params[:wherebox_airp].split(" (")[1].gsub("(","").gsub(")","").upcase
+    Capybara.run_server = false
+    Capybara.current_driver = :webkit
+    Capybara.app_host = "http://www.aboutairportparking.com"
+    visit("http://www.aboutairportparking.com")
+    value="0"
+    all(:css, "#edit-airport option").each do |option|
+      if short_name == option.text.split("(").last.gsub(")","")
+        value = option.value
+      end
+    end
+    all(:css, "#edit-airport").first.set(value)
+    fill_in('edit-start-date', :with => "#{params[:from]}")
+    fill_in('edit-end-date', :with => "#{params[:to]}")
+    all(:css, "#edit-submit")[1].click
+    sleep 2
+    links=[]
+    all(:css, "div.airport_parking").each do |lot|
+     if  lot.all(:css, ".parking_teaser_buttons a").size > 0
+      links << "http://www.aboutairportparking.com/#{lot.all(:css, ".parking_teaser_name a").first[:href]}"
+     end
+    end
+    all(:css, "div.airport_parking_sponsored").each do |lot|
+     if  lot.all(:css, ".parking_teaser_buttons a").size > 0
+      links << "http://www.aboutairportparking.com/#{lot.all(:css, ".parking_teaser_name a").first[:href]}"
+     end
+    end
+
+    links.each do |link|
+      begin
+        object = Hash.new
+        visit(link)
+        object["location"] = all(:css, "div.main_content h1").first.text
+        object["address"] = "#{all(:css, ".parking_address").first.text} #{all(:css, ".parking_address").last.text}"
+        if all(:css, ".parking_price .parking-rate-rate").size > 0
+          object["price"] = all(:css, ".parking_price .parking-rate-rate").first.text
+        elsif all(:css, ".parking_price div").size > 1
+           price1 = all(:css, ".parking_price div").first.text.split(" ").first    
+           price2 = all(:css, ".parking_price div").last.text.split(" ").first    
+            if price1 == price2
+              object["price"] = "#{price1}"
+            else
+              object["price"] = "#{price1} - #{price2}"
+            end 
+        else
+          object["price"] = all(:css, ".parking_price").first.text
+        end
+        object["href"] =  "http://www.aboutairportparking.com/#{all(:css, ".red-button-120").first[:onclick].split("=").last.gsub("'","")}"
+        if all(:css, "img.imagecache-parking_lot_resized").size > 0 
+          object["urlimage"] = all(:css, "img.imagecache-parking_lot_resized").first[:src]
+        else
+        object["urlimage"]=""
+        end
+        results<<object
+      end
+    end
+    #debugger
+    save_results(results,"airport","www.aboutairportparking.com")    
+   rescue Exception => e  
+     puts e.message  
+     puts e.backtrace.inspect  
+    end
+  end
+
+
+
+  
+  def get_results_airportparking(params)
 
  list = YAML.load(File.open("output.yml"))
 #debugger 
