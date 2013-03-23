@@ -16,6 +16,8 @@ class Spider
       spy.get_results_gottapark(params,"daily")
       spy.get_results_pandaparking(params, "daily")
       spy.get_results_centralpark(params, "daily")
+      spy.get_results_parkwhiz(params, "daily")
+     
       result_string = ApplicationController.new.render_to_string(:partial => 'pages/results', :locals => { result_type: "daily" })
       message = {:channel => "/searches",
                  :data => { result_string: result_string}}
@@ -67,6 +69,31 @@ class Spider
     
   end
 #------------------------------------airport search methods -----------------------------------------------------------
+def get_results_pnf(params)
+
+#debugger 
+begin 
+    results=[]
+    city=params[:wherebox_airp].split(" (")[0].gsub(" ","-")
+    short_name = params[:wherebox_airp].split(" (")[1].gsub("(","").gsub(")","").upcase
+    Capybara.run_server = false
+    Capybara.current_driver = :webkit
+    Capybara.app_host = "http://www.pnf.com"
+    visit("http://www.pnf.com")
+    value="0"
+        #debugger
+    save_results(results,"airport","www.aboutairportparking.com")    
+   rescue Exception => e  
+     puts e.message  
+     puts e.backtrace.inspect  
+    end
+  end
+
+
+  
+  
+  
+  
 def get_results_aboutairportparking(params)
 
 #debugger 
@@ -470,7 +497,55 @@ def pickup_panda(desc)
 end
 #-------------------------------------  www.centralparking.com -------------------------------------------------  
                                                
-                                               
+def get_results_parkwhiz(params,type)
+  begin  
+    results = []
+    location = params[:wherebox]
+    agent = Mechanize.new{|a| a.follow_meta_refresh= true}
+    agent.user_agent_alias = "Linux Firefox"
+    agent.get("http://www.parkwhiz.com/")
+    form = agent.page.forms.first
+    form.destination=location
+    form.submit
+    sleep 1
+    agent.get("#{agent.page.uri.to_s}?&start_date=#{params[:from]}&start_time=#{params[:Items].gsub(" ","")}&end_date=#{params[:to]}&end_time=#{params[:Items2].gsub(" ","")}")
+    links = []
+    agent.page.search(".listing-row").each do |link|
+      links << "http://www.parkwhiz.com#{link[:href]}"
+    end
+    links.each do |link|
+     begin
+      object = Hash.new
+     # debugger
+      agent.get(link)
+      sleep 1
+      object["location"] = agent.page.search("#parking-header h1").first.text
+      object["address"] =""
+      agent.page.search(".address span").each do |s|
+       object["address"] << s.text 
+      end
+      if  agent.page.search(".money span").size > 1
+        object["price"] = "$#{agent.page.search(".money span.dollars").first.text} #{agent.page.search(".money span.cents").last.text}"
+      end
+      object["href"] = link
+      if agent.page.search("#photos img").size > 0
+        url =  agent.page.search("#photos img").first[:src]
+        url.slice!(0).slice!(0)
+        object["urlimage"] = "http://#{url}"
+      end
+
+      results << object
+     end
+    end
+    
+    save_results(results,"daily","www.parkwhiz.com")    
+    rescue Exception => e  
+     puts e.message  
+     puts e.backtrace.inspect  
+    end
+
+end                                              
+
 def get_results_centralpark(params,type)
   begin  
     location = params[:wherebox]
