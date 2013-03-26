@@ -52,11 +52,13 @@ class Spider
      begin 
       Result.delete_all
       spy=Spider.new
-      spy.get_results_airportparkingreservations(params)
-      spy.get_results_parkingconnection(params)
-      spy.get_results_airportparking(params)
-      spy.get_results_aboutairportparking(params)
+       spy.get_results_airportparkingreservations(params)
+       spy.get_results_parkingconnection(params)
+       spy.get_results_airportparking(params)
+       spy.get_results_aboutairportparking(params)
+     # spy.get_results_pnf(params)
       # FayeController.publish('/searches', {result_string: result_string})
+      
       result_string = ApplicationController.new.render_to_string(:partial => 'pages/results', :locals => { result_type: "airport" })
       message = {:channel => "/searches",
                  :data => { result_string: result_string}}
@@ -76,13 +78,36 @@ begin
     results=[]
     city=params[:wherebox_airp].split(" (")[0].gsub(" ","-")
     short_name = params[:wherebox_airp].split(" (")[1].gsub("(","").gsub(")","").upcase
-    Capybara.run_server = false
-    Capybara.current_driver = :webkit
-    Capybara.app_host = "http://www.pnf.com"
-    visit("http://www.pnf.com")
-    value="0"
-        #debugger
-    save_results(results,"airport","www.aboutairportparking.com")    
+    
+    agent = Mechanize.new{|a| a.follow_meta_refresh= true}
+    agent.user_agent_alias = "Linux Firefox"
+    agent.get("http://www.pnf.com")
+    f = agent.page.forms.first
+    f.city=short_name
+    f.leave_date= "03/28/2013"
+    f.leave_time="06:00am"
+    f.return_date= "03/29/2013"
+    f.return_time="06:00am"
+    f.submit
+    sleep 5
+    agent.page.search(".location").each do |loc|
+      begin
+      object = Hash.new
+      object["location"] = loc.search(".title").first.text
+      s = loc.search(".info p").first.text
+      add = s.split(/[\t]+/)[0].gsub!(/[\r]+/, "").gsub!(/[\n]+/, "")
+      add << s.split(/[\t]+/)[1].gsub!(/[\r]+/, "").gsub!(/[\n]+/, "")
+      #debugger
+      object["address"] = add
+      object["price"] = loc.search(".ratetotal").first.text
+      part =  loc.search(".reserve-now a").first[:href]
+      object["href"] = "http://www.pnf.com/reserve/#{part}#account"
+      object["urlimage"]=""
+      results << object
+      end
+    end
+ #       debugger
+    save_results(results,"airport","www.pnf.com")    
    rescue Exception => e  
      puts e.message  
      puts e.backtrace.inspect  
@@ -267,7 +292,9 @@ def get_results_parkingconnection(params)
   def get_results_airportparkingreservations(params)
    begin 
     results=[]
-    url = params[:wherebox_airp_full]
+    list = YAML.load(File.open("public/airpreserv.yml"))
+    short_name = params[:wherebox_airp].split(" (")[1].gsub("(","").gsub(")","").upcase
+    url = list["#{short_name}"]
     Capybara.run_server = false
     Capybara.current_driver = :webkit
     Capybara.app_host = "http://www.airportparkingreservations.com/"
