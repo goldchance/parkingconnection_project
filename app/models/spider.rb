@@ -17,6 +17,7 @@ class Spider
       spy.get_results_pandaparking(params, "daily")
       spy.get_results_centralpark(params, "daily")
       spy.get_results_parkwhiz(params, "daily")
+      spy.get_results_spothero(params, "daily")
      
       result_string = ApplicationController.new.render_to_string(:partial => 'pages/results', :locals => { result_type: "daily" })
       message = {:channel => "/searches",
@@ -337,7 +338,54 @@ def get_results_parkingconnection(params)
     end
   end
  #------------------------------------------------------- 
-def get_results_cheapairportparking(params)
+
+def get_results_spothero(params, type)
+   begin 
+     results=[]
+    location = params[:wherebox]
+    if location.present?
+     arr = location.split(",")
+     city = arr[0].strip.gsub(" ","-")
+     state = arr[1].strip
+    end
+    Capybara.run_server = false
+    Capybara.current_driver = :webkit
+    Capybara.app_host = "http://www.spothero.com/"
+    
+    visit("http://www.spothero.com/")
+    all(:css,"#search_string").first.set(params[:wherebox])
+    all(:css,"#submit-search").first.click
+    sleep 5
+    list=[]
+    all(:css, ".result").each do |lot|
+      id = lot.find(:css, ".btnSpotMe")[:id]
+      list << "https://spothero.com/#{city}/spot/#{id}?start_date=#{params[:from].gsub("/","-")}&start_time=#{params[:Items].gsub(":","").gsub(" ","")}&end_date=#{params[:to].gsub("/","-")}&end_time=#{params[:Items2].gsub(":","").gsub(" ","")}"
+    end
+    list.each do |url|
+     begin
+      object = Hash.new
+      visit(url)
+      object["location"] = all(:css, ".hd h1").first.text
+      object["address"] = all(:css, ".hd").first.text
+      object["price"] = all(:css, "#hourly .priceByTimeListCheckout dt").first.text
+      object["href"] = url
+      object["urlimage"] = all(:css, ".slides_control img").first[:src]
+      results << object
+     rescue
+     end
+     end
+    
+   # debugger
+    save_results(results,"daily","www.spothero.com")    
+     rescue Exception => e  
+     puts e.message  
+     puts e.backtrace.inspect  
+    end
+  end
+
+
+ #-------------------------------------------------------------- 
+  def get_results_cheapairportparking(params)
    begin 
     results=[]
     short_name = params[:wherebox_airp].split(" ")[1].gsub("(","").gsub(")","")
