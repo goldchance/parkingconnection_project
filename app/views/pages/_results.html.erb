@@ -1,6 +1,30 @@
 <!-- this is the css for the results -->
 <style type"text/css">
-<--
+  
+
+ul.simplePagerNav li{
+    display:block;
+    float: left;
+    padding: 10px;
+    margin-bottom: 10px;
+    font-family: georgia;
+	font-size:14px;
+}
+
+ul.simplePagerNav li a{
+    color: #333;
+    text-decoration: none;
+}
+
+li.currentPage {
+	background: red;
+    background: #FF9500;	
+}
+
+ul.simplePagerNav li.currentPage a {
+	color: #fff;	
+}
+  <--
 .found-text{
 	font-family:Arial, Helvetica, sans-serif;
 	font-size:16px;
@@ -11,16 +35,21 @@
 
 -->
 </style>
+ <script>
+    $(document).ready(function() {
+      $("ul.pagination1").quickPagination({ pageSize:"18"});
+    });
+</script>
 <!-- end css for the results -->
-<table id="results" >
-    <tbody>
+<div id="results" >
 
-
-<%  Result.find_all_by_desc(result_type).group_by{ |s| [s.latitude, s.longitude]}.each do |hash| %>
-  
-  <tr>
-    <td>
-  <fieldset class="ui-corner-all ui-widget ui-widget-content " style="margin:10px;">
+      <% results = Result.find_all_by_desc(result_type).group_by{ |s| [s.latitude, s.longitude]} %>
+      <p> <%= results.size%> place(s) </p>
+      <br />
+      <ul class="pagination1" style="list-style-type: none; ">
+        <% results.each do |hash| %>
+          <li >
+          <fieldset class="ui-corner-all ui-widget ui-widget-content " style="margin:10px; ">
         <legend>   <h4 style="width:800px; " class=" ui-corner-all ui-widget-header"> <%=link_to "#{hash[1].first.location}", "#", 
           :target => "_blank", :style=>"text-decoration:none;" %> </h4>
         </legend>
@@ -58,13 +87,19 @@
               <%= image_tag("#{urlimage}", :size=>"100x100")%> 
             
             </td>
-        </table>
+            </tr>
+          </table>
       </fieldset>
+   
+    </li>
     <% end %>
-    </td>
-  </tr>
-</tbody>
-</table>
+  </ul>    
+  <br />
+  <br />
+  <br />
+  <br />
+  <br />
+  <br />
 <%
 =begin
 %>

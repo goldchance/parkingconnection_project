@@ -6,6 +6,7 @@ gem 'devise'
 gem "ckeditor", "3.7.3"
 gem 'cancan'
 gem 'gmaps4rails'
+gem 'will_paginate'
 #gem 'paperclip'
 gem 'taps'
 gem 'heroku'
