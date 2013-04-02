@@ -11,7 +11,7 @@ gem 'will_paginate'
 gem 'taps'
 gem 'heroku'
 gem 'libv8', '~> 3.11.8'
-# gem 'pg'
+ gem 'pg'
 #gem "nested_form", :git => "git://github.com/madebydna/nested_form.git"
 gem "nested_form", :git => "git://github.com/ryanb/nested_form.git"
 gem 'json'
