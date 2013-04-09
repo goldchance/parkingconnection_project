@@ -41,7 +41,7 @@ gem 'faye-rails'
  gem 'thin'
 
   gem 'capybara'
-  gem "capybara-webkit"
+#  gem "capybara-webkit"
   gem 'sqlite3'
 group :development do
 
