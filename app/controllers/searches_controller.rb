@@ -17,7 +17,7 @@ class SearchesController < ApplicationController
  end
   
  def monthly_search
-  Spider.delay.monthly_search(params)
+  Spider.monthly_search(params)
   respond_to do |format|
     format.html # index.html.erb
     format.js
@@ -25,7 +25,7 @@ class SearchesController < ApplicationController
  end
 
  def airport_search
-  Spider.delay.airport_search(params)
+  Spider.airport_search(params)
   respond_to do |format|
     format.html # index.html.erb
     format.js

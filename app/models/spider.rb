@@ -37,11 +37,11 @@ class Spider
       spy.get_results_pandaparking(params, "monthly")
       spy.get_results_centralpark(params, "monthly")
       # FayeController.publish('/searches', {result_string: result_string})
-      result_string = ApplicationController.new.render_to_string(:partial => 'pages/results', :locals => { result_type: "monthly" })
-      message = {:channel => "/searches",
-                 :data => { result_string: result_string}}
-      uri = URI.parse("http://localhost:3000/faye")
-      Net::HTTP.post_form(uri, :message => message.to_json)
+    #  result_string = ApplicationController.new.render_to_string(:partial => 'pages/results', :locals => { result_type: "monthly" })
+    #  message = {:channel => "/searches",
+    #             :data => { result_string: result_string}}
+    #  uri = URI.parse("http://localhost:3000/faye")
+    #  Net::HTTP.post_form(uri, :message => message.to_json)
     rescue Exception => e
       puts e.message
       puts e.backtrace
@@ -53,19 +53,19 @@ class Spider
      begin 
       Result.delete_all
       spy=Spider.new
-   #    spy.get_results_airportparkingreservations(params)
-   #    spy.get_results_parkingconnection(params)
-  #     spy.get_results_airportparking(params)
+       spy.get_results_airportparkingreservations(params)
+       spy.get_results_parkingconnection(params)
+      spy.get_results_airportparking(params)
        spy.get_results_aboutairportparking(params)
-     # spy.get_results_pnf(params)
+      spy.get_results_pnf(params)
       # FayeController.publish('/searches', {result_string: result_string})
       
-      result_string = ApplicationController.new.render_to_string(:partial => 'pages/results', :locals => { result_type: "airport" })
-      message = {:channel => "/searches",
-                 :data => { result_string: result_string}}
+     # result_string = ApplicationController.new.render_to_string(:partial => 'pages/results', :locals => { result_type: "airport" })
+     # message = {:channel => "/searches",
+     #            :data => { result_string: result_string}}
      # uri = URI.parse("http://localhost:3000/faye")
-      uri = URI.parse("http://72.10.36.142:80/faye")
-      Net::HTTP.post_form(uri, :message => message.to_json)
+     # uri = URI.parse("http://72.10.36.142:80/faye")
+     # Net::HTTP.post_form(uri, :message => message.to_json)
     rescue Exception => e
       puts e.message
       puts e.backtrace
@@ -128,9 +128,10 @@ begin
     results=[]
     city=params[:wherebox_airp].split(" (")[0].gsub(" ","-")
     short_name = params[:wherebox_airp].split(" (")[1].gsub("(","").gsub(")","").upcase
-    
-    headless = Headless.new
-    headless.start
+    if Rails.env.production?
+      headless = Headless.new
+      headless.start
+    end
     Capybara.run_server = false
     Capybara.current_driver = :webkit
     Capybara.app_host = "http://www.aboutairportparking.com"
@@ -205,10 +206,11 @@ begin
     results=[]
     city=params[:wherebox_airp].split(" (")[0].gsub(" ","-")
     short_name = params[:wherebox_airp].split(" (")[1].gsub("(","").gsub(")","").upcase
-    
-    headless = Headless.new
-    headless.start
-Capybara.run_server = false
+    if Rails.env.production?
+      headless = Headless.new
+      headless.start
+    end  
+    Capybara.run_server = false
     Capybara.current_driver = :webkit
     Capybara.app_host = "http://www.airportparking.com/"
     
@@ -267,9 +269,11 @@ def get_results_parkingconnection(params)
     city=params[:wherebox_airp].split(" (")[0].gsub(" ","-")
     short_name = params[:wherebox_airp].split(" (")[1].gsub("(","").gsub(")","")
     
-    headless = Headless.new
-    headless.start
-Capybara.run_server = false
+    if Rails.env.production?
+      headless = Headless.new
+      headless.start
+    end  
+    Capybara.run_server = false
     Capybara.current_driver = :webkit
     Capybara.app_host = "http://www.airportparkingreservations.com/"
     url="http://www.parkingconnection.com/locations/#{city}-#{short_name}-airport-parking/?dpnLocations=#{short_name}&txtCheckinDt=#{params[:from]}&dpnCheckInTime=#{params[:Items]}&txtCheckoutDt=#{params[:to]}&dpnCheckOutTime=#{params[:Items2]}&UnitID&FacilityID&sendbutton2"
@@ -306,6 +310,11 @@ Capybara.run_server = false
     list = YAML.load(File.open("public/airpreserv.yml"))
     short_name = params[:wherebox_airp].split(" (")[1].gsub("(","").gsub(")","").upcase
     url = list["#{short_name}"]
+  
+    if Rails.env.production?
+      headless = Headless.new
+      headless.start
+    end  
     Capybara.run_server = false
     Capybara.current_driver = :webkit
     Capybara.app_host = "http://www.airportparkingreservations.com/"
@@ -359,8 +368,10 @@ def get_results_spothero(params, type)
      state = arr[1].strip
     end
     
-    headless = Headless.new
-    headless.start
+    if Rails.env.production?
+      headless = Headless.new
+      headless.start
+    end  
     Capybara.run_server = false
     Capybara.current_driver = :webkit
     Capybara.app_host = "http://www.spothero.com/"
@@ -403,6 +414,11 @@ def get_results_spothero(params, type)
     results=[]
     short_name = params[:wherebox_airp].split(" ")[1].gsub("(","").gsub(")","")
     url = params[:wherebox_airp_full]
+    
+    if Rails.env.production?
+      headless = Headless.new
+      headless.start
+    end  
     Capybara.run_server = false
     Capybara.current_driver = :webkit
     Capybara.app_host = "http://www.airportparkingreservations.com/"
@@ -443,9 +459,11 @@ def get_results_spothero(params, type)
      state = arr[1].strip
     end
    
-    headless = Headless.new
-    headless.start
- Capybara.run_server = false
+    if Rails.env.production?
+      headless = Headless.new
+      headless.start
+    end  
+    Capybara.run_server = false
     Capybara.current_driver = :webkit
     Capybara.app_host = "http://www.gottapark.com/"
     visit("http://www.gottapark.com/")
@@ -515,10 +533,12 @@ def get_results_spothero(params, type)
     state = arr[1].strip 
    
 
-    headless = Headless.new
-    headless.start
+    if Rails.env.production?
+      headless = Headless.new
+      headless.start
+    end  
 
- Capybara.run_server = false
+    Capybara.run_server = false
     Capybara.current_driver = :webkit
     Capybara.app_host = "https://www.parkingpanda.com"
     if type != 'daily'
@@ -650,9 +670,11 @@ def get_results_centralpark(params,type)
     city = arr[0].strip.gsub(" ","-")
     state = arr[1].strip 
 	   
-    headless = Headless.new
-    headless.start
- Capybara.run_server = false
+    if Rails.env.production?
+      headless = Headless.new
+      headless.start
+    end  
+    Capybara.run_server = false
     Capybara.current_driver = :webkit
     Capybara.app_host = "https://www.parkingpanda.com"
     if city.downcase =="new-york"

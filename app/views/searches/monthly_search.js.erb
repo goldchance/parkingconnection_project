@@ -1,4 +1,7 @@
 //$('#search_results').html("<%= escape_javascript(render(:partial => 'month_list')) %>");
-$('#spinner').show()
-$('#spinner').spin()
+
+$('#search_results').html("<%= escape_javascript(render(:partial => 'pages/results', :locals => { result_type: "monthly"})) %>");
+$('#spinner').hide()
+//$('#spinner').show()
+//$('#spinner').spin()
 

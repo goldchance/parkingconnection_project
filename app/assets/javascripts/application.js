@@ -12,6 +12,5 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require faye
 //= require jquery.spin
 //= require_tree .

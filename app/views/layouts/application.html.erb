@@ -128,6 +128,10 @@ $("#wherebox_airp").autocomplete({
         $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
       }
     });
+    $( ".button2" ).click(function() {
+      $('#spinner').show()
+      $('#spinner').spin()
+    });
     $( "#wherebox" ).autocomplete({
       source: function( request, response ) {
         $.ajax({
