@@ -1,3 +1,4 @@
-$('#spinner').show()
-$('#spinner').spin()
+$('#search_results').html("<%= escape_javascript(render(:partial => 'pages/results', :locals => { result_type: "daily"})) %>");
+// $('#spinner').show()
+// $('#spinner').spin()
 

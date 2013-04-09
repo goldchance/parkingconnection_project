@@ -13,17 +13,17 @@ class Spider
     begin
       Result.delete_all
       spy=Spider.new
-     # spy.get_results_gottapark(params,"daily")
-     # spy.get_results_pandaparking(params, "daily")
-    #  spy.get_results_centralpark(params, "daily")
+      spy.get_results_gottapark(params,"daily")
+      spy.get_results_pandaparking(params, "daily")
+      spy.get_results_centralpark(params, "daily")
       spy.get_results_parkwhiz(params, "daily")
-   #   spy.get_results_spothero(params, "daily")
+      spy.get_results_spothero(params, "daily")
      
-      result_string = ApplicationController.new.render_to_string(:partial => 'pages/results', :locals => { result_type: "daily" })
-      message = {:channel => "/searches",
-                 :data => { result_string: result_string}}
-      uri = URI.parse("http://72.10.36.142:3000/faye")
-      Net::HTTP.post_form(uri, :message => message.to_json)
+   #   result_string = ApplicationController.new.render_to_string(:partial => 'pages/results', :locals => { result_type: "daily" })
+   #   message = {:channel => "/searches",
+   #              :data => { result_string: result_string}}
+   #   uri = URI.parse("http://72.10.36.142:3000/faye")
+   #   Net::HTTP.post_form(uri, :message => message.to_json)
  rescue Exception => e  
      puts e.message  
      puts e.backtrace.inspect  
@@ -205,7 +205,10 @@ begin
     results=[]
     city=params[:wherebox_airp].split(" (")[0].gsub(" ","-")
     short_name = params[:wherebox_airp].split(" (")[1].gsub("(","").gsub(")","").upcase
-    Capybara.run_server = false
+    
+    headless = Headless.new
+    headless.start
+Capybara.run_server = false
     Capybara.current_driver = :webkit
     Capybara.app_host = "http://www.airportparking.com/"
     
@@ -263,7 +266,10 @@ def get_results_parkingconnection(params)
     results=[]
     city=params[:wherebox_airp].split(" (")[0].gsub(" ","-")
     short_name = params[:wherebox_airp].split(" (")[1].gsub("(","").gsub(")","")
-    Capybara.run_server = false
+    
+    headless = Headless.new
+    headless.start
+Capybara.run_server = false
     Capybara.current_driver = :webkit
     Capybara.app_host = "http://www.airportparkingreservations.com/"
     url="http://www.parkingconnection.com/locations/#{city}-#{short_name}-airport-parking/?dpnLocations=#{short_name}&txtCheckinDt=#{params[:from]}&dpnCheckInTime=#{params[:Items]}&txtCheckoutDt=#{params[:to]}&dpnCheckOutTime=#{params[:Items2]}&UnitID&FacilityID&sendbutton2"
@@ -352,6 +358,9 @@ def get_results_spothero(params, type)
      city = arr[0].strip.gsub(" ","-")
      state = arr[1].strip
     end
+    
+    headless = Headless.new
+    headless.start
     Capybara.run_server = false
     Capybara.current_driver = :webkit
     Capybara.app_host = "http://www.spothero.com/"
@@ -433,7 +442,10 @@ def get_results_spothero(params, type)
      city = arr[0].strip.gsub(" ","-")
      state = arr[1].strip
     end
-    Capybara.run_server = false
+   
+    headless = Headless.new
+    headless.start
+ Capybara.run_server = false
     Capybara.current_driver = :webkit
     Capybara.app_host = "http://www.gottapark.com/"
     visit("http://www.gottapark.com/")
@@ -501,7 +513,12 @@ def get_results_spothero(params, type)
     arr = location.split(",")
     city = arr[0].strip.gsub(" ","-")
     state = arr[1].strip 
-    Capybara.run_server = false
+   
+
+    headless = Headless.new
+    headless.start
+
+ Capybara.run_server = false
     Capybara.current_driver = :webkit
     Capybara.app_host = "https://www.parkingpanda.com"
     if type != 'daily'
@@ -632,7 +649,10 @@ def get_results_centralpark(params,type)
     arr = location.split(",")
     city = arr[0].strip.gsub(" ","-")
     state = arr[1].strip 
-    Capybara.run_server = false
+	   
+    headless = Headless.new
+    headless.start
+ Capybara.run_server = false
     Capybara.current_driver = :webkit
     Capybara.app_host = "https://www.parkingpanda.com"
     if city.downcase =="new-york"

@@ -3,7 +3,7 @@ class SearchesController < ApplicationController
   # GET /searches.json
  
  def daily_search
-  Spider.delay.daily_search(params)
+  Spider.daily_search(params)
  # @json = Result.all.to_gmaps4rails
   #if request.xhr?
     #render :js => "$('#search_results').html('#{escape_javascript(render(:partial => 'list'))}');"
