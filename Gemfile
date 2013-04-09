@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 
 gem 'rails', '3.2.9'
 gem 'therubyracer'
+gem 'headless'
 gem 'devise'
 gem "ckeditor", "3.7.3"
 gem 'cancan'
@@ -37,15 +38,15 @@ gem 'delayed_job_active_record'
 # gem 'debugger'
 # gem 'pry-debugger'
 gem 'faye-rails'
-gem 'thin'
-
-group :development do
-
-  gem 'sqlite3'
-  gem 'nifty-generators'
+ gem 'thin'
 
   gem 'capybara'
   gem "capybara-webkit"
+  gem 'sqlite3'
+group :development do
+
+  gem 'nifty-generators'
+
   gem "ruby-debug19"
 end
 group :assets do

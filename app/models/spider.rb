@@ -4,7 +4,7 @@ require "bundler/setup"
 require "capybara"
 require "capybara/dsl"
 require "capybara-webkit"
-
+require 'headless'
 class Spider
   TIME_VALUE={ }    
   include Capybara::DSL
@@ -13,18 +13,18 @@ class Spider
     begin
       Result.delete_all
       spy=Spider.new
-      spy.get_results_gottapark(params,"daily")
-      spy.get_results_pandaparking(params, "daily")
-      spy.get_results_centralpark(params, "daily")
+     # spy.get_results_gottapark(params,"daily")
+     # spy.get_results_pandaparking(params, "daily")
+    #  spy.get_results_centralpark(params, "daily")
       spy.get_results_parkwhiz(params, "daily")
-      spy.get_results_spothero(params, "daily")
+   #   spy.get_results_spothero(params, "daily")
      
       result_string = ApplicationController.new.render_to_string(:partial => 'pages/results', :locals => { result_type: "daily" })
       message = {:channel => "/searches",
                  :data => { result_string: result_string}}
-      uri = URI.parse("http://localhost:3000/faye")
+      uri = URI.parse("http://72.10.36.142:3000/faye")
       Net::HTTP.post_form(uri, :message => message.to_json)
-   rescue Exception => e  
+ rescue Exception => e  
      puts e.message  
      puts e.backtrace.inspect  
     end
@@ -53,9 +53,9 @@ class Spider
      begin 
       Result.delete_all
       spy=Spider.new
-       spy.get_results_airportparkingreservations(params)
-       spy.get_results_parkingconnection(params)
-       spy.get_results_airportparking(params)
+   #    spy.get_results_airportparkingreservations(params)
+   #    spy.get_results_parkingconnection(params)
+  #     spy.get_results_airportparking(params)
        spy.get_results_aboutairportparking(params)
      # spy.get_results_pnf(params)
       # FayeController.publish('/searches', {result_string: result_string})
@@ -63,7 +63,8 @@ class Spider
       result_string = ApplicationController.new.render_to_string(:partial => 'pages/results', :locals => { result_type: "airport" })
       message = {:channel => "/searches",
                  :data => { result_string: result_string}}
-      uri = URI.parse("http://localhost:3000/faye")
+     # uri = URI.parse("http://localhost:3000/faye")
+      uri = URI.parse("http://72.10.36.142:80/faye")
       Net::HTTP.post_form(uri, :message => message.to_json)
     rescue Exception => e
       puts e.message
@@ -127,6 +128,9 @@ begin
     results=[]
     city=params[:wherebox_airp].split(" (")[0].gsub(" ","-")
     short_name = params[:wherebox_airp].split(" (")[1].gsub("(","").gsub(")","").upcase
+    
+    headless = Headless.new
+    headless.start
     Capybara.run_server = false
     Capybara.current_driver = :webkit
     Capybara.app_host = "http://www.aboutairportparking.com"
