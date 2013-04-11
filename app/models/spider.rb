@@ -288,7 +288,7 @@ def get_results_parkingconnection(params)
     url="http://www.parkingconnection.com/locations/#{city}-#{short_name}-airport-parking/?dpnLocations=#{short_name}&txtCheckinDt=#{params[:from]}&dpnCheckInTime=#{params[:Items]}&txtCheckoutDt=#{params[:to]}&dpnCheckOutTime=#{params[:Items2]}&UnitID&FacilityID&sendbutton2"
     #url="http://www.parkingconnection.com/locations/albany-alb-airport-parking/?dpnLocations=ALB&txtCheckinDt=3/4/2013&dpnCheckInTime=12:00AM&txtCheckoutDt=3/10/2013&dpnCheckOutTime=12:00AM&UnitID&FacilityID&sendbutton2"
     visit(url)
-    sleep 1
+#    sleep 1
     all(:css,"div.locationLot").each do |lot|
       object = Hash.new
       object["location"] = lot.find(:css,"h3").text
@@ -388,7 +388,7 @@ def get_results_spothero(params, type)
     visit("http://www.spothero.com/")
     all(:css,"#search_string").first.set(params[:wherebox])
     all(:css,"#submit-search").first.click
-    sleep 5
+#    sleep 5
     list=[]
     all(:css, ".result").each do |lot|
       id = lot.find(:css, ".btnSpotMe")[:id]
@@ -632,7 +632,7 @@ def get_results_parkwhiz(params,type)
     form = agent.page.forms.first
     form.destination=location
     form.submit
-    sleep 1
+#    sleep 1
     agent.get("#{agent.page.uri.to_s}?&start_date=#{params[:from]}&start_time=#{params[:Items].gsub(" ","")}&end_date=#{params[:to]}&end_time=#{params[:Items2].gsub(" ","")}")
     links = []
     agent.page.search(".listing-row").each do |link|
@@ -643,7 +643,7 @@ def get_results_parkwhiz(params,type)
       object = Hash.new
      # debugger
       agent.get(link)
-      sleep 1
+#      sleep 1
       object["location"] = agent.page.search("#parking-header h1").first.text
       object["address"] =""
       agent.page.search(".address span").each do |s|
