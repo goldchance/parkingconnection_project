@@ -3,7 +3,7 @@ class SearchesController < ApplicationController
   # GET /searches.json
  
  def daily_search
-  Spider.daily_search(params)
+ @results = Spider.daily_search(params)
  # @json = Result.all.to_gmaps4rails
   #if request.xhr?
     #render :js => "$('#search_results').html('#{escape_javascript(render(:partial => 'list'))}');"
@@ -17,7 +17,8 @@ class SearchesController < ApplicationController
  end
   
  def monthly_search
-  Spider.monthly_search(params)
+  @results = Spider.monthly_search(params)
+  #debugger
   respond_to do |format|
     format.html # index.html.erb
     format.js
@@ -25,7 +26,7 @@ class SearchesController < ApplicationController
  end
 
  def airport_search
-  Spider.airport_search(params)
+  @results = Spider.airport_search(params)
   respond_to do |format|
     format.html # index.html.erb
     format.js

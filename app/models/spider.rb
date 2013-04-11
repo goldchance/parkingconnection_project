@@ -24,19 +24,24 @@ class Spider
    #              :data => { result_string: result_string}}
    #   uri = URI.parse("http://72.10.36.142:3000/faye")
    #   Net::HTTP.post_form(uri, :message => message.to_json)
- rescue Exception => e  
+    rescue Exception => e  
      puts e.message  
      puts e.backtrace.inspect  
     end
+  
+    results = Result.find_all_by_desc("daily") 
+    results
   end
  
   def self.monthly_search(params)
+   results=[]
     begin 
       Result.delete_all
       spy=Spider.new
       spy.get_results_pandaparking(params, "monthly")
       spy.get_results_centralpark(params, "monthly")
-      # FayeController.publish('/searches', {result_string: result_string})
+       
+       # FayeController.publish('/searches', {result_string: result_string})
     #  result_string = ApplicationController.new.render_to_string(:partial => 'pages/results', :locals => { result_type: "monthly" })
     #  message = {:channel => "/searches",
     #             :data => { result_string: result_string}}
@@ -46,6 +51,8 @@ class Spider
       puts e.message
       puts e.backtrace
     end
+    results = Result.find_all_by_desc("monthly") 
+    results
   end
   
     
@@ -71,6 +78,8 @@ class Spider
       puts e.backtrace
     end
     
+    results = Result.find_all_by_desc("airport").group_by{ |s| [s.latitude, s.longitude]} 
+    results
   end
 #------------------------------------airport search methods -----------------------------------------------------------
 def get_results_pnf(params)

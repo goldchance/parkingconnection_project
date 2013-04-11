@@ -43,11 +43,12 @@ ul.simplePagerNav li.currentPage a {
 <!-- end css for the results -->
 <div id="results" >
 
-      <% results = Result.find_all_by_desc(result_type).group_by{ |s| [s.latitude, s.longitude]} %>
-      <p> <%= results.size%> place(s) </p>
+      <%# results = Result.find_all_by_desc(result_type).group_by{ |s| [s.latitude, s.longitude]} %>
+      <p> <%= @results.size%> place(s) </p>
+      <% @allresults = @results.group_by{ |s| [s.latitude, s.longitude]} %>
       <br />
       <ul class="pagination1" style="list-style-type: none; ">
-        <% results.each do |hash| %>
+        <% @allresults.each do |hash| %>
           <li >
           <fieldset class="ui-corner-all ui-widget ui-widget-content " style="margin:10px; ">
         <legend>   <h4 style="width:800px; " class=" ui-corner-all ui-widget-header"> <%=link_to "#{hash[1].first.location}", "#", 
@@ -100,10 +101,11 @@ ul.simplePagerNav li.currentPage a {
   <br />
   <br />
   <br />
+  
 <%
 =begin
 %>
-<table id="results" >
+  <table id="results" >
     <tbody>
   <% results = Result.find_all_by_desc(result_type) %>
     
