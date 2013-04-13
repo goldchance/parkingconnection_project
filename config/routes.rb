@@ -1,4 +1,6 @@
 StagePark::Application.routes.draw do
+  resources :requests
+
  # faye_server '/faye', :timeout => 25 do
  #   map '/searches/**' => FayeController
     # map :default => :block

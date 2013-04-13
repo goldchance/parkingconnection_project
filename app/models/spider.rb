@@ -11,13 +11,13 @@ class Spider
   
   def self.daily_search(params)
     begin
-      Result.delete_all
       spy=Spider.new
-      spy.get_results_gottapark(params,"daily")
-      spy.get_results_pandaparking(params, "daily")
-      spy.get_results_centralpark(params, "daily")
-      spy.get_results_parkwhiz(params, "daily")
-      spy.get_results_spothero(params, "daily")
+      req = Request.create
+      spy.get_results_gottapark(params,"daily", req)
+      spy.get_results_pandaparking(params, "daily",req)
+      spy.get_results_centralpark(params, "daily",req)
+      spy.get_results_parkwhiz(params, "daily",req)
+      spy.get_results_spothero(params, "daily",req)
      
    #   result_string = ApplicationController.new.render_to_string(:partial => 'pages/results', :locals => { result_type: "daily" })
    #   message = {:channel => "/searches",
@@ -29,17 +29,18 @@ class Spider
      puts e.backtrace.inspect  
     end
   
-    results = Result.find_all_by_desc("daily") 
+    results = req.results
+    #req.destroy
     results
   end
  
   def self.monthly_search(params)
    results=[]
     begin 
-      Result.delete_all
       spy=Spider.new
-      spy.get_results_pandaparking(params, "monthly")
-      spy.get_results_centralpark(params, "monthly")
+      req = Request.create
+      spy.get_results_pandaparking(params, "monthly",req)
+      spy.get_results_centralpark(params, "monthly", req)
        
        # FayeController.publish('/searches', {result_string: result_string})
     #  result_string = ApplicationController.new.render_to_string(:partial => 'pages/results', :locals => { result_type: "monthly" })
@@ -51,20 +52,21 @@ class Spider
       puts e.message
       puts e.backtrace
     end
-    results = Result.find_all_by_desc("monthly") 
+    results = req.results
+    #req.destroy
     results
   end
   
     
   def self.airport_search(params)
      begin 
-      Result.delete_all
       spy=Spider.new
-       spy.get_results_airportparkingreservations(params)
-       spy.get_results_parkingconnection(params)
-      spy.get_results_airportparking(params)
-       spy.get_results_aboutairportparking(params)
-      spy.get_results_pnf(params)
+      req = Request.create
+       spy.get_results_airportparkingreservations(params,req)
+       spy.get_results_parkingconnection(params,req)
+      spy.get_results_airportparking(params,req)
+       spy.get_results_aboutairportparking(params, req)
+      spy.get_results_pnf(params,req)
       # FayeController.publish('/searches', {result_string: result_string})
       
      # result_string = ApplicationController.new.render_to_string(:partial => 'pages/results', :locals => { result_type: "airport" })
@@ -78,11 +80,12 @@ class Spider
       puts e.backtrace
     end
     
-    results = Result.find_all_by_desc("airport").group_by{ |s| [s.latitude, s.longitude]} 
+    results = req.results
+    #req.destroy
     results
   end
 #------------------------------------airport search methods -----------------------------------------------------------
-def get_results_pnf(params)
+def get_results_pnf(params, req)
 
 #debugger 
 begin 
@@ -118,7 +121,7 @@ begin
       end
     end
  #       debugger
-    save_results(results,"airport","www.pnf.com")    
+    save_results(results,"airport","www.pnf.com", req)    
    rescue Exception => e  
      puts e.message  
      puts e.backtrace.inspect  
@@ -130,7 +133,7 @@ begin
   
    
   
-def get_results_aboutairportparking(params)
+def get_results_aboutairportparking(params, req)
 
 #debugger 
 begin 
@@ -197,7 +200,7 @@ begin
       end
     end
     #debugger
-    save_results(results,"airport","www.aboutairportparking.com")    
+    save_results(results,"airport","www.aboutairportparking.com",req)    
    rescue Exception => e  
      puts e.message  
      puts e.backtrace.inspect  
@@ -207,7 +210,7 @@ begin
 
 
   
-  def get_results_airportparking(params)
+  def get_results_airportparking(params, req)
 
  list = YAML.load(File.open("output.yml"))
 #debugger 
@@ -262,7 +265,7 @@ begin
       results<<object
     end
     end
-    save_results(results,"airport","www.airportparking.com")    
+    save_results(results,"airport","www.airportparking.com", req)    
    rescue Exception => e  
      puts e.message  
      puts e.backtrace.inspect  
@@ -272,7 +275,7 @@ begin
 
 
   #--------------------  http://www.parkingconnection.com/
-def get_results_parkingconnection(params)
+def get_results_parkingconnection(params,req)
    begin 
     results=[]
     city=params[:wherebox_airp].split(" (")[0].gsub(" ","-")
@@ -304,7 +307,7 @@ def get_results_parkingconnection(params)
       end
       results<<object
     end
-    save_results(results,"airport","www.parkingconnection.com")    
+    save_results(results,"airport","www.parkingconnection.com",req)    
   rescue Exception => e  
      puts e.message  
      puts e.backtrace.inspect  
@@ -313,7 +316,7 @@ def get_results_parkingconnection(params)
 
 
 
-  def get_results_airportparkingreservations(params)
+  def get_results_airportparkingreservations(params,req)
    begin 
     results=[]
     list = YAML.load(File.open("public/airpreserv.yml"))
@@ -359,7 +362,7 @@ def get_results_parkingconnection(params)
       r["urlimage"] = all(:css, "li.jcarousel-item img").first[:src]
     end
   end
-  save_results(results,"airport","www.airportparkingreservations.com")    
+  save_results(results,"airport","www.airportparkingreservations.com",req)    
   rescue Exception => e  
      puts e.message  
      puts e.backtrace.inspect  
@@ -367,7 +370,7 @@ def get_results_parkingconnection(params)
   end
  #------------------------------------------------------- 
 
-def get_results_spothero(params, type)
+def get_results_spothero(params, type,req)
    begin 
      results=[]
     location = params[:wherebox]
@@ -409,7 +412,7 @@ def get_results_spothero(params, type)
      end
     
    # debugger
-    save_results(results,"daily","www.spothero.com")    
+    save_results(results,"daily","www.spothero.com",req)    
      rescue Exception => e  
      puts e.message  
      puts e.backtrace.inspect  
@@ -418,7 +421,7 @@ def get_results_spothero(params, type)
 
 
  #-------------------------------------------------------------- 
-  def get_results_cheapairportparking(params)
+  def get_results_cheapairportparking(params,req)
    begin 
     results=[]
     short_name = params[:wherebox_airp].split(" ")[1].gsub("(","").gsub(")","")
@@ -448,7 +451,7 @@ def get_results_spothero(params, type)
         object["price"]= item.text
       end
     end
-    save_results(results,"airport","www.cheapairportparking.org")    
+    save_results(results,"airport","www.cheapairportparking.org",req)    
      rescue Exception => e  
      puts e.message  
      puts e.backtrace.inspect  
@@ -458,7 +461,7 @@ def get_results_spothero(params, type)
   
   
 #-------------------------------------------- www.gottaprk.com -------------------------------------  
-  def get_results_gottapark(params,type)
+  def get_results_gottapark(params,type,req)
    begin 
     results=[]
     location=params[:wherebox]
@@ -524,7 +527,7 @@ def get_results_spothero(params, type)
         r["urlimage"] = all(:css, "img#lp_photo").first[:src]
       end
     end
-    save_results(results,type,"www.gottapark.com")    
+    save_results(results,type,"www.gottapark.com",req)    
   rescue Exception => e  
      puts e.message  
      puts e.backtrace.inspect  
@@ -533,7 +536,7 @@ def get_results_spothero(params, type)
   
 #------------------------------------  www.pandaparking.com --------------------------------------------
   
-  def get_results_pandaparking(params,type)
+  def get_results_pandaparking(params,type,req)
    begin
     location = params[:wherebox]
     results=[]
@@ -561,7 +564,7 @@ def get_results_spothero(params, type)
 	      sleep 5
         if all(:css, "span.location-rate").size>0
           if all(:css, "span.location-rate").first.text=="monthly"
-            pickup_panda("monthly")
+            pickup_panda("monthly",req)
           end
         end
       end
@@ -569,7 +572,7 @@ def get_results_spothero(params, type)
     else
       visit("https://www.parkingpanda.com/Search/?location=#{city}&monthly=false&daily=true")
       sleep 5
-      pickup_panda("daily")
+      pickup_panda("daily",req)
     end
     rescue Exception => e  
      puts e.message  
@@ -577,7 +580,7 @@ def get_results_spothero(params, type)
     end
   end                                          
 #------------------------------------------ pickup
-def pickup_panda(desc)
+def pickup_panda(desc,req)
   results =[]
     all(:xpath, "//div[@class='location-details']/h2").each do |item|
      #object = Result.new
@@ -618,11 +621,11 @@ def pickup_panda(desc)
         #object.save
       end
     end
-    save_results(results,desc,"www.parkingpanda.com")    
+    save_results(results,desc,"www.parkingpanda.com", req)    
 end
 #-------------------------------------  www.centralparking.com -------------------------------------------------  
                                                
-def get_results_parkwhiz(params,type)
+def get_results_parkwhiz(params,type,req)
   begin  
     results = []
     location = params[:wherebox]
@@ -663,7 +666,7 @@ def get_results_parkwhiz(params,type)
      end
     end
     
-    save_results(results,"daily","www.parkwhiz.com")    
+    save_results(results,"daily","www.parkwhiz.com",req)    
     rescue Exception => e  
      puts e.message  
      puts e.backtrace.inspect  
@@ -671,7 +674,7 @@ def get_results_parkwhiz(params,type)
 
 end                                              
 
-def get_results_centralpark(params,type)
+def get_results_centralpark(params,type,req)
   begin  
     location = params[:wherebox]
     results=[]
@@ -722,7 +725,7 @@ def get_results_centralpark(params,type)
 
 	  results<<object
     end
-    save_results(results,type,"www.centralparking.com")    
+    save_results(results,type,"www.centralparking.com",req)    
     rescue Exception => e  
      puts e.message  
      puts e.backtrace.inspect  
@@ -732,9 +735,9 @@ end
   
   
 #---------------------------------------------------------------------------------------------------------------  
-def save_results(results,type,source) 
+def save_results(results,type,source,req) 
     results.each do |o|
-      item = Result.new
+      item = req.results.new
       item.address = o["address"]
       item.location = o["location"]
       item.price = o["price"]
