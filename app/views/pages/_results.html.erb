@@ -44,8 +44,8 @@ ul.simplePagerNav li.currentPage a {
 <div id="results" >
 
       <%# results = Result.find_all_by_desc(result_type).group_by{ |s| [s.latitude, s.longitude]} %>
-      <p> <%= @results.size%> place(s) </p>
-      <% @allresults = @results.group_by{ |s| [s.latitude, s.longitude]} %>
+      <p> <%= @res.size %> place(s) </p>
+      <% @allresults = @res.group_by{ |s| [s.latitude, s.longitude]} %>
       <br />
       <ul class="pagination1" style="list-style-type: none; ">
         <% @allresults.each do |hash| %>

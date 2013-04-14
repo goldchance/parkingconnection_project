@@ -41,8 +41,8 @@ gem 'faye-rails'
  gem 'thin'
 
   gem 'capybara'
-#  gem "capybara-webkit"
-#  gem 'sqlite3'
+  gem "capybara-webkit"
+  gem 'sqlite3'
 group :development do
 
   gem 'nifty-generators'
