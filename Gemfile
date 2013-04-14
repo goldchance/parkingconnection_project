@@ -37,12 +37,12 @@ gem 'delayed_job_active_record'
 #
 # gem 'debugger'
 # gem 'pry-debugger'
-gem 'faye-rails'
+#gem 'faye-rails'
  gem 'thin'
 
   gem 'capybara'
-  gem "capybara-webkit"
-  gem 'sqlite3'
+#  gem "capybara-webkit"
+#  gem 'sqlite3'
 group :development do
 
   gem 'nifty-generators'
