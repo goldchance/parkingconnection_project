@@ -32,9 +32,8 @@
 <script type="text/javascript" src="javascript/datepicker.js"></script>
 <link href="/css/results.css" rel="stylesheet" type="text/css" />
 
-
-  <script>
-$(function() {
+<script>
+  $(function() {
     $( document ).tooltip({
       items: "img, [data-geo], [title]",
       content: function() {
@@ -49,16 +48,14 @@ $(function() {
        
       }
     });
-  });
-   $(function() {
-     
-  $( ".airport-select" ).click(function() {
+       
+    $( ".airport-select" ).click(function() {
     $("#wherebox_airp").val($(this).html());
     $("#wherebox_airp_full").val($(this).attr("href"));
     $("#effect" ).toggle( "slide", {}, 500 );
-  return false;
-});
-$( "#google_map_button" ).click(function() {
+       return false;
+    });
+  $( "#google_map_button" ).click(function() {
   $.getJSON('/results', function(json){
     $(".map_container").show();
     Gmaps.loadMaps();
@@ -66,20 +63,14 @@ $( "#google_map_button" ).click(function() {
   })
   $( "#google_map" ).toggle( "blind", {}, 500 );
   return false;
-});
-<% list = YAML.load(File.open("public/airports.yml")) %>
-$("#wherebox_airp").autocomplete({
-  source: <%=raw list %>
+    });
+  <% list = YAML.load(File.open("public/airports.yml")) %>
+  $("#wherebox_airp").autocomplete({
+    source: <%=raw list %>
     });
     
-
-    $( ".button" )
-      .button()
-        });
-  </script>
-  <script>
-  $(function() {
-    
+    $(".button").button()
+     
     $(".loginform").validate({
   rules: {
     field: {
@@ -87,7 +78,7 @@ $("#wherebox_airp").autocomplete({
       email: true
     }
   }
-});
+  });
     function log( message ) {
       $( "<div>" ).text( message ).prependTo( "#log" );
       $( "#log" ).scrollTop( 0 );
@@ -166,15 +157,7 @@ $("#wherebox_airp").autocomplete({
         $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
       }
     });
-  });
-  </script>
-  <script>
-    
-        $(document).ready(function() {
-
-        });
-    $(function() {
-      $(".button2").click(function() {
+       $(".button2").click(function() {
         $("#google_map").hide();
         $("#google_map_button").show("slide",{} ,500);
       });
