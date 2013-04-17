@@ -1,5 +1,7 @@
 body {
-	margin: 0px;
+	
+	height: auto;
+  margin: 0px;
 	background-image: url(../images/bg_color.png);
 	background-repeat: repeat-x;
 }

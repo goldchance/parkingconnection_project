@@ -20,6 +20,7 @@
 <script src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>
 <script src="http://www.jquery4u.com/demos/jquery-quick-pagination/js/jquery.quick.pagination.min.js"></script>
 <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.0/jquery.validate.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery-backstretch/2.0.3/jquery.backstretch.min.js"></script>
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.0/themes/base/jquery-ui.css" />
 <link href="/css/jquery-ui-1.9.1.custom/css/pc-calendar/jquery-ui-1.9.1.custom.css" rel="stylesheet">
 <link href="/css/pc.css" rel="stylesheet" type="text/css" />
@@ -34,6 +35,7 @@
 
 <script>
   $(function() {
+ $.backstretch("/images/bg_color.png");
     $( document ).tooltip({
       items: "img, [data-geo], [title]",
       content: function() {
