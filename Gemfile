@@ -7,7 +7,6 @@ gem 'devise'
 gem "ckeditor", "3.7.3"
 gem 'cancan'
 gem 'gmaps4rails'
-gem 'will_paginate'
 #gem 'paperclip'
 gem 'taps'
 gem 'heroku'
@@ -35,16 +34,16 @@ gem 'delayed_job_active_record'
 # Gems used only for assets and not required
 # in production environments by default.
 #
-# gem 'debugger'
-# gem 'pry-debugger'
 #gem 'faye-rails'
  gem 'thin'
 
   gem 'capybara'
-#  gem "capybara-webkit"
-#  gem 'sqlite3'
 group :development do
 
+ gem 'debugger'
+ gem 'pry-debugger'
+  gem "capybara-webkit"
+  gem 'sqlite3'
   gem 'nifty-generators'
 
   gem "ruby-debug19"
