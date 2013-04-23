@@ -12,10 +12,10 @@ class Spider
   def self.daily_search(params)
     begin
       spy=Spider.new
-      req = Request.create
+      req = Request.create(:desc=>"")
       spy.get_results_gottapark(params,"daily", req)
       spy.get_results_pandaparking(params, "daily",req)
-      spy.get_results_centralpark(params, "daily",req)
+     # spy.get_results_centralpark(params, "daily",req)
       spy.get_results_parkwhiz(params, "daily",req)
       spy.get_results_spothero(params, "daily",req)
      
@@ -27,18 +27,21 @@ class Spider
     rescue Exception => e  
      puts e.message  
      puts e.backtrace.inspect  
+     req.desc << e.message.to_s << e.backtrace.inspect.to_s
+     req.save
     end
   
-    results = req.results
+    #results = req.results
     #req.destroy
-    results
+    #results
+    req
   end
  
   def self.monthly_search(params)
    results=[]
     begin 
       spy=Spider.new
-      req = Request.create
+      req = Request.create(:desc=>"")
       spy.get_results_pandaparking(params, "monthly",req)
       spy.get_results_centralpark(params, "monthly", req)
        
@@ -51,22 +54,25 @@ class Spider
     rescue Exception => e
       puts e.message
       puts e.backtrace
+     req.desc << e.message.to_s << e.backtrace.inspect.to_s
+      req.save
     end
-    results = req.results
+    #results = req.results
     #req.destroy
-    results
+    #results
+    req
   end
   
     
   def self.airport_search(params)
      begin 
       spy=Spider.new
-      req = Request.create
+      req = Request.create(:desc=>"")
        spy.get_results_airportparkingreservations(params,req)
        spy.get_results_parkingconnection(params,req)
-      spy.get_results_airportparking(params,req)
+       spy.get_results_airportparking(params,req)
        spy.get_results_aboutairportparking(params, req)
-      spy.get_results_pnf(params,req)
+       spy.get_results_pnf(params,req)
       # FayeController.publish('/searches', {result_string: result_string})
       
      # result_string = ApplicationController.new.render_to_string(:partial => 'pages/results', :locals => { result_type: "airport" })
@@ -78,11 +84,13 @@ class Spider
     rescue Exception => e
       puts e.message
       puts e.backtrace
+      
+      req.desc<< e.message << e.backtrace
+      req.save
     end
     
-    results = req.results
     #req.destroy
-    results
+    req
   end
 #------------------------------------airport search methods -----------------------------------------------------------
 def get_results_pnf(params, req)
@@ -291,7 +299,7 @@ def get_results_parkingconnection(params,req)
     url="http://www.parkingconnection.com/locations/#{city}-#{short_name}-airport-parking/?dpnLocations=#{short_name}&txtCheckinDt=#{params[:from]}&dpnCheckInTime=#{params[:Items]}&txtCheckoutDt=#{params[:to]}&dpnCheckOutTime=#{params[:Items2]}&UnitID&FacilityID&sendbutton2"
     #url="http://www.parkingconnection.com/locations/albany-alb-airport-parking/?dpnLocations=ALB&txtCheckinDt=3/4/2013&dpnCheckInTime=12:00AM&txtCheckoutDt=3/10/2013&dpnCheckOutTime=12:00AM&UnitID&FacilityID&sendbutton2"
     visit(url)
-#    sleep 1
+    sleep 1
     all(:css,"div.locationLot").each do |lot|
       object = Hash.new
       object["location"] = lot.find(:css,"h3").text
@@ -391,7 +399,7 @@ def get_results_spothero(params, type,req)
     visit("http://www.spothero.com/")
     all(:css,"#search_string").first.set(params[:wherebox])
     all(:css,"#submit-search").first.click
-#    sleep 5
+    sleep 5
     list=[]
     all(:css, ".result").each do |lot|
       id = lot.find(:css, ".btnSpotMe")[:id]
@@ -635,7 +643,7 @@ def get_results_parkwhiz(params,type,req)
     form = agent.page.forms.first
     form.destination=location
     form.submit
-#    sleep 1
+   sleep 1
     agent.get("#{agent.page.uri.to_s}?&start_date=#{params[:from]}&start_time=#{params[:Items].gsub(" ","")}&end_date=#{params[:to]}&end_time=#{params[:Items2].gsub(" ","")}")
     links = []
     agent.page.search(".listing-row").each do |link|
@@ -646,7 +654,7 @@ def get_results_parkwhiz(params,type,req)
       object = Hash.new
      # debugger
       agent.get(link)
-#      sleep 1
+      sleep 1
       object["location"] = agent.page.search("#parking-header h1").first.text
       object["address"] =""
       agent.page.search(".address span").each do |s|
@@ -688,7 +696,6 @@ def get_results_centralpark(params,type,req)
     end  
     Capybara.run_server = false
     Capybara.current_driver = :webkit
-    Capybara.app_host = "https://www.parkingpanda.com"
     if city.downcase =="new-york"
       city_short = "nyc"
     else
@@ -709,9 +716,9 @@ def get_results_centralpark(params,type,req)
 	      object["address"] = all(:css,"dl.info dd").first.text
       end
       
-        if all(:css, "div.column_1-5.left h1").size>0
+      if all(:css, "div.column_1-5.left h1").size>0
          object["location"] = all(:css, "div.column_1-5.left h1").first.text
-        end
+      end
       if type == 'daily'
         if all(:css, "table.layout-table-1 tr td").size>3
 	        object["price"] = all(:css, "table.layout-table-1 tr td")[3].text
@@ -720,15 +727,18 @@ def get_results_centralpark(params,type,req)
         if all(:css, "div.monthly-parking-rates p").size>0
          object["price"] = all(:css, "div.monthly-parking-rates p")[0].text
         end
-
       end
 
-	  results<<object
-    end
+	    results<<object
+     
+     end
     save_results(results,type,"www.centralparking.com",req)    
     rescue Exception => e  
      puts e.message  
      puts e.backtrace.inspect  
+      
+     req.desc<< e.message.to_s << e.backtrace.inspect.to_s
+     req.save
     end
 end
 
