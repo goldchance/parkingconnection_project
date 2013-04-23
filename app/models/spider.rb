@@ -15,7 +15,7 @@ class Spider
       req = Request.create(:desc=>"")
       spy.get_results_gottapark(params,"daily", req)
       spy.get_results_pandaparking(params, "daily",req)
-     # spy.get_results_centralpark(params, "daily",req)
+      spy.get_results_centralpark(params, "daily",req)
       spy.get_results_parkwhiz(params, "daily",req)
       spy.get_results_spothero(params, "daily",req)
      

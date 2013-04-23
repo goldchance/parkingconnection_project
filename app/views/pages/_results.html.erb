@@ -43,8 +43,12 @@ ul.simplePagerNav li.currentPage a {
 }
 </style>
  <script>
-    $(document).ready(function() {
+   $(function() {
+    $( "#tabs" ).tabs();
+  });
+   $(document).ready(function() {
       $("ul.pagination1").quickPagination({ pageSize:"18"});
+    
     });
 </script>
 <!-- end css for the results -->
@@ -53,63 +57,121 @@ ul.simplePagerNav li.currentPage a {
           <legend>Log</legend>
               <%= @req.desc %>
        </fieldset>
-       <%# results = Result.find_all_by_desc(result_type).group_by{ |s| [s.latitude, s.longitude]} %>
-      <% @allresults = @req.results.group_by{ |s| [s.latitude, s.longitude]} %>
-      <p> <%= @allresults.size %> place(s) </p>
-      <br />
-      <ul class="pagination1" style="list-style-type: none; ">
-        <% @allresults.each do |hash| %>
-          <li >
-          <fieldset class="ui-corner-all ui-widget ui-widget-content " style="margin:10px; ">
-        <legend>   <h4 style="width:800px; " class=" ui-corner-all ui-widget-header"> <%=link_to "#{hash[1].first.location}", "#", 
-          :target => "_blank", :style=>"text-decoration:none;" %> </h4>
-        </legend>
-        <table style="width:100%;">
-          <tr>
-            <td style="width:85%;">
-              <span style="color:gray;">
-                <a href="#" data-geo="data-geo" ><%= hash[1].first.address %></a>
-              </span>
-              <br />
-              <hr style="width:600px;">
-              <table style="width:80%;">
-                <% hash[1].each do |place| %>
-                <tr >
-                  <td>
-                    <%= link_to  "#{place.source}", place.href  , :target =>"_blank", :style=> "text-color:light-blue; text-decoration:none;"%>
+       
+      <div id="tabs">
+      <ul>
+        <li><a href="#tabs-1">Group by location</a></li>
+        <li><a href="#tabs-2">Group by source</a></li>
+      </ul>
+      <div id="tabs-1">
+        <% @allresults = @req.results.group_by{ |s| [s.latitude, s.longitude]} %>
+        <p> <%= @allresults.size %> place(s) </p>
+        <br />
+        <ul class="pagination1" style="list-style-type: none; ">
+          <% @allresults.each do |hash| %>
+            <li >
+            <fieldset class="ui-corner-all ui-widget ui-widget-content " style="margin:10px; ">
+          <legend>   <h4 style="width:800px; " class=" ui-corner-all ui-widget-header"> <%=link_to "#{hash[1].first.location}", "#", 
+            :target => "_blank", :style=>"text-decoration:none;" %> </h4>
+          </legend>
+          <table style="width:100%;">
+            <tr>
+              <td style="width:85%;">
+                <span style="color:gray;">
+                  <a href="#" data-geo="data-geo" ><%= hash[1].first.address %></a>
+                </span>
+                <br />
+                <hr style="width:600px;">
+                <table style="width:80%;">
+                  <% hash[1].each do |place| %>
+                  <tr >
+                    <td>
+                      <%= link_to  "#{place.source}", place.href  , :target =>"_blank", :style=> "text-color:light-blue; text-decoration:none;"%>
+                    </td>
+                    <td>
+                      <p> <strong><%= place["price"] %> </strong> </p>
                   </td>
-                  <td>
-                    <p> <strong><%= place["price"] %> </strong> </p>
-                </td>
-                  <td>
-                    <%= link_to "reserve", place.href , :target =>"_blank" %>
-                  </td>
-                </tr>
-              <% end %>
-              </table>
-            </td>
-            <td style="width:15%;" class="">
-              <% urlimage = "default.jpg" %>
-              <% hash[1].each do |place| %>
-                <% if place.urlimage != nil %>
-                  <% urlimage = place.urlimage %>
+                    <td>
+                      <%= link_to "reserve", place.href , :target =>"_blank" %>
+                    </td>
+                  </tr>
                 <% end %>
-              <% end %>
-              <%= image_tag("#{urlimage}", :size=>"100x100")%> 
-            
-            </td>
-            </tr>
-          </table>
-      </fieldset>
+                </table>
+              </td>
+              <td style="width:15%;" class="">
+                <% urlimage = "default.jpg" %>
+                <% hash[1].each do |place| %>
+                  <% if place.urlimage != nil %>
+                    <% urlimage = place.urlimage %>
+                  <% end %>
+                <% end %>
+                <%= image_tag("#{urlimage}", :size=>"100x100")%> 
+              
+              </td>
+              </tr>
+            </table>
+        </fieldset>
    
-    </li>
-    <% end %>
-  </ul>    
-  <br />
-  <br />
-  <br />
-  <br />
-  <br />
+        </li>
+        <% end %>
+        </ul>    
+
+        </div>
+      <div id="tabs-2">
+        <% @allresults = @req.results.group_by{ |s| [s.source]} %>
+        <p> <%= @allresults.size %> source(s) </p>
+        <ul class="pagination1" style="list-style-type: none; ">
+          <% @allresults.each do |hash| %>
+            <li >
+            <fieldset class="ui-corner-all ui-widget ui-widget-content " style="margin:10px; ">
+          <legend>   <h4 style="width:800px; " class=" ui-corner-all ui-widget-header"> <%=link_to "#{hash[1].first.source}", "#", 
+            :target => "_blank", :style=>"text-decoration:none;" %> </h4>
+          </legend>
+          <table style="width:100%;">
+            <tr>
+              <td style="width:85%;">
+                                <br />
+                <hr style="width:600px;">
+                <table style="width:80%;">
+                  <% hash[1].each do |place| %>
+                  <tr >
+                    <td>
+                      <%= link_to  "#{place.location}", place.href  , :target =>"_blank", :style=> "text-color:light-blue; text-decoration:none;"%>
+                    </td>
+                    <td>
+                      <p> <strong><%= place["price"] %> </strong> </p>
+                  </td>
+                    <td>
+                      <%= link_to "reserve", place.href , :target =>"_blank" %>
+                    </td>
+                  </tr>
+                <% end %>
+                </table>
+              </td>
+              <td style="width:15%;" class="">
+                <% urlimage = "default.jpg" %>
+                <% hash[1].each do |place| %>
+                  <% if place.urlimage != nil %>
+                    <% urlimage = place.urlimage %>
+                  <% end %>
+                <% end %>
+                <%= image_tag("#{urlimage}", :size=>"100x100")%> 
+              
+              </td>
+              </tr>
+            </table>
+        </fieldset>
+   
+        </li>
+        <% end %>
+        </ul>    
+        <br />
+
+      </div>
+      </div> 
+  
+      
+      <br />
   <br />
   
 <%
