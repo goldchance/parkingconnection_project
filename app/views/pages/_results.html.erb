@@ -58,7 +58,7 @@ ul.simplePagerNav li.currentPage a {
               <%= @req.desc %>
        </fieldset>
        
-      <div id="tabs">
+      <div id="tabs" style="z-index:1;">
       <ul>
         <li><a href="#tabs-1">Group by location</a></li>
         <li><a href="#tabs-2">Group by source</a></li>
@@ -129,18 +129,22 @@ ul.simplePagerNav li.currentPage a {
           </legend>
           <table style="width:100%;">
             <tr>
-              <td style="width:85%;">
+              <td style="width:95%;">
                                 <br />
                 <hr style="width:600px;">
-                <table style="width:80%;">
+                <table style="width:100%;">
                   <% hash[1].each do |place| %>
                   <tr >
                     <td>
                       <%= link_to  "#{place.location}", place.href  , :target =>"_blank", :style=> "text-color:light-blue; text-decoration:none;"%>
                     </td>
                     <td>
+                      <p> <strong><%= place.address %> </strong> </p>
+                    </td>
+                    <td>
                       <p> <strong><%= place["price"] %> </strong> </p>
-                  </td>
+                    </td>
+                    
                     <td>
                       <%= link_to "reserve", place.href , :target =>"_blank" %>
                     </td>
@@ -148,17 +152,7 @@ ul.simplePagerNav li.currentPage a {
                 <% end %>
                 </table>
               </td>
-              <td style="width:15%;" class="">
-                <% urlimage = "default.jpg" %>
-                <% hash[1].each do |place| %>
-                  <% if place.urlimage != nil %>
-                    <% urlimage = place.urlimage %>
-                  <% end %>
-                <% end %>
-                <%= image_tag("#{urlimage}", :size=>"100x100")%> 
-              
-              </td>
-              </tr>
+                            </tr>
             </table>
         </fieldset>
    

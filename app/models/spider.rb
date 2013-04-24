@@ -153,6 +153,7 @@ begin
       headless.start
     end
     Capybara.run_server = false
+    Capybara.javascript_driver = :webkit_debug
     Capybara.current_driver = :webkit
     Capybara.app_host = "http://www.aboutairportparking.com"
     visit("http://www.aboutairportparking.com")
@@ -231,6 +232,7 @@ begin
       headless.start
     end  
     Capybara.run_server = false
+    Capybara.javascript_driver = :webkit_debug
     Capybara.current_driver = :webkit
     Capybara.app_host = "http://www.airportparking.com/"
     
@@ -294,6 +296,7 @@ def get_results_parkingconnection(params,req)
       headless.start
     end  
     Capybara.run_server = false
+    Capybara.javascript_driver = :webkit_debug
     Capybara.current_driver = :webkit
     Capybara.app_host = "http://www.airportparkingreservations.com/"
     url="http://www.parkingconnection.com/locations/#{city}-#{short_name}-airport-parking/?dpnLocations=#{short_name}&txtCheckinDt=#{params[:from]}&dpnCheckInTime=#{params[:Items]}&txtCheckoutDt=#{params[:to]}&dpnCheckOutTime=#{params[:Items2]}&UnitID&FacilityID&sendbutton2"
@@ -336,6 +339,7 @@ def get_results_parkingconnection(params,req)
       headless.start
     end  
     Capybara.run_server = false
+    Capybara.javascript_driver = :webkit_debug
     Capybara.current_driver = :webkit
     Capybara.app_host = "http://www.airportparkingreservations.com/"
     visit(url)
@@ -393,6 +397,7 @@ def get_results_spothero(params, type,req)
       headless.start
     end  
     Capybara.run_server = false
+    Capybara.javascript_driver = :webkit_debug
     Capybara.current_driver = :webkit
     Capybara.app_host = "http://www.spothero.com/"
     
@@ -440,6 +445,7 @@ def get_results_spothero(params, type,req)
       headless.start
     end  
     Capybara.run_server = false
+    Capybara.javascript_driver = :webkit_debug
     Capybara.current_driver = :webkit
     Capybara.app_host = "http://www.airportparkingreservations.com/"
     "http://www.cheapairportparking.org/parking/find.php?airport=#{short_name}&FromDate=03%2F05%2F2013&from_time=1&ToDate=03%2F06%2F2013&to_time=15"
@@ -484,6 +490,7 @@ def get_results_spothero(params, type,req)
       headless.start
     end  
     Capybara.run_server = false
+    Capybara.javascript_driver = :webkit_debug
     Capybara.current_driver = :webkit
     Capybara.app_host = "http://www.gottapark.com/"
     visit("http://www.gottapark.com/")
@@ -559,6 +566,7 @@ def get_results_spothero(params, type,req)
     end  
 
     Capybara.run_server = false
+    Capybara.javascript_driver = :webkit_debug
     Capybara.current_driver = :webkit
     Capybara.app_host = "https://www.parkingpanda.com"
     if type != 'daily'
@@ -695,6 +703,7 @@ def get_results_centralpark(params,type,req)
       headless.start
     end  
     Capybara.run_server = false
+    Capybara.javascript_driver = :webkit_debug
     Capybara.current_driver = :webkit
     if city.downcase =="new-york"
       city_short = "nyc"
