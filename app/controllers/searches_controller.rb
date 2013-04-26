@@ -2,6 +2,7 @@ class SearchesController < ApplicationController
   # GET /searches
   # GET /searches.json
  
+
  def daily_search
  @req = Spider.daily_search(params)
  # @json = Result.all.to_gmaps4rails

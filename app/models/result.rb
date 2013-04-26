@@ -1,4 +1,5 @@
 class Result < ActiveRecord::Base
+  
   attr_accessible :owner, :request_id,  :location, :address, :price, :desc, :gmaps4rails_address, :latitude, :longitude, :gmaps
   acts_as_gmappable
   belongs_to :request

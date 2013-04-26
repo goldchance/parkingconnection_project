@@ -15,7 +15,8 @@ class Spider
     if Rails.env.production?
       Headless.new(display: 100, destroy_at_exit: false).start
     end
-      spy=Spider.new
+ 
+    spy=Spider.new
       req = Request.create(:desc=>"")
       spy.get_results_gottapark(params,"daily", req)
       spy.get_results_pandaparking(params, "daily",req)
@@ -781,11 +782,13 @@ def get_results_centralpark(params,type,req)
     end
 end
 
+
   
   
 #---------------------------------------------------------------------------------------------------------------  
 def save_results(results,type,source,req) 
-    results.each do |o|
+    
+  results.each do |o|
       item = req.results.new
       item.address = o["address"]
       item.location = o["location"]
