@@ -53,18 +53,8 @@ ul.simplePagerNav li.currentPage a {
 </script>
 <!-- end css for the results -->
 <div id="results" >
-       <fieldset class="ui-corner-all ui-widget ui-widget-content " style="margin:10px; ">
-          <legend>Log</legend>
-              <%= @req.desc %>
-       </fieldset>
-       
-      <div id="tabs" style="z-index:1;">
-      <ul>
-        <li><a href="#tabs-1">Group by location</a></li>
-        <li><a href="#tabs-2">Group by source</a></li>
-      </ul>
-      <div id="tabs-1">
-        <% @allresults = @req.results.group_by{ |s| [s.latitude, s.longitude]} %>
+              
+       <% @allresults = @req.results.group_by{ |s| [s.latitude, s.longitude]} %>
         <p> <%= @allresults.size %> place(s) </p>
         <br />
         <ul class="pagination1" style="list-style-type: none; ">
@@ -118,7 +108,22 @@ ul.simplePagerNav li.currentPage a {
         </ul>    
 
         </div>
-      <div id="tabs-2">
+
+        
+      
+      <br />
+  <br />
+  
+<%
+=begin
+%>
+ <div id="tabs" style="z-index:1;">
+      <ul>
+        <li><a href="#tabs-1">Group by location</a></li>
+        <li><a href="#tabs-2">Group by source</a></li>
+      </ul>
+      <div id="tabs-1">
+             <div id="tabs-2">
         <% @allresults = @req.results.group_by{ |s| [s.source]} %>
         <p> <%= @allresults.size %> source(s) </p>
         <ul class="pagination1" style="list-style-type: none; ">
@@ -164,15 +169,8 @@ ul.simplePagerNav li.currentPage a {
 
       </div>
       </div> 
-  
-      
-      <br />
-  <br />
-  
-<%
-=begin
-%>
-  <table id="results" >
+
+<table id="results" >
     <tbody>
   <% results = Result.find_all_by_desc(result_type) %>
     
@@ -220,6 +218,11 @@ ul.simplePagerNav li.currentPage a {
   <% end %>
     </tbody>
   </table>
+ <fieldset class="ui-corner-all ui-widget ui-widget-content " style="margin:10px; ">
+          <legend>Log</legend>
+              <%= @req.desc %>
+       </fieldset>
+ 
 <%
 =end
 %>
