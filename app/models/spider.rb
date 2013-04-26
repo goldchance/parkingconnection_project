@@ -11,6 +11,10 @@ class Spider
   
   def self.daily_search(params)
     begin
+      
+    if Rails.env.production?
+      Headless.new(display: 100, destroy_at_exit: false).start
+    end
       spy=Spider.new
       req = Request.create(:desc=>"")
       spy.get_results_gottapark(params,"daily", req)
@@ -40,6 +44,10 @@ class Spider
   def self.monthly_search(params)
    results=[]
     begin 
+     
+    if Rails.env.production?
+      Headless.new(display: 100, destroy_at_exit: false).start
+    end
       spy=Spider.new
       req = Request.create(:desc=>"")
       spy.get_results_pandaparking(params, "monthly",req)
@@ -66,7 +74,11 @@ class Spider
     
   def self.airport_search(params)
      begin 
-      spy=Spider.new
+     
+    if Rails.env.production?
+      Headless.new(display: 100, destroy_at_exit: false).start
+    end
+       spy=Spider.new
       req = Request.create(:desc=>"")
        spy.get_results_airportparkingreservations(params,req)
        spy.get_results_parkingconnection(params,req)
@@ -85,7 +97,7 @@ class Spider
       puts e.message
       puts e.backtrace
       
-      req.desc<< e.message << e.backtrace
+      req.desc<< e.message.to_s << e.backtrace.inspect.to_s
       req.save
     end
     
@@ -149,8 +161,10 @@ begin
     city=params[:wherebox_airp].split(" (")[0].gsub(" ","-")
     short_name = params[:wherebox_airp].split(" (")[1].gsub("(","").gsub(")","").upcase
     if Rails.env.production?
-      headless = Headless.new
-      headless.start
+     
+      headless = Headless.new(display: 100, reuse: true, destroy_at_exit: false)
+     # headless = Headless.new
+     # headless.start
     end
     Capybara.run_server = false
     Capybara.javascript_driver = :webkit_debug
@@ -228,8 +242,10 @@ begin
     city=params[:wherebox_airp].split(" (")[0].gsub(" ","-")
     short_name = params[:wherebox_airp].split(" (")[1].gsub("(","").gsub(")","").upcase
     if Rails.env.production?
-      headless = Headless.new
-      headless.start
+    
+      headless = Headless.new(display: 100, reuse: true, destroy_at_exit: false)
+     # headless = Headless.new
+     # headless.start
     end  
     Capybara.run_server = false
     Capybara.javascript_driver = :webkit_debug
@@ -292,8 +308,10 @@ def get_results_parkingconnection(params,req)
     short_name = params[:wherebox_airp].split(" (")[1].gsub("(","").gsub(")","")
     
     if Rails.env.production?
-      headless = Headless.new
-      headless.start
+    
+      headless = Headless.new(display: 100, reuse: true, destroy_at_exit: false)
+     # headless = Headless.new
+     # headless.start
     end  
     Capybara.run_server = false
     Capybara.javascript_driver = :webkit_debug
@@ -335,8 +353,10 @@ def get_results_parkingconnection(params,req)
     url = list["#{short_name}"]
   
     if Rails.env.production?
-      headless = Headless.new
-      headless.start
+     
+      headless = Headless.new(display: 100, reuse: true, destroy_at_exit: false)
+     # headless = Headless.new
+     # headless.start
     end  
     Capybara.run_server = false
     Capybara.javascript_driver = :webkit_debug
@@ -393,8 +413,10 @@ def get_results_spothero(params, type,req)
     end
     
     if Rails.env.production?
-      headless = Headless.new
-      headless.start
+      
+      headless = Headless.new(display: 100, reuse: true, destroy_at_exit: false)
+      #headless = Headless.new
+      #headless.start
     end  
     Capybara.run_server = false
     Capybara.javascript_driver = :webkit_debug
@@ -441,8 +463,10 @@ def get_results_spothero(params, type,req)
     url = params[:wherebox_airp_full]
     
     if Rails.env.production?
-      headless = Headless.new
-      headless.start
+   
+      headless = Headless.new(display: 100, reuse: true, destroy_at_exit: false)
+     # headless = Headless.new
+     # headless.start
     end  
     Capybara.run_server = false
     Capybara.javascript_driver = :webkit_debug
@@ -486,8 +510,10 @@ def get_results_spothero(params, type,req)
     end
    
     if Rails.env.production?
-      headless = Headless.new
-      headless.start
+      
+      headless = Headless.new(display: 100, reuse: true, destroy_at_exit: false)
+     # headless = Headless.new
+     # headless.start
     end  
     Capybara.run_server = false
     Capybara.javascript_driver = :webkit_debug
@@ -561,8 +587,10 @@ def get_results_spothero(params, type,req)
    
 
     if Rails.env.production?
-      headless = Headless.new
-      headless.start
+      
+      headless = Headless.new(display: 100, reuse: true, destroy_at_exit: false)
+      #headless = Headless.new
+      #headless.start
     end  
 
     Capybara.run_server = false
@@ -699,8 +727,10 @@ def get_results_centralpark(params,type,req)
     state = arr[1].strip 
 	   
     if Rails.env.production?
-      headless = Headless.new
-      headless.start
+      
+      headless = Headless.new(display: 100, reuse: true, destroy_at_exit: false)
+      #headless = Headless.new
+      #headless.start
     end  
     Capybara.run_server = false
     Capybara.javascript_driver = :webkit_debug
