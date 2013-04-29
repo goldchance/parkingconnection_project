@@ -18,11 +18,11 @@ class Spider
  
     spy=Spider.new
       req = Request.create(:desc=>"")
-      spy.get_results_gottapark(params,"daily", req)
-      spy.get_results_pandaparking(params, "daily",req)
-      spy.get_results_centralpark(params, "daily",req)
-      spy.get_results_parkwhiz(params, "daily",req)
-      spy.get_results_spothero(params, "daily",req)
+      spy.get_results_gottapark(params,"daily", req)    if params["gottapark"] == "1"
+      spy.get_results_pandaparking(params, "daily",req) if params["pandaparking"] == "1"
+      spy.get_results_centralpark(params, "daily",req)  if params["centralpark"] == "1"
+      spy.get_results_parkwhiz(params, "daily",req)     if params["parkwhiz"] == "1"
+      spy.get_results_spothero(params, "daily",req)     if params["spothero"] == "1"
      
    #   result_string = ApplicationController.new.render_to_string(:partial => 'pages/results', :locals => { result_type: "daily" })
    #   message = {:channel => "/searches",
@@ -51,8 +51,8 @@ class Spider
     end
       spy=Spider.new
       req = Request.create(:desc=>"")
-      spy.get_results_pandaparking(params, "monthly",req)
-      spy.get_results_centralpark(params, "monthly", req)
+      spy.get_results_pandaparking(params, "monthly",req) if params["pandaparking"] == "1"
+      spy.get_results_centralpark(params, "monthly", req) if params["centralpark"] == "1"
        
        # FayeController.publish('/searches', {result_string: result_string})
     #  result_string = ApplicationController.new.render_to_string(:partial => 'pages/results', :locals => { result_type: "monthly" })
@@ -81,12 +81,13 @@ class Spider
     end
        spy=Spider.new
       req = Request.create(:desc=>"")
-       spy.get_results_airportparkingreservations(params,req)
-       spy.get_results_parkingconnection(params,req)
-       spy.get_results_airportparking(params,req)
-       spy.get_results_aboutairportparking(params, req)
-       spy.get_results_pnf(params,req)
-      # FayeController.publish('/searches', {result_string: result_string})
+       
+        spy.get_results_airportparkingreservations(params,req)  if params["parkingconnection"] == "1"
+        spy.get_results_parkingconnection(params,req)           if params["parkingconnection"] == "1"
+        spy.get_results_airportparking(params,req)              if params["airportparking"] == "1"
+        spy.get_results_aboutairportparking(params, req)        if params["aboutairportparking"] == "1"
+        spy.get_results_pnf(params,req)                         if params["pnf"] == 1
+       # FayeController.publish('/searches', {result_string: result_string})
       
      # result_string = ApplicationController.new.render_to_string(:partial => 'pages/results', :locals => { result_type: "airport" })
      # message = {:channel => "/searches",

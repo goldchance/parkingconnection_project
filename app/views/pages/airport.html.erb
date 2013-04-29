@@ -1,6 +1,6 @@
     <div id="content">
        <h1>one search 
-    <span style="color: #024986">CONNETS</span>
+    <span style="color: #024986">CONNECTS</span>
     all.</h1>
     <p>Compare multiple parking sites at once.
     Choose where to park at the best rate.</p>
@@ -144,9 +144,41 @@
 <option value="11:30pm">11:30 pm</option>	
 	</select>
   </div><!-- end timebox left -->
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  <hr>
+  <table style="width:95%;">
+    <tr>
+      <td>
+        <%= check_box_tag("airportparkingreservations", value = "1", checked = true, options = {})%>
+        <%= label_tag "airportparkingreservations" %>
+      </td>
+      <td>
+        <%= check_box_tag("airportparking", value = "1", checked = true, options = {})%>
+        <%= label_tag "airportparking" %>
+      </td>
+      <td>
+        <%= check_box_tag("pnf", value = "1", checked = true, options = {})%>
+        <%= label_tag "pnf" %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <%= check_box_tag("aboutairportparking", value = "1", checked = true, options = {})%>
+        <%= label_tag "aboutairportparking" %>
+      </td>
+      <td>
+        <%= check_box_tag("parkingconnection", value = "1", checked = true, options = {})%>
+        <%= label_tag "parkingconnection" %>
+      </td>
+      </tr>
+      </table>
+
 </div><!-- end formbox2 -->
 
-        <div id="formbox3">
+<div id="formbox3">
       <div id="findbtn">
         <input type="submit" class="button2"/></button>
       </div><!-- end findparkingbtn -->

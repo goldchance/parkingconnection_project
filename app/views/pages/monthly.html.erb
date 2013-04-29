@@ -5,7 +5,7 @@
 		
     <div id="content">
        <h1>one search 
-    <span style="color: #024986">CONNETS</span>
+    <span style="color: #024986">CONNECTS</span>
     all.</h1>
     <p>Compare multiple parking sites at once.
     Choose where to park at the best rate.</p>
@@ -20,7 +20,20 @@
       <label for="wherebox"><h1>Where</h1></label>
         <input type="text" name="wherebox" id="wherebox" tabindex="1" />
         <p>enter city, address, or landmark</p>
-  
+ <br/>
+  <hr>
+  <table style="width:95%;">
+    <tr>
+      <td>
+        <%= check_box_tag("pandaparking", value = "1", checked = true, options = {})%>
+        <%= label_tag "pandaparking" %>
+      </td>
+      <td>
+        <%= check_box_tag("centralpark", value = "1", checked = true, options = {})%>
+        <%= label_tag "centralpark" %>
+      </td>
+          </tr>
+    </table>
     <div id="formbox3">
       <div id="findbtn">
         <input type="submit" class="button2"/></button>
