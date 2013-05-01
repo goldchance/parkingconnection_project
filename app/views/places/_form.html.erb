@@ -1,0 +1,32 @@
+<%= form_for @place do |f| %>
+  <%= f.error_messages %>
+  <p>
+    <%= f.label :href %><br />
+    <%= f.text_field :href %>
+  </p>
+  <p>
+    <%= f.label :location %><br />
+    <%= f.text_field :location %>
+  </p>
+  <p>
+    <%= f.label :address %><br />
+    <%= f.text_field :address %>
+  </p>
+  <p>
+    <%= f.label :price %><br />
+    <%= f.text_field :price %>
+  </p>
+  <p>
+    <%= f.label :urlimage %><br />
+    <%= f.text_field :urlimage %>
+  </p>
+  <p>
+    <%= f.label :desc %><br />
+    <%= f.text_field :desc %>
+  </p>
+  <p>
+    <%= f.label :source_id %><br />
+    <%= f.number_field :source_id %>
+  </p>
+  <p><%= f.submit %></p>
+<% end %>

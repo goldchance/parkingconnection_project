@@ -1,0 +1,17 @@
+one:
+  href: MyString
+  location: MyString
+  address: MyString
+  price: MyString
+  urlimage: MyString
+  desc: MyString
+  source_id: 1
+
+two:
+  href: MyString
+  location: MyString
+  address: MyString
+  price: MyString
+  urlimage: MyString
+  desc: MyString
+  source_id: 1

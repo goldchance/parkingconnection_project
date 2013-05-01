@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130412145051) do
+ActiveRecord::Schema.define(:version => 20130501213806) do
 
   create_table "contacts", :force => true do |t|
     t.string    "email"
@@ -35,6 +35,18 @@ ActiveRecord::Schema.define(:version => 20130412145051) do
 
   add_index "delayed_jobs", ["priority", "run_at"], :name => "delayed_jobs_priority"
 
+  create_table "places", :force => true do |t|
+    t.string   "href"
+    t.string   "location"
+    t.string   "address"
+    t.string   "price"
+    t.string   "urlimage"
+    t.string   "desc"
+    t.integer  "source_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
   create_table "rails_admin_histories", :force => true do |t|
     t.text      "message"
     t.string    "username"
@@ -49,9 +61,9 @@ ActiveRecord::Schema.define(:version => 20130412145051) do
   add_index "rails_admin_histories", ["item", "table", "month", "year"], :name => "index_rails_admin_histories"
 
   create_table "requests", :force => true do |t|
-    t.text     "desc"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.text      "desc"
+    t.timestamp "created_at", :null => false
+    t.timestamp "updated_at", :null => false
   end
 
   create_table "results", :force => true do |t|
@@ -69,6 +81,12 @@ ActiveRecord::Schema.define(:version => 20130412145051) do
     t.float     "longitude"
     t.boolean   "gmaps"
     t.integer   "request_id"
+  end
+
+  create_table "sources", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "users", :force => true do |t|

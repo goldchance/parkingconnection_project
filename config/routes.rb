@@ -1,4 +1,8 @@
 StagePark::Application.routes.draw do
+  resources :places
+
+  resources :sources
+
   resources :requests
 
  # faye_server '/faye', :timeout => 25 do

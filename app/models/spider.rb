@@ -750,26 +750,42 @@ def get_results_centralpark(params,type,req)
     end
     #debugger
     list.each do |url|
-      visit("http://#{city_short}.centralparking.com#{url}")
-      object = Hash.new
-      object["href"]= "http://#{city_short}.centralparking.com#{url}"
-      if all(:css,"dl.info dd").size>0
-	      object["address"] = all(:css,"dl.info dd").first.text
-      end
-      
-      if all(:css, "div.column_1-5.left h1").size>0
-         object["location"] = all(:css, "div.column_1-5.left h1").first.text
-      end
-      if type == 'daily'
-        if all(:css, "table.layout-table-1 tr td").size>3
-	        object["price"] = all(:css, "table.layout-table-1 tr td")[3].text
-        end
-      else
-        if all(:css, "div.monthly-parking-rates p").size>0
-         object["price"] = all(:css, "div.monthly-parking-rates p")[0].text
-        end
-      end
+      if Source.find_by_name("centralparking").places.find_by_href("http://#{city_short}.centralparking.com#{url}") != nil
+        place = Source.find_by_name("centralparking").places.find_by_href("http://#{city_short}.centralparking.com#{url}")
+        object = Hash.new
+        object["href"]= "http://#{city_short}.centralparking.com#{url}"
+        object["location"] = place.location
+        object["address"] = place.address
+        object["price"] = place.price
 
+      else
+        visit("http://#{city_short}.centralparking.com#{url}")
+        object = Hash.new
+        place = Source.find_by_name("centralparking").places.new
+        place.href = "http://#{city_short}.centralparking.com#{url}"
+        object["href"]= "http://#{city_short}.centralparking.com#{url}"
+        if all(:css,"dl.info dd").size>0
+          object["address"] = all(:css,"dl.info dd").first.text
+          place.address = object["address"]
+        end
+        
+        if all(:css, "div.column_1-5.left h1").size>0
+           object["location"] = all(:css, "div.column_1-5.left h1").first.text
+           place.location = object["location"]
+        end
+        if type == 'daily'
+          if all(:css, "table.layout-table-1 tr td").size>3
+            object["price"] = all(:css, "table.layout-table-1 tr td")[3].text
+            place.price = object["price"]
+          end
+        else
+          if all(:css, "div.monthly-parking-rates p").size>0
+           object["price"] = all(:css, "div.monthly-parking-rates p")[0].text
+           place.price = object["price"]
+          end
+        end
+        place.save
+      end
 	    results<<object
      
      end
