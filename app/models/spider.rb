@@ -691,8 +691,8 @@ def get_results_parkwhiz(params,type,req)
      begin
       object = Hash.new
      # debugger
-      agent.get(link)
-      sleep 1
+     page =  agent.get(link)
+     # sleep 1
       object["location"] = agent.page.search("#parking-header h1").first.text
       object["address"] =""
       agent.page.search(".address span").each do |s|
@@ -790,17 +790,19 @@ end
 def save_results(results,type,source,req) 
     
   results.each do |o|
-      item = req.results.new
-      item.address = o["address"]
-      item.location = o["location"]
-      item.price = o["price"]
-      if o["urlimage"].present? 
-        item.urlimage = o["urlimage"]
+      if o["href"] != nil
+        item = req.results.new
+        item.address = o["address"]
+        item.location = o["location"]
+        item.price = o["price"]
+        if o["urlimage"].present? 
+          item.urlimage = o["urlimage"]
+        end
+        item.href = o["href"]
+        item.desc= type
+        item.source = source
+        item.save
       end
-      item.href = o["href"]
-      item.desc= type
-      item.source = source
-      item.save
     end
 end
 
