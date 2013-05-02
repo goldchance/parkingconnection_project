@@ -688,27 +688,47 @@ def get_results_parkwhiz(params,type,req)
       links << "http://www.parkwhiz.com#{link[:href]}"
     end
     links.each do |link|
-     begin
-      object = Hash.new
-     # debugger
-     page =  agent.get(link)
-     # sleep 1
-      object["location"] = agent.page.search("#parking-header h1").first.text
-      object["address"] =""
-      agent.page.search(".address span").each do |s|
-       object["address"] << s.text 
-      end
-      if  agent.page.search(".money span").size > 1
-        object["price"] = "$#{agent.page.search(".money span.dollars").first.text} #{agent.page.search(".money span.cents").last.text}"
-      end
-      object["href"] = link
-      if agent.page.search("#photos img").size > 0
-        url =  agent.page.search("#photos img").first[:src]
-        url.slice!(0).slice!(0)
-        object["urlimage"] = "http://#{url}"
-      end
-
-      results << object
+      href = link.split("/?start").first
+      begin
+      #---
+        if Source.find_by_name("parkwhiz").places.find_by_href(href) != nil
+          place = Source.find_by_name("parkwhiz").places.find_by_href(href)
+          object = Hash.new
+          object["href"]= link
+          object["location"] = place.location
+          object["address"] = place.address
+          object["price"] = place.price
+          object["urlimage"] = place.urlimage
+        else
+            object = Hash.new
+          # debugger
+          
+          place = Source.find_by_name("parkwhiz").places.new
+          place.href = href
+          page =  agent.get(link)
+          sleep 1
+          object["location"] = agent.page.search("#parking-header h1").first.text
+          place.location = object["location"]
+          object["address"] =""
+          agent.page.search(".address span").each do |s|
+           object["address"] << s.text 
+          end
+          place.address = object["address"]
+          if  agent.page.search(".money span").size > 1
+            object["price"] = "$#{agent.page.search(".money span.dollars").first.text} #{agent.page.search(".money span.cents").last.text}"
+          end
+          place.price = object["price"]
+          object["href"] = link
+          if agent.page.search("#photos img").size > 0
+            url =  agent.page.search("#photos img").first[:src]
+            url.slice!(0).slice!(0)
+            object["urlimage"] = "http://#{url}"
+          end
+          place.urlimage = object["urlimage"]
+          place.save
+        end
+        results << object
+     #------
      end
     end
     
@@ -749,11 +769,16 @@ def get_results_centralpark(params,type,req)
       
     end
     #debugger
+    if type == 'daily'
+      det="#Tab_standard-rates"
+    else
+     det="#Tab_monthly-rates"
+    end
     list.each do |url|
-      if Source.find_by_name("centralparking").places.find_by_href("http://#{city_short}.centralparking.com#{url}") != nil
-        place = Source.find_by_name("centralparking").places.find_by_href("http://#{city_short}.centralparking.com#{url}")
+      if Source.find_by_name("centralparking").places.find_by_href("http://#{city_short}.centralparking.com#{url}#{det}") != nil
+        place = Source.find_by_name("centralparking").places.find_by_href("http://#{city_short}.centralparking.com#{url}#{det}")
         object = Hash.new
-        object["href"]= "http://#{city_short}.centralparking.com#{url}"
+        object["href"]= "http://#{city_short}.centralparking.com#{url}#{det}"
         object["location"] = place.location
         object["address"] = place.address
         object["price"] = place.price
@@ -762,8 +787,8 @@ def get_results_centralpark(params,type,req)
         visit("http://#{city_short}.centralparking.com#{url}")
         object = Hash.new
         place = Source.find_by_name("centralparking").places.new
-        place.href = "http://#{city_short}.centralparking.com#{url}"
-        object["href"]= "http://#{city_short}.centralparking.com#{url}"
+        place.href = "http://#{city_short}.centralparking.com#{url}#{det}"
+        object["href"]= "http://#{city_short}.centralparking.com#{url}#{det}"
         if all(:css,"dl.info dd").size>0
           object["address"] = all(:css,"dl.info dd").first.text
           place.address = object["address"]
