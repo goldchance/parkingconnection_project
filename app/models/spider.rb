@@ -435,16 +435,37 @@ def get_results_spothero(params, type,req)
       list << "https://spothero.com/#{city}/spot/#{id}?start_date=#{params[:from].gsub("/","-")}&start_time=#{params[:Items].gsub(":","").gsub(" ","")}&end_date=#{params[:to].gsub("/","-")}&end_time=#{params[:Items2].gsub(":","").gsub(" ","")}"
     end
     list.each do |url|
-     begin
-      object = Hash.new
-      visit(url)
-      object["location"] = all(:css, ".hd h1").first.text
-      object["address"] = all(:css, ".hd").first.text
-      object["price"] = all(:css, "#hourly .priceByTimeListCheckout dt").first.text
-      object["href"] = url
-      object["urlimage"] = all(:css, ".slides_control img").first[:src]
-      results << object
-     rescue
+      begin
+        href= url.split("?start_date").first
+        if Source.find_by_name("spothero").places.find_by_href(href) != nil
+          place = Source.find_by_name("spothero").places.find_by_href(href)
+          object = Hash.new
+          object["href"]= url
+          object["location"] = place.location
+          object["address"] = place.address
+          object["price"] = place.price
+          object["urlimage"] = place.urlimage
+        else
+
+          object = Hash.new
+          place = Source.find_by_name("spothero").places.new
+          visit(url)
+          object["location"] = all(:css, ".hd h1").first.text
+          object["address"] = all(:css, ".hd").first.text
+          object["price"] = all(:css, "#hourly .priceByTimeListCheckout dt").first.text
+          object["href"] = url
+          object["urlimage"] = all(:css, ".slides_control img").first[:src]
+          
+          place.href = href
+          place.location = object["location"]
+          place.address = object["address"]
+          place.price = object["price"]
+          place.urlimage = object["urlimage"]
+          place.save
+        end 
+
+          results << object
+    rescue
      end
      end
     
