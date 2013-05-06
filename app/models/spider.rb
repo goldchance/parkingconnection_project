@@ -82,7 +82,7 @@ class Spider
        spy=Spider.new
       req = Request.create(:desc=>"")
        
-        spy.get_results_airportparkingreservations(params,req)  if params["parkingconnection"] == "1"
+        spy.get_results_airportparkingreservations(params,req)  if params["airportparkingreservations"] == "1"
         spy.get_results_parkingconnection(params,req)           if params["parkingconnection"] == "1"
         spy.get_results_airportparking(params,req)              if params["airportparking"] == "1"
         spy.get_results_aboutairportparking(params, req)        if params["aboutairportparking"] == "1"
@@ -198,7 +198,12 @@ begin
 
     links.each do |link|
       begin
-        object = Hash.new
+        href = link
+      object = Hash.new
+      if Source.find_by_name("aboutairportparking").places.find_by_href(link) != nil
+        find_place("aboutairportparking", link, object)
+        object["href"] = link
+      else
         visit(link)
         object["location"] = all(:css, "div.main_content h1").first.text
         object["address"] = "#{all(:css, ".parking_address").first.text} #{all(:css, ".parking_address").last.text}"
@@ -221,7 +226,11 @@ begin
         else
         object["urlimage"]=""
         end
+      
+        save_place(object,"aboutairportparking",link)
+      end
         results<<object
+      
       end
     end
     #debugger
@@ -271,27 +280,36 @@ begin
         end
       end
     end
+    #------
     links.each do |link|
-    begin 
-      object = Hash.new
-      visit(link)
-      object["urlimage"] = all(:css, "div#photos img").first[:src]
-      all(:css, "#details_container form button").first.click
-      sleep 3
-      #debugger
-      
-      object["location"] = all(:css,"div#review_reservation_container div#lot_title").first.text
-     if all(:css,"div#review_reservation_container div#price_breakdown_container div").size> 0 
-      object["address"] = all(:css,"div#review_reservation_container div#price_breakdown_container div")[4].text
-      object["address"] << all(:css,"div#review_reservation_container div#price_breakdown_container div")[5].text
-     elsif
-      object["address"] = all(:css,"#review_reservation_container div.span6.offset1 div")[4].text
-      object["address"] << all(:css,"div#review_reservation_container div.span6.offset1 div")[5].text
-     end
-      object["price"] = all(:css,"span.reservation-subtotal-amount").first.text
-      object["href"] = current_url
-      results<<object
-    end
+      begin 
+        href = link.split("/reservation?").first
+        object = Hash.new
+        if Source.find_by_name("airportparking").places.find_by_href(href) != nil
+          find_place("airportparking", href, object)
+          object["href"]=link
+        else
+         visit(link)
+         object["urlimage"] = all(:css, "div#photos img").first[:src]
+         all(:css, "#details_container form button").first.click
+         sleep 3
+          #debugger
+          
+         object["location"] = all(:css,"div#review_reservation_container div#lot_title").first.text
+         if all(:css,"div#review_reservation_container div#price_breakdown_container div").size> 0 
+          object["address"] = all(:css,"div#review_reservation_container div#price_breakdown_container div")[4].text
+          object["address"] << all(:css,"div#review_reservation_container div#price_breakdown_container div")[5].text
+         elsif
+          object["address"] = all(:css,"#review_reservation_container div.span6.offset1 div")[4].text
+          object["address"] << all(:css,"div#review_reservation_container div.span6.offset1 div")[5].text
+         end
+         object["price"] = all(:css,"span.reservation-subtotal-amount").first.text
+         object["href"] = current_url
+        
+         save_place(object,"airportparking",href)
+        end
+      end
+        results<<object
     end
     save_results(results,"airport","www.airportparking.com", req)    
    rescue Exception => e  
@@ -390,11 +408,20 @@ def get_results_parkingconnection(params,req)
       end
     end
   results.each do |r|
-    visit(r["href"])
-    r["address"] = "#{find(:css, "span.street-address").text}, #{find(:css, "span.locality").text}"
-    if all(:css, "li.jcarousel-item img").size > 0
-      r["urlimage"] = all(:css, "li.jcarousel-item img").first[:src]
-    end
+    link = r["href"] 
+     if Source.find_by_name("airportparkingreservations").places.find_by_href(link) != nil
+        object = r
+        find_place("airportparkingreservations", link, object)
+        r = object
+        #object["href"] = link
+     else
+        visit(r["href"])
+        r["address"] = "#{find(:css, "span.street-address").text}, #{find(:css, "span.locality").text}"
+        if all(:css, "li.jcarousel-item img").size > 0
+          r["urlimage"] = all(:css, "li.jcarousel-item img").first[:src]
+        end
+        save_place(object,"airportparkingreservations",link)
+     end
   end
   save_results(results,"airport","www.airportparkingreservations.com",req)    
   rescue Exception => e  
@@ -713,40 +740,31 @@ def get_results_parkwhiz(params,type,req)
       begin
       #---
         if Source.find_by_name("parkwhiz").places.find_by_href(href) != nil
-          place = Source.find_by_name("parkwhiz").places.find_by_href(href)
           object = Hash.new
+          find_place("parkwhiz", href, object)
           object["href"]= link
-          object["location"] = place.location
-          object["address"] = place.address
-          object["price"] = place.price
-          object["urlimage"] = place.urlimage
         else
-            object = Hash.new
+          object = Hash.new
           # debugger
-          
-          place = Source.find_by_name("parkwhiz").places.new
-          place.href = href
           page =  agent.get(link)
           sleep 1
           object["location"] = agent.page.search("#parking-header h1").first.text
-          place.location = object["location"]
           object["address"] =""
           agent.page.search(".address span").each do |s|
            object["address"] << s.text 
           end
-          place.address = object["address"]
           if  agent.page.search(".money span").size > 1
             object["price"] = "$#{agent.page.search(".money span.dollars").first.text} #{agent.page.search(".money span.cents").last.text}"
           end
-          place.price = object["price"]
           object["href"] = link
           if agent.page.search("#photos img").size > 0
             url =  agent.page.search("#photos img").first[:src]
             url.slice!(0).slice!(0)
             object["urlimage"] = "http://#{url}"
           end
-          place.urlimage = object["urlimage"]
-          place.save
+         # place.urlimage = object["urlimage"]
+         # place.save
+          save_place(object, "parkwhiz" , href)
         end
         results << object
      #------
@@ -796,41 +814,43 @@ def get_results_centralpark(params,type,req)
      det="#Tab_monthly-rates"
     end
     list.each do |url|
+      href = "http://#{city_short}.centralparking.com#{url}#{det}"
       if Source.find_by_name("centralparking").places.find_by_href("http://#{city_short}.centralparking.com#{url}#{det}") != nil
-        place = Source.find_by_name("centralparking").places.find_by_href("http://#{city_short}.centralparking.com#{url}#{det}")
         object = Hash.new
-        object["href"]= "http://#{city_short}.centralparking.com#{url}#{det}"
-        object["location"] = place.location
-        object["address"] = place.address
-        object["price"] = place.price
+        find_place("centralparking", href, object)
+        #object["href"]= "http://#{city_short}.centralparking.com#{url}#{det}"
+        #object["location"] = place.location
+        #object["address"] = place.address
+        #object["price"] = place.price
 
       else
         visit("http://#{city_short}.centralparking.com#{url}")
         object = Hash.new
-        place = Source.find_by_name("centralparking").places.new
-        place.href = "http://#{city_short}.centralparking.com#{url}#{det}"
+       # place = Source.find_by_name("centralparking").places.new
+       # place.href = "http://#{city_short}.centralparking.com#{url}#{det}"
         object["href"]= "http://#{city_short}.centralparking.com#{url}#{det}"
         if all(:css,"dl.info dd").size>0
           object["address"] = all(:css,"dl.info dd").first.text
-          place.address = object["address"]
+         # place.address = object["address"]
         end
         
         if all(:css, "div.column_1-5.left h1").size>0
            object["location"] = all(:css, "div.column_1-5.left h1").first.text
-           place.location = object["location"]
+          # place.location = object["location"]
         end
         if type == 'daily'
           if all(:css, "table.layout-table-1 tr td").size>3
             object["price"] = all(:css, "table.layout-table-1 tr td")[3].text
-            place.price = object["price"]
+         #   place.price = object["price"]
           end
         else
           if all(:css, "div.monthly-parking-rates p").size>0
            object["price"] = all(:css, "div.monthly-parking-rates p")[0].text
-           place.price = object["price"]
+        #   place.price = object["price"]
           end
         end
-        place.save
+        save_place(object,"centralparking",href)
+       # place.save
       end
 	    results<<object
      
@@ -849,6 +869,28 @@ end
   
   
 #---------------------------------------------------------------------------------------------------------------  
+def save_place(object,source,href)
+    place = Source.find_by_name(source).places.new
+    place.location = object["location"] if object["location"]
+    place.address = object["address"] if object["address"]
+    place.price = object["price"] if object["price"]
+    place.href = href
+    place.urlimage = object["urlimage"] if object["urlimage"]
+    place.save
+end
+
+def find_place(source,href,object)
+    place = Source.find_by_name(source).places.find_by_href(href)
+      #    object["href"]= link
+          object["location"] = place.location if place.location != nil
+          object["address"] = place.address if place.address != nil
+          object["price"] = place.price if place.address != nil
+          object["urlimage"] = place.urlimage if place.address != nil
+
+       # debugger
+object
+end
+
 def save_results(results,type,source,req) 
     
   results.each do |o|
