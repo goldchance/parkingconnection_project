@@ -420,6 +420,7 @@ def get_results_parkingconnection(params,req)
         if all(:css, "li.jcarousel-item img").size > 0
           r["urlimage"] = all(:css, "li.jcarousel-item img").first[:src]
         end
+        object = r
         save_place(object,"airportparkingreservations",link)
      end
   end
