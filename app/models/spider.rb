@@ -86,7 +86,7 @@ class Spider
         spy.get_results_parkingconnection(params,req)           if params["parkingconnection"] == "1"
         spy.get_results_airportparking(params,req)              if params["airportparking"] == "1"
         spy.get_results_aboutairportparking(params, req)        if params["aboutairportparking"] == "1"
-        spy.get_results_pnf(params,req)                         if params["pnf"] == 1
+        spy.get_results_pnf(params,req)                         if params["pnf"] == "1"
        # FayeController.publish('/searches', {result_string: result_string})
       
      # result_string = ApplicationController.new.render_to_string(:partial => 'pages/results', :locals => { result_type: "airport" })
@@ -120,14 +120,13 @@ begin
     agent.get("http://www.pnf.com")
     f = agent.page.forms.first
     f.city=short_name
-    f.leave_date= "06/28/2013"
-    f.leave_time="06:00am"
-    f.return_date= "06/29/2013"
-    f.return_time="06:00am"
+    f.leave_date= params[:from]
+    f.leave_time=params[:Items]
+    f.return_date= params[:to]
+    f.return_time=params[:Items2]
     f.submit
-    sleep 5
+    sleep 2
     agent.page.search(".location").each do |loc|
-      begin
       object = Hash.new
       object["location"] = loc.search(".title").first.text
       s = loc.search(".info p").first.text
@@ -137,12 +136,10 @@ begin
       object["address"] = add
       object["price"] = loc.search(".ratetotal").first.text
       part =  loc.search(".reserve-now a").first[:href]
-      object["href"] = "http://www.pnf.com/reserve/#{part}#account"
+      object["href"] = "http://www.pnf.com/reserve/#{part}#parking"
       object["urlimage"]=""
       results << object
-      end
     end
- #       debugger
     save_results(results,"airport","www.pnf.com", req)    
    rescue Exception => e  
      puts e.message  
