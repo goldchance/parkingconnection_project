@@ -52,11 +52,11 @@ ul.simplePagerNav li.currentPage a {
     });
 </script>
 <!-- end css for the results -->
-<div id="results" title="<%=@req.id%>">
+<div id="results" title="<%=@req.id%>" name="no">
               
-        <input type="text" id="request" />
-       <% @allresults = @req.results.group_by{ |s| [s.latitude, s.longitude]} %>
+        <% @allresults = @req.results.group_by{ |s| [s.latitude, s.longitude]} %>
         <p> <%= @allresults.size %> place(s) </p>
+        
         <br />
         <ul class="pagination1" style="list-style-type: none; ">
           <% @allresults.each do |hash| %>

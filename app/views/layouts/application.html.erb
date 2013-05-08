@@ -34,8 +34,11 @@
 <link href="/css/results.css" rel="stylesheet" type="text/css" />
 
 <script>
+  
+    var asd = '0'
   $(function() {
- $.backstretch("/images/bg_color.png");
+    
+    $.backstretch("/images/bg_color.png");
     $( document ).tooltip({
       items: "img, [data-geo], [title]",
       content: function() {
@@ -58,12 +61,18 @@
        return false;
     });
   $( "#google_map_button" ).click(function() {
+  
     var request = $('#results').attr('title') 
-    $.getJSON('/results?request_id='+ request, function(json){
-    $(".map_container").show();
-    Gmaps.loadMaps();
-    Gmaps.map.addMarkers(json);
-  })
+    var req_status = $('#results').attr('name')
+    if (  req_status == 'no'  ) {
+      $('#results').attr('name','yes')
+      $.getJSON('/results?request_id='+ request, function(json){
+      $(".map_container").show();
+      Gmaps.loadMaps();
+      Gmaps.map.addMarkers(json);
+    })
+  
+    }
   $( "#google_map" ).toggle( "blind", {}, 500 );
   return false;
     });
