@@ -1,4 +1,5 @@
 class RequestsController < ApplicationController
+  respond_to :html, :json
   def index
     @requests = Request.all
   end

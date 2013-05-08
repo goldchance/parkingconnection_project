@@ -58,7 +58,8 @@
        return false;
     });
   $( "#google_map_button" ).click(function() {
-  $.getJSON('/results', function(json){
+    var request = $('#results').attr('title') 
+    $.getJSON('/results?request_id='+ request, function(json){
     $(".map_container").show();
     Gmaps.loadMaps();
     Gmaps.map.addMarkers(json);

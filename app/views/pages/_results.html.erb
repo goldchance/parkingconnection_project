@@ -52,8 +52,9 @@ ul.simplePagerNav li.currentPage a {
     });
 </script>
 <!-- end css for the results -->
-<div id="results" >
+<div id="results" title="<%=@req.id%>">
               
+        <input type="text" id="request" />
        <% @allresults = @req.results.group_by{ |s| [s.latitude, s.longitude]} %>
         <p> <%= @allresults.size %> place(s) </p>
         <br />

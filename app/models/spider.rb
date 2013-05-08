@@ -120,9 +120,9 @@ begin
     agent.get("http://www.pnf.com")
     f = agent.page.forms.first
     f.city=short_name
-    f.leave_date= "03/28/2013"
+    f.leave_date= "06/28/2013"
     f.leave_time="06:00am"
-    f.return_date= "03/29/2013"
+    f.return_date= "06/29/2013"
     f.return_time="06:00am"
     f.submit
     sleep 5

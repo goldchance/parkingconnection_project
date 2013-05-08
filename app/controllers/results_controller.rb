@@ -1,8 +1,8 @@
 class ResultsController < ApplicationController
   respond_to :html, :json
   def index
-    @results = Result.all
-    @json = Result.all.to_gmaps4rails
+    #@results = Result.all
+    @json = Result.find_all_by_request_id(params[:request_id]).to_gmaps4rails
     respond_with @json
   end
 

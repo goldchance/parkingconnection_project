@@ -3,15 +3,14 @@ StagePark::Application.routes.draw do
 
   resources :sources
 
-  resources :requests
 
  # faye_server '/faye', :timeout => 25 do
  #   map '/searches/**' => FayeController
     # map :default => :block
  # end
 
+  resources :requests  
   resources :results
-
   mount RailsAdmin::Engine => '/admin', :as => 'rails_admin'
 
   devise_for :users
@@ -23,6 +22,7 @@ StagePark::Application.routes.draw do
     match 'daily_search' => 'searches#daily_search'
     match 'monthly_search' => 'searches#monthly_search'
     match 'airport_search' => 'searches#airport_search'
+    
     match 'home' => 'pages#home'
     match 'daily' => 'pages#daily'
     match 'monthly' => 'pages#monthly'
