@@ -1,4 +1,23 @@
-    <div id="content">
+<script>
+   $(document).ready(function() {
+      $('#findbtn').click(function(){
+        var wherebox, city, short_name
+        wherebox = $('#wherebox_airp').val();
+        short_name = wherebox.split(" (")[1].replace(")","")
+        city = wherebox.split(" (")[0].replace(" ","-")
+        from = $('#from').val();
+        to = $('#to').val();
+        time_start = $('#Items').val();
+        time_end = $('#Items2').val();
+        if ($('#parkingconnection').is(':checked')) {
+          url1="http://www.parkingconnection.com/locations/" + city + "-" + short_name + "-airport-parking/?dpnLocations=" + short_name + "&txtCheckinDt=" + from +"&dpnCheckInTime=" + time_start + "&txtCheckoutDt=" + to + "&dpnCheckOutTime=" + time_end +"&UnitID&FacilityID&sendbutton2"
+          window.open(url1, 'window name', 'window settings');
+        }
+        
+      });
+   });
+</script>
+<div id="content">
        <h1>one search 
     <span style="color: #024986">CONNECTS</span>
     all.</h1>
@@ -148,33 +167,22 @@
   <br/>
   <br/>
   <br/>
+  <p>Choose Sites to Compare vs. ParkingConnects (new windows)  </p>
   <hr>
   <table style="width:95%;">
     <tr>
       <td>
-        <%= check_box_tag("airportparkingreservations", value = "1", checked = true, options = {})%>
-        <%= label_tag "airportparkingreservations" %>
-      </td>
-      <td>
-        <%= check_box_tag("airportparking", value = "1", checked = true, options = {})%>
-        <%= label_tag "airportparking" %>
-      </td>
-      <td>
-        <%= check_box_tag("pnf", value = "1", checked = true, options = {})%>
-        <%= label_tag "pnf" %>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <%= check_box_tag("aboutairportparking", value = "1", checked = true, options = {})%>
-        <%= label_tag "aboutairportparking" %>
-      </td>
-      <td>
         <%= check_box_tag("parkingconnection", value = "1", checked = true, options = {})%>
         <%= label_tag "parkingconnection" %>
       </td>
-      </tr>
-      </table>
+      
+      <td>
+      </td>
+      
+      <td>
+      </td>
+    </tr>
+          </table>
 
 </div><!-- end formbox2 -->
 

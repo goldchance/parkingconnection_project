@@ -1,8 +1,32 @@
+<script>
+   $(document).ready(function() {
+      $('#findbtn').click(function(){
+        var wherebox, city, state
+        wherebox = $('#wherebox').val();
+        city = wherebox.split(",")[0].replace(/^\s+|\s+$/g, '').replace(" ","-")
+        state = wherebox.split(",")[1].replace(/^\s+|\s+$/g, '')
+        from = $('#from').val();
+        to = $('#to').val();
+        time_start = $('#Items').val();
+        time_end = $('#Items2').val();
+        if ($('#centralpark').is(':checked')) {
+          var city_short
+          if ( city.toLowerCase() == "new-york" )
+          { city_short = "nyc" }
+          else
+          { city_short = city.replace(" ","").replace("-","") }
+          url = "http://" + city_short + ".centralparking.com/parking-near/" + city + "-" + state + "-USA.html"
+          window.open(url, 'window name', 'window settings');
+        }
+        
+      });
+   });
+</script>
 <link href="css/pc.css" rel="stylesheet" type="text/css" />
 <link href="css/dailybox.css" rel="stylesheet" type="text/css" />
 <link href="css/loginbox.css" rel="stylesheet" type="text/css" />
 
-		
+    
     <div id="content">
        <h1>one search 
     <span style="color: #024986">CONNECTS</span>
@@ -21,13 +45,12 @@
         <input type="text" name="wherebox" id="wherebox" tabindex="1" />
         <p>enter city, address, or landmark</p>
  <br/>
-  <hr>
+ 
+ <p>Choose Sites to Compare vs. ParkingConnects (new windows)  </p>
+ <hr>
   <table style="width:95%;">
     <tr>
-      <td>
-        <%= check_box_tag("pandaparking", value = "1", checked = true, options = {})%>
-        <%= label_tag "pandaparking" %>
-      </td>
+      
       <td>
         <%= check_box_tag("centralpark", value = "1", checked = true, options = {})%>
         <%= label_tag "centralpark" %>
