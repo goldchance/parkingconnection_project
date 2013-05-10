@@ -7,6 +7,7 @@
 			minDate: 0,
             onClose: function( selectedDate ) {
                 $( "#to" ).datepicker( "option", "minDate", selectedDate );
+                $("#to").datepicker("show");
             }
         });
         $( "#to" ).datepicker({
