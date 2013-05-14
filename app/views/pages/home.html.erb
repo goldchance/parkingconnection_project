@@ -1,3 +1,4 @@
+
 <script>
    $(document).ready(function() {
       $('#findbtn').click(function(){
@@ -19,7 +20,16 @@
           url = "http://" + city_short + ".centralparking.com/parking-near/" + city + "-" + state + "-USA.html"
           window.open(url, 'window name', 'window settings');
         }
-        
+        if ($('#parkwhiz').is(':checked')) {
+          url = "http://www.parkwhiz.com/p/"+city+"-parking/map/?&start_date="+ from
+                   +"&start_time=" + time_start +"&end_date="+ to +"&end_time="+time_end 
+          window.open(url, 'window name', 'window settings');
+        }
+        if ($('#parkingpanda').is(':checked')) {
+          url=  "https://www.parkingpanda.com/Search/?location="+ city + "%2c"+state+"%2c+USA&start=" + from 
+          +"#location="+city +"%2C%20"+state+"%2C%20USA&start="+from+"&end="+to+"&monthly=false&daily=true"
+          window.open(url, 'window name', 'window settings');
+        }
       });
    });
 </script>
@@ -176,11 +186,18 @@
   <table style="width:95%;">
     <tr>
       <td>
-        <%= check_box_tag("centralpark", value = "1", checked = true, options = {})%>
+        <%= check_box_tag("centralpark", value = "1", checked = false, options = {})%>
         <%= label_tag "centralpark" %>
       </td>
       <td>
+        <%= check_box_tag("parkwhiz", value = "1", checked = false, options = {})%>
+        <%= label_tag "parkwhiz" %>
       </td>
+      <td>
+        <%= check_box_tag("parkingpanda", value = "1", checked = false, options = {})%>
+        <%= label_tag "parkingpanda" %>
+      </td>
+
     </tr>
   </table>
 

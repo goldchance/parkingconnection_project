@@ -29,6 +29,8 @@ gem 'mysql2', "~> 0.3.11"
 #gem 'gdata', :git => 'git://github.com/agentrock/gdata.git'
 #gem 'watir'
 #gem 'watir-webdriver'
+gem "gon"
+gem "squeel"
 gem "psych", "~> 1.3.4"
 gem 'delayed_job_active_record'
 # Gems used only for assets and not required
