@@ -16,9 +16,24 @@
           else
           { city_short = city.replace(" ","").replace("-","") }
           url = "http://" + city_short + ".centralparking.com/parking-near/" + city + "-" + state + "-USA.html"
-          window.open(url, 'window name', 'window settings');
+          //window.open(url, 'window name', 'window settings');
+          $('#centralpark_link').click(function(){
+                   window.open(url, 'blank1');
+          });
+          $('#centralpark_link').click();
+
+          }
+        if ($('#parkingpanda').is(':checked')) {
+          url=  "https://www.parkingpanda.com/Search/?location="+ city + "%2c"+state+"%2c+USA&start=" + from 
+          +"#location="+city +"%2C%20"+state+"%2C%20USA&start="+from+"&end="+to+"&monthly=true&daily=false"
+          //window.open(url, 'window name', 'window settings');
+                $('#parkingpanda_link').click(function(){
+            window.open(url, 'blank3');
+          
+          });
+
+        $('#parkingpanda_link').click();
         }
-        
       });
    });
 </script>
@@ -54,7 +69,14 @@
       <td>
         <%= check_box_tag("centralpark", value = "1", checked = true, options = {})%>
         <%= label_tag "centralpark" %>
+        <div id="centralpark_link" style="display:none;"> </div>
       </td>
+      <td>
+        <%= check_box_tag("parkingpanda", value = "1", checked = false, options = {})%>
+        <%= label_tag "parkingpanda" %>
+        <div id="parkingpanda_link" style="display:none;"> </div>
+      </td>
+
           </tr>
     </table>
     <div id="formbox3">
