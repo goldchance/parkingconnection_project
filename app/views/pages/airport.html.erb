@@ -1,5 +1,7 @@
 <script>
-   $(document).ready(function() {
+
+  
+  $(document).ready(function() {
       $('#findbtn').click(function(){
         var wherebox, city, short_name
         wherebox = $('#wherebox_airp').val();
@@ -10,10 +12,28 @@
         time_start = $('#Items').val();
         time_end = $('#Items2').val();
         if ($('#parkingconnection').is(':checked')) {
-          url1="http://www.parkingconnection.com/locations/" + city + "-" + short_name + "-airport-parking/?dpnLocations=" + short_name + "&txtCheckinDt=" + from +"&dpnCheckInTime=" + time_start + "&txtCheckoutDt=" + to + "&dpnCheckOutTime=" + time_end +"&UnitID&FacilityID&sendbutton2"
-          window.open(url1, 'window name', 'window settings');
+          url="http://www.parkingconnection.com/locations/" + city + "-" + short_name + "-airport-parking/?dpnLocations=" + short_name + "&txtCheckinDt=" + from +"&dpnCheckInTime=" + time_start + "&txtCheckoutDt=" + to + "&dpnCheckOutTime=" + time_end +"&UnitID&FacilityID&sendbutton2"
+          //window.open(url1, 'window name', 'window settings');
+           $('#parkingconnection_link').click(function(){
+                   window.open(url, 'blank1');
+          });
+          $('#parkingconnection_link').click();
+
         }
-        
+        if ($('#airportparking').is(':checked')) {
+         
+        <% airportparking_list = YAML.load(File.open("output.yml")) %>
+        var airportparking_source = <%=raw airportparking_list.to_json %>
+         
+         url="https://www.airportparking.com/airports/" + airportparking_source[short_name]
+         //url="http://www.parkingconnection.com/locations/" + city + "-" + short_name + "-airport-parking/?dpnLocations=" + short_name + "&txtCheckinDt=" + from +"&dpnCheckInTime=" + time_start + "&txtCheckoutDt=" + to + "&dpnCheckOutTime=" + time_end +"&UnitID&FacilityID&sendbutton2"
+          //window.open(url1, 'window name', 'window settings');
+           $('#airportparking_link').click(function(){
+                   window.open(url, 'blank1');
+          });
+          $('#airportparking_link').click();
+
+        }
       });
    });
 </script>
@@ -174,8 +194,13 @@
       <td>
         <%= check_box_tag("parkingconnection", value = "1", checked = true, options = {})%>
         <%= label_tag "parkingconnection" %>
+        <div id="parkingconnection_link" style="display:none;"> </div>
       </td>
-      
+       <td>
+        <%= check_box_tag("airportparking", value = "1", checked = true, options = {})%>
+        <%= label_tag "airportparking" %>
+        <div id="airportparking_link" style="display:none;"> </div>
+      </td>
       <td>
       </td>
       
