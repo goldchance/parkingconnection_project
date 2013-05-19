@@ -20,18 +20,20 @@
           $('#parkingconnection_link').click();
 
         }
-        if ($('#airportparking').is(':checked')) {
+        if ($('#pnf').is(':checked')) {
          
         <% airportparking_list = YAML.load(File.open("output.yml")) %>
         var airportparking_source = <%=raw airportparking_list.to_json %>
          
-         url="https://www.airportparking.com/airports/" + airportparking_source[short_name]
+     //    url="https://www.airportparking.com/airports/" + airportparking_source[short_name]
+   // $().redirect('demo.php?arg1=value1&arg2=value2');
+     $().redirect('http://www.airportparkingreservations.com/search/pre_search_results', {'search[airport_id]': 'Albany (ALB)', 'search[checkindate]': '05/18/2013', 'search[checkintime]': '12:00', 'search[checkoutdate]': '05/21/2013', 'search[checkouttime]': '12:00', 'search[number_cars]': '1', 'APR_ENVIRONMENT': 'live', 'APR_USER_TYPE': 'guest'});
          //url="http://www.parkingconnection.com/locations/" + city + "-" + short_name + "-airport-parking/?dpnLocations=" + short_name + "&txtCheckinDt=" + from +"&dpnCheckInTime=" + time_start + "&txtCheckoutDt=" + to + "&dpnCheckOutTime=" + time_end +"&UnitID&FacilityID&sendbutton2"
           //window.open(url1, 'window name', 'window settings');
-           $('#airportparking_link').click(function(){
-                   window.open(url, 'blank1');
-          });
-          $('#airportparking_link').click();
+       //    $('#airportparking_link').click(function(){
+        //           window.open(url, 'blank1');
+        //  });
+         // $('#airportparking_link').click();
 
         }
       });
@@ -196,10 +198,10 @@
         <%= label_tag "parkingconnection" %>
         <div id="parkingconnection_link" style="display:none;"> </div>
       </td>
-       <td>
-        <%= check_box_tag("airportparking", value = "1", checked = true, options = {})%>
-        <%= label_tag "airportparking" %>
-        <div id="airportparking_link" style="display:none;"> </div>
+    <td>
+        <%= check_box_tag("pnf", value = "1", checked = true, options = {})%>
+        <%= label_tag "pnf" %>
+        <div id="pnf_link" style="display:none;"> </div>
       </td>
       <td>
       </td>
