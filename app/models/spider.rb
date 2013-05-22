@@ -837,7 +837,10 @@ def find_place(source,href,object)
           object["address"] = place.address if place.address != nil
           object["price"] = place.price if place.address != nil
           object["urlimage"] = place.urlimage if place.address != nil
-
+          object["latitude"] = place.latitude if place.latitude != nil 
+          object["longitude"] = place.longitude if place.longitude != nil
+          object["gmaps4rails_address"] = place.gmaps4rails_address if place.gmaps4rails_address != nil
+          
        # debugger
 object
 end
