@@ -79,14 +79,19 @@ class Spider
     if Rails.env.production?
       Headless.new(display: 100, destroy_at_exit: false).start
     end
-       spy=Spider.new
-      req = Request.create(:desc=>"")
+    Capybara.run_server = false
+    Capybara.javascript_driver = :webkit_debug
+    Capybara.current_driver = :webkit
+    Capybara.app_host = "http://www.airportparking.com/"
+      
+    spy=Spider.new
+    req = Request.create(:desc=>"")
        
         spy.get_results_airportparkingreservations(params,req) # if params["airportparkingreservations"] == "1"
-        spy.get_results_parkingconnection(params,req)          # if params["parkingconnection"] == "1"
-        spy.get_results_airportparking(params,req)             # if params["airportparking"] == "1"
-        spy.get_results_aboutairportparking(params, req)       # if params["aboutairportparking"] == "1"
-        spy.get_results_pnf(params,req)                        # if params["pnf"] == "1"
+         spy.get_results_parkingconnection(params,req)          # if params["parkingconnection"] == "1"
+         spy.get_results_airportparking(params,req)             # if params["airportparking"] == "1"
+         spy.get_results_aboutairportparking(params, req)       # if params["aboutairportparking"] == "1"
+         spy.get_results_pnf(params,req)                        # if params["pnf"] == "1"
        # FayeController.publish('/searches', {result_string: result_string})
       
      # result_string = ApplicationController.new.render_to_string(:partial => 'pages/results', :locals => { result_type: "airport" })
@@ -165,10 +170,6 @@ begin
      # headless = Headless.new
      # headless.start
     end
-    Capybara.run_server = false
-    Capybara.javascript_driver = :webkit_debug
-    Capybara.current_driver = :webkit
-    Capybara.app_host = "http://www.aboutairportparking.com"
     visit("http://www.aboutairportparking.com")
     value="0"
     all(:css, "#edit-airport option").each do |option|
@@ -255,11 +256,7 @@ begin
      # headless = Headless.new
      # headless.start
     end  
-    Capybara.run_server = false
-    Capybara.javascript_driver = :webkit_debug
-    Capybara.current_driver = :webkit
-    Capybara.app_host = "http://www.airportparking.com/"
-    
+   
     url="https://www.airportparking.com/airports/#{list["#{short_name}"]}"
     visit(url)
     sleep 1
@@ -330,10 +327,6 @@ def get_results_parkingconnection(params,req)
      # headless = Headless.new
      # headless.start
     end  
-    Capybara.run_server = false
-    Capybara.javascript_driver = :webkit_debug
-    Capybara.current_driver = :webkit
-    Capybara.app_host = "http://www.airportparkingreservations.com/"
     url="http://www.parkingconnection.com/locations/#{city}-#{short_name}-airport-parking/?dpnLocations=#{short_name}&txtCheckinDt=#{params[:from]}&dpnCheckInTime=#{params[:Items]}&txtCheckoutDt=#{params[:to]}&dpnCheckOutTime=#{params[:Items2]}&UnitID&FacilityID&sendbutton2"
     #url="http://www.parkingconnection.com/locations/albany-alb-airport-parking/?dpnLocations=ALB&txtCheckinDt=3/4/2013&dpnCheckInTime=12:00AM&txtCheckoutDt=3/10/2013&dpnCheckOutTime=12:00AM&UnitID&FacilityID&sendbutton2"
     visit(url)
@@ -375,10 +368,6 @@ def get_results_parkingconnection(params,req)
      # headless = Headless.new
      # headless.start
     end  
-    Capybara.run_server = false
-    Capybara.javascript_driver = :webkit_debug
-    Capybara.current_driver = :webkit
-    Capybara.app_host = "http://www.airportparkingreservations.com/"
     visit(url)
     sleep 1
     all(:css, "div.sr-v3-left div.headline").each do |item|
