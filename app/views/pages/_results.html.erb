@@ -54,9 +54,12 @@ ul.simplePagerNav li.currentPage a {
     });
 </script>
 <!-- end css for the results -->
-<div id="results" title="<%=@req.id%>" name="no">
-              
-        <% @allresults = @req.results.group_by{ |s| [s.latitude, s.longitude]} %>
+<div id="results" title="<%#=@req.id%>" name="no">
+  <%= @req.size %>             
+<%
+=begin
+%>
+  <% @allresults = @req.results.group_by{ |s| [s.latitude, s.longitude]} %>
         <p> <%= @allresults.size %> place(s) </p>
         
         <br />
@@ -110,6 +113,9 @@ ul.simplePagerNav li.currentPage a {
         <% end %>
         </ul>    
 
+<%
+=begin
+%>
         </div>
 
         

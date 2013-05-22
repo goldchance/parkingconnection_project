@@ -91,11 +91,11 @@ class Spider
     spy=Spider.new
     req = Request.create(:desc=>"")
        
-         spy.get_results_airportparkingreservations(params,req) # if params["airportparkingreservations"] == "1"
-         spy.get_results_parkingconnection(params,req)          # if params["parkingconnection"] == "1"
-         spy.get_results_airportparking(params,req)             # if params["airportparking"] == "1"
-         spy.get_results_aboutairportparking(params, req)       # if params["aboutairportparking"] == "1"
-         spy.get_results_pnf(params,req)                        # if params["pnf"] == "1"
+      results = spy.get_results_airportparkingreservations(params,req) # if params["airportparkingreservations"] == "1"
+         spy.get_results_parkingconnection(params,req, results)          # if params["parkingconnection"] == "1"
+         spy.get_results_airportparking(params,req,results)             # if params["airportparking"] == "1"
+         spy.get_results_aboutairportparking(params, req, results)       # if params["aboutairportparking"] == "1"
+        # spy.get_results_pnf(params,req)                        # if params["pnf"] == "1"
        # FayeController.publish('/searches', {result_string: result_string})
       
      # result_string = ApplicationController.new.render_to_string(:partial => 'pages/results', :locals => { result_type: "airport" })
@@ -111,7 +111,8 @@ class Spider
       req.save
     end
     #req.destroy
-    req
+    #req
+     results
   end
 #------------------------------------airport search methods -----------------------------------------------------------
 def get_results_pnf(params, req)
@@ -153,10 +154,10 @@ begin
  
    
   
-def get_results_aboutairportparking(params, req)
+def get_results_aboutairportparking(params, req, results)
 
 begin 
-    results=[]
+    #results=[]
     city=params[:wherebox_airp].split(" (")[0].gsub(" ","-")
     short_name = params[:wherebox_airp].split(" (")[1].gsub("(","").gsub(")","").upcase
     if Rails.env.production?
@@ -222,18 +223,19 @@ begin
         results<<object
       end
     end
-    save_results(results,"airport","www.aboutairportparking.com",req)    
-   rescue Exception => e  
+    #save_results(results,"airport","www.aboutairportparking.com",req)    
+    results 
+  rescue Exception => e  
      puts e.message  
      puts e.backtrace.inspect  
     end
   end
 
   
-def get_results_airportparking(params, req)
+def get_results_airportparking(params, req, results)
   list = YAML.load(File.open("output.yml"))
   begin 
-    results=[]
+    #results=[]
     city=params[:wherebox_airp].split(" (")[0].gsub(" ","-")
     short_name = params[:wherebox_airp].split(" (")[1].gsub("(","").gsub(")","").upcase
     if Rails.env.production?
@@ -286,7 +288,8 @@ def get_results_airportparking(params, req)
       end
         results<<object
     end
-    save_results(results,"airport","www.airportparking.com", req)    
+    #save_results(results,"airport","www.airportparking.com", req)    
+    results
    rescue Exception => e  
      puts e.message  
      puts e.backtrace.inspect  
@@ -296,9 +299,9 @@ def get_results_airportparking(params, req)
 
 
   #--------------------  http://www.parkingconnection.com/
-def get_results_parkingconnection(params,req)
+def get_results_parkingconnection(params,req, results)
    begin 
-    results=[]
+    #results=[]
     city=params[:wherebox_airp].split(" (")[0].gsub(" ","-")
     short_name = params[:wherebox_airp].split(" (")[1].gsub("(","").gsub(")","")
     if Rails.env.production?
@@ -323,7 +326,8 @@ def get_results_parkingconnection(params,req)
       end
       results<<object
     end
-    save_results(results,"airport","www.parkingconnection.com",req)    
+    #save_results(results,"airport","www.parkingconnection.com",req)    
+    results
   rescue Exception => e  
      puts e.message  
      puts e.backtrace.inspect  
@@ -387,8 +391,9 @@ def get_results_parkingconnection(params,req)
         save_place(object,"airportparkingreservations",link)
      end
   end
-  save_results(results,"airport","www.airportparkingreservations.com",req)    
-  rescue Exception => e  
+  #save_results(results,"airport","www.airportparkingreservations.com",req)    
+  results
+   rescue Exception => e  
      puts e.message  
      puts e.backtrace.inspect  
     end
