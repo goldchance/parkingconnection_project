@@ -15,7 +15,9 @@ class Spider
     if Rails.env.production?
       Headless.new(display: 100, destroy_at_exit: false).start
     end
- 
+    Capybara.run_server = false
+    Capybara.javascript_driver = :webkit_debug
+    Capybara.current_driver = :webkit
     spy=Spider.new
       req = Request.create(:desc=>"")
       spy.get_results_gottapark(params,"daily", req)    # if params["gottapark"] == "1"
@@ -49,6 +51,9 @@ class Spider
     if Rails.env.production?
       Headless.new(display: 100, destroy_at_exit: false).start
     end
+    Capybara.run_server = false
+    Capybara.javascript_driver = :webkit_debug
+    Capybara.current_driver = :webkit
       spy=Spider.new
       req = Request.create(:desc=>"")
       spy.get_results_pandaparking(params, "monthly",req) #if params["pandaparking"] == "1"
@@ -82,12 +87,11 @@ class Spider
     Capybara.run_server = false
     Capybara.javascript_driver = :webkit_debug
     Capybara.current_driver = :webkit
-    Capybara.app_host = "http://www.airportparking.com/"
       
     spy=Spider.new
     req = Request.create(:desc=>"")
        
-        spy.get_results_airportparkingreservations(params,req) # if params["airportparkingreservations"] == "1"
+         spy.get_results_airportparkingreservations(params,req) # if params["airportparkingreservations"] == "1"
          spy.get_results_parkingconnection(params,req)          # if params["parkingconnection"] == "1"
          spy.get_results_airportparking(params,req)             # if params["airportparking"] == "1"
          spy.get_results_aboutairportparking(params, req)       # if params["aboutairportparking"] == "1"
@@ -103,23 +107,19 @@ class Spider
     rescue Exception => e
       puts e.message
       puts e.backtrace
-      
       req.desc<< e.message.to_s << e.backtrace.inspect.to_s
       req.save
     end
-    
     #req.destroy
     req
   end
 #------------------------------------airport search methods -----------------------------------------------------------
 def get_results_pnf(params, req)
 
-#debugger 
 begin 
     results=[]
     city=params[:wherebox_airp].split(" (")[0].gsub(" ","-")
     short_name = params[:wherebox_airp].split(" (")[1].gsub("(","").gsub(")","").upcase
-    
     agent = Mechanize.new{|a| a.follow_meta_refresh= true}
     agent.user_agent_alias = "Linux Firefox"
     agent.get("http://www.pnf.com")
@@ -137,7 +137,6 @@ begin
       s = loc.search(".info p").first.text
       add = s.split(/[\t]+/)[0].gsub!(/[\r]+/, "").gsub!(/[\n]+/, "")
       add << s.split(/[\t]+/)[1].gsub!(/[\r]+/, "").gsub!(/[\n]+/, "")
-      #debugger
       object["address"] = add
       object["price"] = loc.search(".ratetotal").first.text
       part =  loc.search(".reserve-now a").first[:href]
@@ -151,24 +150,17 @@ begin
      puts e.backtrace.inspect  
     end
   end
-
-
-  
-  
+ 
    
   
 def get_results_aboutairportparking(params, req)
 
-#debugger 
 begin 
     results=[]
     city=params[:wherebox_airp].split(" (")[0].gsub(" ","-")
     short_name = params[:wherebox_airp].split(" (")[1].gsub("(","").gsub(")","").upcase
     if Rails.env.production?
-     
       headless = Headless.new(display: 100, reuse: true, destroy_at_exit: false)
-     # headless = Headless.new
-     # headless.start
     end
     visit("http://www.aboutairportparking.com")
     value="0"
@@ -228,10 +220,8 @@ begin
         save_place(object,"aboutairportparking",link)
       end
         results<<object
-      
       end
     end
-    #debugger
     save_results(results,"airport","www.aboutairportparking.com",req)    
    rescue Exception => e  
      puts e.message  
@@ -239,22 +229,15 @@ begin
     end
   end
 
-
-
   
-  def get_results_airportparking(params, req)
-
- list = YAML.load(File.open("output.yml"))
-#debugger 
-begin 
+def get_results_airportparking(params, req)
+  list = YAML.load(File.open("output.yml"))
+  begin 
     results=[]
     city=params[:wherebox_airp].split(" (")[0].gsub(" ","-")
     short_name = params[:wherebox_airp].split(" (")[1].gsub("(","").gsub(")","").upcase
     if Rails.env.production?
-    
       headless = Headless.new(display: 100, reuse: true, destroy_at_exit: false)
-     # headless = Headless.new
-     # headless.start
     end  
    
     url="https://www.airportparking.com/airports/#{list["#{short_name}"]}"
@@ -287,7 +270,6 @@ begin
          object["urlimage"] = all(:css, "div#photos img").first[:src]
          all(:css, "#details_container form button").first.click
          sleep 3
-          #debugger
           
          object["location"] = all(:css,"div#review_reservation_container div#lot_title").first.text
          if all(:css,"div#review_reservation_container div#price_breakdown_container div").size> 0 
@@ -299,7 +281,6 @@ begin
          end
          object["price"] = all(:css,"span.reservation-subtotal-amount").first.text
          object["href"] = current_url
-        
          save_place(object,"airportparking",href)
         end
       end
@@ -320,12 +301,8 @@ def get_results_parkingconnection(params,req)
     results=[]
     city=params[:wherebox_airp].split(" (")[0].gsub(" ","-")
     short_name = params[:wherebox_airp].split(" (")[1].gsub("(","").gsub(")","")
-    
     if Rails.env.production?
-    
       headless = Headless.new(display: 100, reuse: true, destroy_at_exit: false)
-     # headless = Headless.new
-     # headless.start
     end  
     url="http://www.parkingconnection.com/locations/#{city}-#{short_name}-airport-parking/?dpnLocations=#{short_name}&txtCheckinDt=#{params[:from]}&dpnCheckInTime=#{params[:Items]}&txtCheckoutDt=#{params[:to]}&dpnCheckOutTime=#{params[:Items2]}&UnitID&FacilityID&sendbutton2"
     #url="http://www.parkingconnection.com/locations/albany-alb-airport-parking/?dpnLocations=ALB&txtCheckinDt=3/4/2013&dpnCheckInTime=12:00AM&txtCheckoutDt=3/10/2013&dpnCheckOutTime=12:00AM&UnitID&FacilityID&sendbutton2"
@@ -434,10 +411,6 @@ def get_results_spothero(params, type,req)
       #headless = Headless.new
       #headless.start
     end  
-    Capybara.run_server = false
-    Capybara.javascript_driver = :webkit_debug
-    Capybara.current_driver = :webkit
-    Capybara.app_host = "http://www.spothero.com/"
     
     visit("http://www.spothero.com/")
     all(:css,"#search_string").first.set(params[:wherebox])
@@ -505,10 +478,6 @@ def get_results_spothero(params, type,req)
      # headless = Headless.new
      # headless.start
     end  
-    Capybara.run_server = false
-    Capybara.javascript_driver = :webkit_debug
-    Capybara.current_driver = :webkit
-    Capybara.app_host = "http://www.airportparkingreservations.com/"
     "http://www.cheapairportparking.org/parking/find.php?airport=#{short_name}&FromDate=03%2F05%2F2013&from_time=1&ToDate=03%2F06%2F2013&to_time=15"
     visit(url)
     sleep 1
@@ -552,10 +521,6 @@ def get_results_spothero(params, type,req)
      # headless = Headless.new
      # headless.start
     end  
-    Capybara.run_server = false
-    Capybara.javascript_driver = :webkit_debug
-    Capybara.current_driver = :webkit
-    Capybara.app_host = "http://www.gottapark.com/"
     visit("http://www.gottapark.com/")
     fill_in "search_key", :with =>"#{location}"
     fill_in "date_from", :with =>"#{params[:from].gsub("/","-")}"
@@ -630,10 +595,6 @@ def get_results_spothero(params, type,req)
       #headless.start
     end  
 
-    Capybara.run_server = false
-    Capybara.javascript_driver = :webkit_debug
-    Capybara.current_driver = :webkit
-    Capybara.app_host = "https://www.parkingpanda.com"
     if type != 'daily'
       # visit("https://www.parkingpanda.com/Search/?location=#{city}&start=#{params[:from]}&end=#{params[:to]}3&monthly=true&daily=false")
       visit "https://www.parkingpanda.com"
@@ -780,9 +741,6 @@ def get_results_centralpark(params,type,req)
       #headless = Headless.new
       #headless.start
     end  
-    Capybara.run_server = false
-    Capybara.javascript_driver = :webkit_debug
-    Capybara.current_driver = :webkit
     if city.downcase =="new-york"
       city_short = "nyc"
     else
