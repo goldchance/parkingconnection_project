@@ -30,6 +30,22 @@ class SearchesController < ApplicationController
  
  def airport_search
   @req = Spider.airport_search(params)
+  Struct.new("Result", :location, :address, :price, :longitude, :latitude, :gmaps4rails_address, :source, :urlimage, :href)
+  @list=[]
+  @req.each  do |r|
+    s = Struct::Result.new
+    s.location = r["location"]
+    s.address = r["address"]
+    s.price = r["price"]
+    s.longitude = r["longitude"]
+    s.latitude = r["latitude"]
+    s.gmaps4rails_address = r["gmaps4rails_address"]
+    s.source = r["source"]
+    s.urlimage = r["urlimage"]
+    s.href = r["href"]
+    #s.save
+    @list<<s
+  end
   respond_to do |format|
     format.html # index.html.erb
     format.js

@@ -313,10 +313,7 @@ def get_results_parkingconnection(params,req, results)
     sleep 1
     all(:css,"div.locationLot").each do |lot|
       object = Hash.new
-      object["location"] = lot.find(:css,"h3").text
-      object["location"] << lot.find(:css,"span").text
-      object["address"] = lot.find(:css,"p.locationAddress").text
-      object["price"] = lot.find(:css,"div.rateInfoContainer div.rate").text
+      
       if lot.all(:css,"div.rateInfoContainer div.lotInfo div.reserveLotButtonNotAvailable").size > 0
         object["href"] = lot.find(:css,"div.rateInfoContainer div.lotInfo ul li.noBorder a")[:href]
       else
@@ -324,7 +321,22 @@ def get_results_parkingconnection(params,req, results)
         unitid = lot.find(:css,"div.rateInfoContainer div.lotInfo div.reserveLotButton p.unitID").text
         object["href"] = "https://www.airportparkingconnection.com/apc/api/Checkout.aspx?dpnLocations=#{short_name}&txtCheckinDt=#{params[:from]}&dpnCheckInTime=#{params[:Items]}&txtCheckoutDt=#{params[:to]}&dpnCheckOutTime=#{params[:Items2]}&UnitID=#{unitid}&FacilityID=#{facilityid}&sendbutton2="
       end
-      results<<object
+      link = object["href"]
+      if Source.find_by_name("parkingconnection").places.find_by_href(link) != nil
+        find_place("parkingconnection", link, object)
+        
+        #object["href"] = link
+     else
+      object["location"] = lot.find(:css,"h3").text
+      object["location"] << lot.find(:css,"span").text
+      object["address"] = lot.find(:css,"p.locationAddress").text
+      object["price"] = lot.find(:css,"div.rateInfoContainer div.rate").text
+      object["source"] = "parkingconnection"         
+      save_place(object,"parkingconnection",link)
+     end
+
+      
+            results<<object
     end
     #save_results(results,"airport","www.parkingconnection.com",req)    
     results
@@ -835,6 +847,7 @@ def find_place(source,href,object)
       #    object["href"]= link
           object["location"] = place.location if place.location != nil
           object["address"] = place.address if place.address != nil
+          object["source"] = source
           object["price"] = place.price if place.address != nil
           object["urlimage"] = place.urlimage if place.address != nil
           object["latitude"] = place.latitude if place.latitude != nil 
