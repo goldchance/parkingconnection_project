@@ -4,9 +4,26 @@ class SearchesController < ApplicationController
  
 
  def daily_search
- @req = Spider.daily_search(params)
- gon.results = @req.results.to_gmaps4rails
- # @json = Result.all.to_gmaps4rails
+  @req = Spider.daily_search(params)
+ # gon.results = @req.results.to_gmaps4rails
+  Struct.new("Result", :location, :address, :price, :longitude, :latitude, :gmaps4rails_address, :source, :urlimage, :href)
+  @list=[]
+  @req.each  do |r|
+    s = Struct::Result.new
+    s.location = r["location"]
+    s.address = r["address"]
+    s.price = r["price"]
+    s.longitude = r["longitude"]
+    s.latitude = r["latitude"]
+    s.gmaps4rails_address = r["gmaps4rails_address"]
+    s.source = r["source"]
+    s.urlimage = r["urlimage"]
+    s.href = r["href"]
+    #s.save
+    @list<<s
+  end
+
+  # @json = Result.all.to_gmaps4rails
   #if request.xhr?
     #render :js => "$('#search_results').html('#{escape_javascript(render(:partial => 'list'))}');"
    #   render :js => "$('.loginform').fadeOut();  $('.result').fadeIn();"
@@ -20,6 +37,23 @@ class SearchesController < ApplicationController
   
  def monthly_search
   @req = Spider.monthly_search(params)
+  Struct.new("Result", :location, :address, :price, :longitude, :latitude, :gmaps4rails_address, :source, :urlimage, :href)
+  @list=[]
+  @req.each  do |r|
+    s = Struct::Result.new
+    s.location = r["location"]
+    s.address = r["address"]
+    s.price = r["price"]
+    s.longitude = r["longitude"]
+    s.latitude = r["latitude"]
+    s.gmaps4rails_address = r["gmaps4rails_address"]
+    s.source = r["source"]
+    s.urlimage = r["urlimage"]
+    s.href = r["href"]
+    #s.save
+    @list<<s
+  end
+
   #debugger
   respond_to do |format|
     format.html # index.html.erb

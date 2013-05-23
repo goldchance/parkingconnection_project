@@ -20,11 +20,12 @@ class Spider
     Capybara.current_driver = :webkit
     spy=Spider.new
       req = Request.create(:desc=>"")
-      spy.get_results_gottapark(params,"daily", req)    # if params["gottapark"] == "1"
-      spy.get_results_pandaparking(params, "daily",req) # if params["pandaparking"] == "1"
-      spy.get_results_centralpark(params, "daily",req)  # if params["centralpark"] == "1"
-      spy.get_results_parkwhiz(params, "daily",req)     # if params["parkwhiz"] == "1"
-      spy.get_results_spothero(params, "daily",req)     # if params["spothero"] == "1"
+      
+      results = spy.get_results_centralpark(params, "daily",req)  # if params["centralpark"] == "1"
+   #   spy.get_results_gottapark(params,"daily", req, results)    # if params["gottapark"] == "1"
+  #    spy.get_results_pandaparking(params, "daily",req ,results) # if params["pandaparking"] == "1"
+      spy.get_results_parkwhiz(params, "daily",req,results)     # if params["parkwhiz"] == "1"
+      spy.get_results_spothero(params, "daily",req,results)     # if params["spothero"] == "1"
      
    #   result_string = ApplicationController.new.render_to_string(:partial => 'pages/results', :locals => { result_type: "daily" })
    #   message = {:channel => "/searches",
@@ -40,8 +41,8 @@ class Spider
   
     #results = req.results
     #req.destroy
-    #results
-    req
+    results
+    #req
   end
  
   def self.monthly_search(params)
@@ -56,8 +57,8 @@ class Spider
     Capybara.current_driver = :webkit
       spy=Spider.new
       req = Request.create(:desc=>"")
-      spy.get_results_pandaparking(params, "monthly",req) #if params["pandaparking"] == "1"
-      spy.get_results_centralpark(params, "monthly", req) #if params["centralpark"] == "1"
+      results = spy.get_results_centralpark(params, "monthly", req) #if params["centralpark"] == "1"
+      spy.get_results_pandaparking(params, "monthly",req , results) #if params["pandaparking"] == "1"
        
        # FayeController.publish('/searches', {result_string: result_string})
     #  result_string = ApplicationController.new.render_to_string(:partial => 'pages/results', :locals => { result_type: "monthly" })
@@ -73,14 +74,13 @@ class Spider
     end
     #results = req.results
     #req.destroy
-    #results
-    req
+    results
+    #req
   end
   
     
   def self.airport_search(params)
-     begin 
-     
+    begin 
     if Rails.env.production?
       Headless.new(display: 100, destroy_at_exit: false).start
     end
@@ -90,14 +90,13 @@ class Spider
       
     spy=Spider.new
     req = Request.create(:desc=>"")
-       
-      results = spy.get_results_airportparkingreservations(params,req) # if params["airportparkingreservations"] == "1"
-         spy.get_results_parkingconnection(params,req, results)          # if params["parkingconnection"] == "1"
-         spy.get_results_airportparking(params,req,results)             # if params["airportparking"] == "1"
-         spy.get_results_aboutairportparking(params, req, results)       # if params["aboutairportparking"] == "1"
+    results = spy.get_results_airportparkingreservations(params,req) # if params["airportparkingreservations"] == "1"
+    spy.get_results_parkingconnection(params,req,results)          # if params["parkingconnection"] == "1"
+    spy.get_results_airportparking(params,req, results)             # if params["airportparking"] == "1"
+    spy.get_results_aboutairportparking(params, req, results)       # if params["aboutairportparking"] == "1"
         # spy.get_results_pnf(params,req)                        # if params["pnf"] == "1"
        # FayeController.publish('/searches', {result_string: result_string})
-      
+     
      # result_string = ApplicationController.new.render_to_string(:partial => 'pages/results', :locals => { result_type: "airport" })
      # message = {:channel => "/searches",
      #            :data => { result_string: result_string}}
@@ -412,77 +411,7 @@ def get_results_parkingconnection(params,req, results)
   end
  #------------------------------------------------------- 
 
-def get_results_spothero(params, type,req)
-   begin 
-     results=[]
-    location = params[:wherebox]
-    if location.present?
-     arr = location.split(",")
-     city = arr[0].strip.gsub(" ","-")
-     state = arr[1].strip
-    end
-    
-    if Rails.env.production?
-      
-      headless = Headless.new(display: 100, reuse: true, destroy_at_exit: false)
-      #headless = Headless.new
-      #headless.start
-    end  
-    
-    visit("http://www.spothero.com/")
-    all(:css,"#search_string").first.set(params[:wherebox])
-    all(:css,"#submit-search").first.click
-    sleep 5
-    list=[]
-    all(:css, ".result").each do |lot|
-      id = lot.find(:css, ".btnSpotMe")[:id]
-      list << "https://spothero.com/#{city}/spot/#{id}?start_date=#{params[:from].gsub("/","-")}&start_time=#{params[:Items].gsub(":","").gsub(" ","")}&end_date=#{params[:to].gsub("/","-")}&end_time=#{params[:Items2].gsub(":","").gsub(" ","")}"
-    end
-    list.each do |url|
-      begin
-        href= url.split("?start_date").first
-        if Source.find_by_name("spothero").places.find_by_href(href) != nil
-          place = Source.find_by_name("spothero").places.find_by_href(href)
-          object = Hash.new
-          object["href"]= url
-          object["location"] = place.location
-          object["address"] = place.address
-          object["price"] = place.price
-          object["urlimage"] = place.urlimage
-        else
-
-          object = Hash.new
-          place = Source.find_by_name("spothero").places.new
-          visit(url)
-          object["location"] = all(:css, ".hd h1").first.text
-          object["address"] = all(:css, ".hd").first.text
-          object["price"] = all(:css, "#hourly .priceByTimeListCheckout dt").first.text
-          object["href"] = url
-          object["urlimage"] = all(:css, ".slides_control img").first[:src]
-          
-          place.href = href
-          place.location = object["location"]
-          place.address = object["address"]
-          place.price = object["price"]
-          place.urlimage = object["urlimage"]
-          place.save
-        end 
-
-          results << object
-    rescue
-     end
-     end
-    
-   # debugger
-    save_results(results,"daily","www.spothero.com",req)    
-     rescue Exception => e  
-     puts e.message  
-     puts e.backtrace.inspect  
-    end
-  end
-
-
- #-------------------------------------------------------------- 
+#-------------------------------------------------------------- 
   def get_results_cheapairportparking(params,req)
    begin 
     results=[]
@@ -519,12 +448,99 @@ def get_results_spothero(params, type,req)
     end
   end
 
-  
+#--------------------------------------------------------Spothero -----------
+  def get_results_spothero(params, type,req, results)
+   begin 
+    location = params[:wherebox]
+    if location.present?
+     arr = location.split(",")
+     city = arr[0].strip.gsub(" ","-")
+     state = arr[1].strip
+    end
+    
+    if Rails.env.production?
+      
+      headless = Headless.new(display: 100, reuse: true, destroy_at_exit: false)
+      #headless = Headless.new
+      #headless.start
+    end  
+    
+    visit("http://www.spothero.com/")
+    all(:css,"#search_string").first.set(params[:wherebox])
+    all(:css,"#submit-search").first.click
+    sleep 2
+    list=[]
+    all(:css, ".result").each do |lot|
+      id = lot.find(:css, ".btnSpotMe")[:id]
+      list << "https://spothero.com/#{city}/spot/#{id}?start_date=#{params[:from].gsub("/","-")}&start_time=#{params[:Items].gsub(":","").gsub(" ","")}&end_date=#{params[:to].gsub("/","-")}&end_time=#{params[:Items2].gsub(":","").gsub(" ","")}"
+    end
+    list.each do |url|
+    #  begin
+        href= url.split("?start_date").first
+        if Source.find_by_name("spothero").places.find_by_href(href) != nil
+          object = Hash.new
+          find_place("spothero", href, object)
+          object["href"]= url
+         
+       #  place = Source.find_by_name("spothero").places.find_by_href(href)
+       #  object = Hash.new
+       #  object["href"]= url
+       #  object["source"] = place.source.name
+       #  object["location"] = place.location
+       #  object["address"] = place.address
+       #  object["price"] = place.price
+       #  object["urlimage"] = place.urlimage
+       #  place["longitude"] = place.longitude
+       #  place["latitude"] = place.latitude
+       #  place["gmaps4rails_address"] = place.gmaps4rails_address if place.gmaps4rails_address != nil
+
+        else
+
+          object = Hash.new
+          visit(url)
+          sleep 2
+          object["location"] = all(:css, ".hd h1").first.text
+          object["address"] = all(:css, ".hd").first.text
+          if all(:css, "#hourly .priceByTimeListCheckout dt").size > 0
+            object["price"] = all(:css, "#hourly .priceByTimeListCheckout dt").first.text
+          else
+            object["price"] = "n/a"
+          end
+          object["href"] = url
+          object["urlimage"] = all(:css, ".slides_control img").first[:src]
+          
+          save_place(object, "spothero" , href)
+       
+          #place = Source.find_by_name("spothero").places.new
+          #  place.href = href
+       #  place.location = object["location"]
+       #  place.address = object["address"]
+       #  place.price = object["price"]
+       #  place.urlimage = object["urlimage"]
+       #  place.save
+        end 
+        results << object
+   #  rescue Exception => e
+   #   puts e.message  
+   #   puts e.backtrace.inspect  
+   #  end
+     end
+    
+   # debugger
+    #save_results(results,"daily","www.spothero.com",req)    
+   results  
+   rescue Exception => e  
+     puts e.message  
+     puts e.backtrace.inspect  
+    end
+  end
+
+
+   
   
 #-------------------------------------------- www.gottaprk.com -------------------------------------  
-  def get_results_gottapark(params,type,req)
+  def get_results_gottapark(params,type,req, results)
    begin 
-    results=[]
     location=params[:wherebox]
     if location.present?
      arr = location.split(",")
@@ -587,8 +603,9 @@ def get_results_spothero(params, type,req)
         r["urlimage"] = all(:css, "img#lp_photo").first[:src]
       end
     end
-    save_results(results,type,"www.gottapark.com",req)    
-  rescue Exception => e  
+    #save_results(results,type,"www.gottapark.com",req)    
+    results
+   rescue Exception => e  
      puts e.message  
      puts e.backtrace.inspect  
     end
@@ -596,10 +613,9 @@ def get_results_spothero(params, type,req)
   
 #------------------------------------  www.pandaparking.com --------------------------------------------
   
-  def get_results_pandaparking(params,type,req)
+  def get_results_pandaparking(params,type,req, results)
    begin
     location = params[:wherebox]
-    results=[]
     arr = location.split(",")
     city = arr[0].strip.gsub(" ","-")
     state = arr[1].strip 
@@ -680,13 +696,14 @@ def pickup_panda(desc,req)
         #object.save
       end
     end
-    save_results(results,desc,"www.parkingpanda.com", req)    
+    results
+    #save_results(results,desc,"www.parkingpanda.com", req)    
 end
 #-------------------------------------  www.centralparking.com -------------------------------------------------  
                                                
-def get_results_parkwhiz(params,type,req)
+def get_results_parkwhiz(params,type,req, results)
   begin  
-    results = []
+    
     location = params[:wherebox]
     agent = Mechanize.new{|a| a.follow_meta_refresh= true}
     agent.user_agent_alias = "Linux Firefox"
@@ -736,7 +753,8 @@ def get_results_parkwhiz(params,type,req)
      end
     end
     
-    save_results(results,"daily","www.parkwhiz.com",req)    
+    #save_results(results,"daily","www.parkwhiz.com",req)    
+    results
     rescue Exception => e  
      puts e.message  
      puts e.backtrace.inspect  
@@ -746,8 +764,8 @@ end
 
 def get_results_centralpark(params,type,req)
   begin  
+    results = []
     location = params[:wherebox]
-    results=[]
     arr = location.split(",")
     city = arr[0].strip.gsub(" ","-")
     state = arr[1].strip 
@@ -818,7 +836,8 @@ def get_results_centralpark(params,type,req)
 	    results<<object
      
      end
-    save_results(results,type,"www.centralparking.com",req)    
+    #save_results(results,type,"www.centralparking.com",req)    
+    results  
     rescue Exception => e  
      puts e.message  
      puts e.backtrace.inspect  
