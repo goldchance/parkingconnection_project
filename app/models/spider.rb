@@ -22,7 +22,7 @@ class Spider
       req = Request.create(:desc=>"")
       
       results = spy.get_results_centralpark(params, "daily",req)  # if params["centralpark"] == "1"
-   #   spy.get_results_gottapark(params,"daily", req, results)    # if params["gottapark"] == "1"
+      spy.get_results_gottapark(params,"daily", req, results)    # if params["gottapark"] == "1"
   #    spy.get_results_pandaparking(params, "daily",req ,results) # if params["pandaparking"] == "1"
       spy.get_results_parkwhiz(params, "daily",req,results)     # if params["parkwhiz"] == "1"
       spy.get_results_spothero(params, "daily",req,results)     # if params["spothero"] == "1"
@@ -597,11 +597,17 @@ def get_results_parkingconnection(params,req, results)
 
     end
    
-    results.each do |r|
-      visit(r["href"])
-      if all(:css, "img#lp_photo").size>0
-        r["urlimage"] = all(:css, "img#lp_photo").first[:src]
-      end
+    results.each do |object|
+     href = object["href"] 
+      if Source.find_by_name("gottapark").places.find_by_href(href) != nil
+          find_place("gottapark", href, object)
+     else
+      visit(object["href"])
+       if all(:css, "img#lp_photo").size>0
+        object["urlimage"] = all(:css, "img#lp_photo").first[:src]
+       end
+      save_place(object, "gottapark" , href)
+     end
     end
     #save_results(results,type,"www.gottapark.com",req)    
     results
