@@ -23,7 +23,7 @@ class Spider
       
       results = spy.get_results_centralpark(params, "daily",req)  # if params["centralpark"] == "1"
       spy.get_results_gottapark(params,"daily", req, results)    # if params["gottapark"] == "1"
-  #    spy.get_results_pandaparking(params, "daily",req ,results) # if params["pandaparking"] == "1"
+      spy.get_results_pandaparking(params, "daily",req ,results) # if params["pandaparking"] == "1"
       spy.get_results_parkwhiz(params, "daily",req,results)     # if params["parkwhiz"] == "1"
       spy.get_results_spothero(params, "daily",req,results)     # if params["spothero"] == "1"
      
@@ -114,10 +114,10 @@ class Spider
      results
   end
 #------------------------------------airport search methods -----------------------------------------------------------
-def get_results_pnf(params, req)
+def get_results_pnf(params, req, results)
 
 begin 
-    results=[]
+    list=[]
     city=params[:wherebox_airp].split(" (")[0].gsub(" ","-")
     short_name = params[:wherebox_airp].split(" (")[1].gsub("(","").gsub(")","").upcase
     agent = Mechanize.new{|a| a.follow_meta_refresh= true}
@@ -134,17 +134,19 @@ begin
     agent.page.search(".location").each do |loc|
       object = Hash.new
       object["location"] = loc.search(".title").first.text
+      
+      part =  loc.search(".reserve-now a").first[:href]
+      object["href"] = "http://www.pnf.com/reserve/#{part}#parking"
+      
       s = loc.search(".info p").first.text
       add = s.split(/[\t]+/)[0].gsub!(/[\r]+/, "").gsub!(/[\n]+/, "")
       add << s.split(/[\t]+/)[1].gsub!(/[\r]+/, "").gsub!(/[\n]+/, "")
       object["address"] = add
       object["price"] = loc.search(".ratetotal").first.text
-      part =  loc.search(".reserve-now a").first[:href]
-      object["href"] = "http://www.pnf.com/reserve/#{part}#parking"
       object["urlimage"]=""
-      results << object
+      list << object
     end
-    save_results(results,"airport","www.pnf.com", req)    
+    #save_results(results,"airport","www.pnf.com", req)    
    rescue Exception => e  
      puts e.message  
      puts e.backtrace.inspect  
@@ -541,6 +543,7 @@ def get_results_parkingconnection(params,req, results)
 #-------------------------------------------- www.gottaprk.com -------------------------------------  
   def get_results_gottapark(params,type,req, results)
    begin 
+     list = []
     location=params[:wherebox]
     if location.present?
      arr = location.split(",")
@@ -566,30 +569,30 @@ def get_results_parkingconnection(params,req, results)
     all(:xpath,'//div[@id="smallsearchbox"]/div/div[@class="details"]/p[@class="address"]').each do |item|
        object = Hash.new
        object["address"]= item.text
-      results<<object
+      list<<object
     end
    
     all(:xpath,'//p[@class="price"]').each_with_index do |item,index|
-    if results[index].present?
+    if list[index].present?
       #  object.location = slice[0].text
-        object = results[index]
+        object = list[index]
         object["price"]= item.text[0..-3]
       end
     end
     
     all(:css, "p.title a").each_with_index do |item,index|
-    if results[index].present?
+    if list[index].present?
       #  object.location = slice[0].text
-        object = results[index]
+        object = list[index]
         object["location"]= item.text
       end
     end
 
 
     all(:css, "p.address").each_with_index do |item,index|
-    if results[index].present?
+    if list[index].present?
       #  object.location = slice[0].text
-        object = results[index]
+        object = list[index]
         path=item.text.split(",").first.gsub(" ","-")
         object["href"]= "http://www.gottapark.com/parking/#{city}/#{path}"
           
@@ -597,7 +600,7 @@ def get_results_parkingconnection(params,req, results)
 
     end
    
-    results.each do |object|
+    list.each do |object|
      href = object["href"] 
       if Source.find_by_name("gottapark").places.find_by_href(href) != nil
           find_place("gottapark", href, object)
@@ -608,8 +611,10 @@ def get_results_parkingconnection(params,req, results)
        end
       save_place(object, "gottapark" , href)
      end
+      results << object
     end
     #save_results(results,type,"www.gottapark.com",req)    
+   
     results
    rescue Exception => e  
      puts e.message  
@@ -621,7 +626,8 @@ def get_results_parkingconnection(params,req, results)
   
   def get_results_pandaparking(params,type,req, results)
    begin
-    location = params[:wherebox]
+    list =[]
+     location = params[:wherebox]
     arr = location.split(",")
     city = arr[0].strip.gsub(" ","-")
     state = arr[1].strip 
@@ -645,63 +651,74 @@ def get_results_parkingconnection(params,req, results)
 	      sleep 5
         if all(:css, "span.location-rate").size>0
           if all(:css, "span.location-rate").first.text=="monthly"
-            pickup_panda("monthly",req)
+            pickup_panda("monthly",req, results)
           end
         end
       end
       
     else
       visit("https://www.parkingpanda.com/Search/?location=#{city}&monthly=false&daily=true")
-      sleep 5
-      pickup_panda("daily",req)
+      sleep 1
+      pickup_panda("daily",req, results)
     end
     rescue Exception => e  
      puts e.message  
      puts e.backtrace.inspect  
     end
+  results
   end                                          
 #------------------------------------------ pickup
-def pickup_panda(desc,req)
-  results =[]
+def pickup_panda(desc,req, results)
+  list =[]
     all(:xpath, "//div[@class='location-details']/h2").each do |item|
      #object = Result.new
      #object.address = item.text
        object = Hash.new
        object["location"]= item.text
        object["address"] = item.text
-      results<<object
+      list<<object
     end
     all(:xpath, "//div[@class='location-details']/p").each_slice(2).with_index do |slice,index|
-      if results[index].present?
+      if list[index].present?
       #  object.location = slice[0].text
-        object = results[index]
+        object = list[index]
         object["address"] << ", #{slice[0].text}"
       end
     end
     all(:xpath, "//span[@class='location-price']").each_with_index do |item,index|
-      if results[index].present?
+      if list[index].present?
         #object.price = item.text
-        object = results[index]
+        object = list[index]
         object["price"]= item.text
         #object.save
       end
     end
     all(:css, "div.location-reserve a.btn.btn-parking").each_with_index do |item,index|
-      if results[index].present?
+      if list[index].present?
         #object.price = item.text
-        object = results[index]
+        object = list[index]
         object["href"]= "https://www.parkingpanda.com#{item[:href]}"
         #object.save
       end
     end
     all(:css, "div.location-image img").each_with_index do |item,index|
-      if results[index].present?
+      if list[index].present?
         #object.price = item.text
         object = results[index]
         object["urlimage"]= item[:src]
         #object.save
       end
     end
+    list.each do |object|
+      href = object["href"].split("&start").first 
+      if Source.find_by_name("pandaparking").places.find_by_href(href) != nil
+          find_place("pandaparking", href, object)
+      else
+          save_place(object, "pandaparking" , href)
+      end
+      results << object
+    end
+
     results
     #save_results(results,desc,"www.parkingpanda.com", req)    
 end
