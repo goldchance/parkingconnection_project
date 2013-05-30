@@ -483,19 +483,6 @@ def get_results_parkingconnection(params,req, results)
           object = Hash.new
           find_place("spothero", href, object)
           object["href"]= url
-         
-       #  place = Source.find_by_name("spothero").places.find_by_href(href)
-       #  object = Hash.new
-       #  object["href"]= url
-       #  object["source"] = place.source.name
-       #  object["location"] = place.location
-       #  object["address"] = place.address
-       #  object["price"] = place.price
-       #  object["urlimage"] = place.urlimage
-       #  place["longitude"] = place.longitude
-       #  place["latitude"] = place.latitude
-       #  place["gmaps4rails_address"] = place.gmaps4rails_address if place.gmaps4rails_address != nil
-
         else
 
           object = Hash.new
@@ -512,14 +499,6 @@ def get_results_parkingconnection(params,req, results)
           object["urlimage"] = all(:css, ".slides_control img").first[:src]
           
           save_place(object, "spothero" , href)
-       
-          #place = Source.find_by_name("spothero").places.new
-          #  place.href = href
-       #  place.location = object["location"]
-       #  place.address = object["address"]
-       #  place.price = object["price"]
-       #  place.urlimage = object["urlimage"]
-       #  place.save
         end 
         results << object
    #  rescue Exception => e
@@ -552,10 +531,7 @@ def get_results_parkingconnection(params,req, results)
     end
    
     if Rails.env.production?
-      
       headless = Headless.new(display: 100, reuse: true, destroy_at_exit: false)
-     # headless = Headless.new
-     # headless.start
     end  
     visit("http://www.gottapark.com/")
     fill_in "search_key", :with =>"#{location}"
@@ -632,12 +608,8 @@ def get_results_parkingconnection(params,req, results)
     city = arr[0].strip.gsub(" ","-")
     state = arr[1].strip 
    
-
     if Rails.env.production?
-      
       headless = Headless.new(display: 100, reuse: true, destroy_at_exit: false)
-      #headless = Headless.new
-      #headless.start
     end  
 
     if type != 'daily'
@@ -655,7 +627,6 @@ def get_results_parkingconnection(params,req, results)
           end
         end
       end
-      
     else
       visit("https://www.parkingpanda.com/Search/?location=#{city}&monthly=false&daily=true")
       sleep 1
@@ -718,9 +689,7 @@ def pickup_panda(desc,req, results)
       end
       results << object
     end
-
     results
-    #save_results(results,desc,"www.parkingpanda.com", req)    
 end
 #-------------------------------------  www.centralparking.com -------------------------------------------------  
                                                
@@ -776,7 +745,6 @@ def get_results_parkwhiz(params,type,req, results)
      end
     end
     
-    #save_results(results,"daily","www.parkwhiz.com",req)    
     results
     rescue Exception => e  
      puts e.message  
@@ -793,12 +761,8 @@ def get_results_centralpark(params,type,req)
     city = arr[0].strip.gsub(" ","-")
     state = arr[1].strip 
 	   
-    if Rails.env.production?
-      
-      headless = Headless.new(display: 100, reuse: true, destroy_at_exit: false)
-      #headless = Headless.new
-      #headless.start
-    end  
+    headless = Headless.new(display: 100, reuse: true, destroy_at_exit: false) if Rails.env.production?
+    
     if city.downcase =="new-york"
       city_short = "nyc"
     else
@@ -810,7 +774,6 @@ def get_results_centralpark(params,type,req)
       list << url[:href]
       
     end
-    #debugger
     if type == 'daily'
       det="#Tab_standard-rates"
     else
@@ -822,44 +785,31 @@ def get_results_centralpark(params,type,req)
         object = Hash.new
         find_place("centralparking", href, object)
         object["href"] = href
-        #object["href"]= "http://#{city_short}.centralparking.com#{url}#{det}"
-        #object["location"] = place.location
-        #object["address"] = place.address
-        #object["price"] = place.price
-
       else
         visit("http://#{city_short}.centralparking.com#{url}")
         object = Hash.new
-       # place = Source.find_by_name("centralparking").places.new
-       # place.href = "http://#{city_short}.centralparking.com#{url}#{det}"
         object["href"]= "http://#{city_short}.centralparking.com#{url}#{det}"
         if all(:css,"dl.info dd").size>0
           object["address"] = all(:css,"dl.info dd").first.text
-         # place.address = object["address"]
         end
         
         if all(:css, "div.column_1-5.left h1").size>0
            object["location"] = all(:css, "div.column_1-5.left h1").first.text
-          # place.location = object["location"]
         end
         if type == 'daily'
           if all(:css, "table.layout-table-1 tr td").size>3
             object["price"] = all(:css, "table.layout-table-1 tr td")[3].text
-         #   place.price = object["price"]
           end
         else
           if all(:css, "div.monthly-parking-rates p").size>0
            object["price"] = all(:css, "div.monthly-parking-rates p")[0].text
-        #   place.price = object["price"]
           end
         end
         save_place(object,"centralparking",href)
-       # place.save
       end
 	    results<<object
      
      end
-    #save_results(results,type,"www.centralparking.com",req)    
     results  
     rescue Exception => e  
      puts e.message  
