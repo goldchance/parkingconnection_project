@@ -48,45 +48,85 @@ ul.simplePagerNav li.currentPage a {
    $(function() {
     $( "#tabs" ).tabs();
   });
-   $(document).ready(function() {
+  $(document).ready(function() {
+      
+      
+      $(".place_info").hover(
+        function () {
+          $(this).animate({ boxShadow: '0 0 30px #44f'  });
+        },
+        function () {
+          $(this).animate({ boxShadow: '0 0 10px #000'} );
+        }
+      );
+      $(".ui-icon-circle-close").click(function() {
+        $(this).parent().fadeOut();
+      });
       $("ul.pagination1").quickPagination({ pageSize:"18"});
     
     });
 </script>
 <!-- end css for the results -->
+
+<div id="box1" onmouseover="$('#box1').stop().animate({boxShadow: '0 0 30px #44f'})" onmouseout="$('#box1').stop().animate({boxShadow: '0 0 10px #000'})">mouse over</div>
 <div id="results" title="<%#=@req.id%>" name="no">
-  <%= @req.size %>             
-  <%#= @req %>             
   <% @allresults = @list.group_by{ |s| [s.latitude, s.longitude]}%>             
   <%# @allresults = @req.results.group_by{ |s| [s.latitude, s.longitude]} %>
-        <p> <%= @allresults.size %> place(s) </p>
-        
         <br />
         <ul class="pagination1" style="list-style-type: none; ">
+        <h4> <%= @allresults.size %> place(s) found </h4>
           <% @allresults.each do |hash| %>
             <li >
-            <fieldset class="ui-corner-all ui-widget ui-widget-content " style="margin:10px; ">
-          <legend>   <h4 style="width:800px; " class=" ui-corner-all ui-widget-header"> <%=link_to "#{hash[1].first.location}", "#", 
-            :target => "_blank", :style=>"text-decoration:none;" %> </h4>
-          </legend>
-          <table style="width:100%;">
+            <fieldset class="place_info ui-corner-all ui-widget ui-widget-content " style="margin:10px; box-shadow: 0 0 10px #000000;">
+                    
+  <span class="ui-icon ui-icon-circle-close" style="float:right;"> </span>
+<%
+=begin
+%>
+              <legend >
+                <table style="width:800px;" >
+                  <tr>
+                    <td style="width:40%;">
+                      <h4 style="; " class=" ui-corner-all ui-widget-header"> <%=link_to "#{hash[1].first.location}", "#", 
+                        :target => "_blank", :style=>"text-decoration:none;" %> </h4>
+                    </td>
+                    
+                  </tr>
+              </table>
+        </legend>
+
+<%
+=end
+%>
+        <table style="width:100%;">
             <tr>
               <td style="width:85%;">
-                <span style="color:gray;">
-                  <a href="#" data-geo="data-geo" ><%= hash[1].first.address %></a>
-                </span>
-                <br />
-                <hr style="width:600px;">
-                <table style="width:80%;">
+                <table style="width:600px;" >
+                  <tr>
+                    <td style="width:40%;">
+
+                <h4 style="float:left" class=" ui-corner-all ui-widget-header"> <%=link_to "#{hash[1].first.location}", "#", 
+                        :target => "_blank", :style=>"text-decoration:none;" %> </h4>
+                    </td>
+                    <td> 
+                      <span style="float:right;"> <%=  "#{hash[1].first.address}" %> </span>      
+                    </td>
+                  </tr>
+                  </table>
+                      <table style="width:80%;">
                   <% hash[1].each do |place| %>
                   <tr >
-                    <td>
-                      <%= link_to  "#{place.source}", place.href  , :target =>"_blank", :style=> "text-color:light-blue; text-decoration:none;"%>
+                    <td style="width:40%;">
+                      <%= link_to  "www.#{place.source}.com", place.href  , :target =>"_blank", :style=> "text-color:light-blue; text-decoration:none;"%>
                     </td>
-                    <td>
-                      <p> <strong><%= place["price"] %> </strong> </p>
-                  </td>
-                    <td>
+                    <td style="width:20%;">
+                      <% if  place["price"] == nil %>
+                        <p> <strong> n/a </strong> </p>
+                      <% else%>
+                        <p> <strong><%= place["price"] %> </strong> </p>
+                      <% end %>
+                    </td>
+                    <td style="width:40%;">
                       <%= link_to "reserve", place.href , :target =>"_blank" %>
                     </td>
                   </tr>

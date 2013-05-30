@@ -91,9 +91,9 @@ class Spider
     spy=Spider.new
     req = Request.create(:desc=>"")
     results = spy.get_results_airportparkingreservations(params,req) # if params["airportparkingreservations"] == "1"
-    spy.get_results_parkingconnection(params,req,results)          # if params["parkingconnection"] == "1"
+  #  spy.get_results_parkingconnection(params,req,results)          # if params["parkingconnection"] == "1"
     spy.get_results_airportparking(params,req, results)             # if params["airportparking"] == "1"
-    spy.get_results_aboutairportparking(params, req, results)       # if params["aboutairportparking"] == "1"
+   # spy.get_results_aboutairportparking(params, req, results)       # if params["aboutairportparking"] == "1"
         # spy.get_results_pnf(params,req)                        # if params["pnf"] == "1"
        # FayeController.publish('/searches', {result_string: result_string})
      
@@ -251,12 +251,12 @@ def get_results_airportparking(params, req, results)
       fill_in 'park_to', :with => "#{params[:to]}"
     end
     find_button('UPDATE SEARCH').click
-    sleep 1
+    sleep 4
     links=[]
     all(:css,"div.lot").each do |lot|
       if lot.all(:css, "#reserve_button").size >0
         if lot.all(:css, "#reserve_button").first.text == "RESERVE"
-          links << "#{lot.find(:css, "span.lot-title a")[:href]}"
+          links << "http://www.airportparking.com/#{lot.find(:css, "span.lot-title a")[:href]}"
         end
       end
     end
