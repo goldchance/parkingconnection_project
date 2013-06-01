@@ -594,6 +594,7 @@ def get_results_parkingconnection(params,req, results)
         object["urlimage"] = all(:css, "img#lp_photo").first[:src]
        end
       save_place(object, "gottapark" , href)
+      find_place("gottapark", href, object)
      end
       results << object
     end
@@ -696,6 +697,7 @@ def pickup_panda(desc,req, results)
           find_place("pandaparking", href, object)
       else
           save_place(object, "pandaparking" , href)
+          find_place("pandaparking", href, object)
       end
       results << object
     end
@@ -746,9 +748,8 @@ def get_results_parkwhiz(params,type,req, results)
             url.slice!(0).slice!(0)
             object["urlimage"] = "http://#{url}"
           end
-         # place.urlimage = object["urlimage"]
-         # place.save
           save_place(object, "parkwhiz" , href)
+          find_place("parkwhiz", href, object)
         end
         results << object
      #------
@@ -817,6 +818,7 @@ def get_results_centralpark(params,type,req)
           end
         end
         save_place(object,"centralparking",href)
+        find_place("centralparking", href, object)
       end
 	    results<<object
      
