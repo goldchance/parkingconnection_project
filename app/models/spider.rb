@@ -37,12 +37,10 @@ class Spider
      puts e.backtrace.inspect  
      req.desc << e.message.to_s << e.backtrace.inspect.to_s
      req.save
+     results
     end
-  
-    #results = req.results
-    #req.destroy
+   
     results
-    #req
   end
  
   def self.monthly_search(params)
@@ -71,11 +69,10 @@ class Spider
       puts e.backtrace
      req.desc << e.message.to_s << e.backtrace.inspect.to_s
       req.save
+     results
     end
-    #results = req.results
-    #req.destroy
+    
     results
-    #req
   end
   
     
@@ -91,9 +88,9 @@ class Spider
     spy=Spider.new
     req = Request.create(:desc=>"")
     results = spy.get_results_airportparkingreservations(params,req) # if params["airportparkingreservations"] == "1"
-  #  spy.get_results_parkingconnection(params,req,results)          # if params["parkingconnection"] == "1"
+    spy.get_results_parkingconnection(params,req,results)          # if params["parkingconnection"] == "1"
     spy.get_results_airportparking(params,req, results)             # if params["airportparking"] == "1"
-   # spy.get_results_aboutairportparking(params, req, results)       # if params["aboutairportparking"] == "1"
+    spy.get_results_aboutairportparking(params, req, results)       # if params["aboutairportparking"] == "1"
         # spy.get_results_pnf(params,req)                        # if params["pnf"] == "1"
        # FayeController.publish('/searches', {result_string: result_string})
      
@@ -108,10 +105,10 @@ class Spider
       puts e.backtrace
       req.desc<< e.message.to_s << e.backtrace.inspect.to_s
       req.save
+      results
     end
-    #req.destroy
-    #req
-     results
+     
+    results
   end
 #------------------------------------airport search methods -----------------------------------------------------------
 def get_results_pnf(params, req, results)
@@ -150,6 +147,7 @@ begin
    rescue Exception => e  
      puts e.message  
      puts e.backtrace.inspect  
+     results
     end
   end
  
@@ -220,6 +218,7 @@ begin
         end
       
         save_place(object,"aboutairportparking",link)
+        find_place("aboutairportparking", link, object)
       end
         results<<object
       end
@@ -229,6 +228,7 @@ begin
   rescue Exception => e  
      puts e.message  
      puts e.backtrace.inspect  
+     results
     end
   end
 
@@ -285,15 +285,16 @@ def get_results_airportparking(params, req, results)
          object["price"] = all(:css,"span.reservation-subtotal-amount").first.text
          object["href"] = current_url
          save_place(object,"airportparking",href)
+        find_place("airportparking", href, object)
         end
       end
         results<<object
     end
-    #save_results(results,"airport","www.airportparking.com", req)    
     results
    rescue Exception => e  
      puts e.message  
      puts e.backtrace.inspect  
+     results
     end
   end
 
@@ -309,7 +310,6 @@ def get_results_parkingconnection(params,req, results)
       headless = Headless.new(display: 100, reuse: true, destroy_at_exit: false)
     end  
     url="http://www.parkingconnection.com/locations/#{city}-#{short_name}-airport-parking/?dpnLocations=#{short_name}&txtCheckinDt=#{params[:from]}&dpnCheckInTime=#{params[:Items]}&txtCheckoutDt=#{params[:to]}&dpnCheckOutTime=#{params[:Items2]}&UnitID&FacilityID&sendbutton2"
-    #url="http://www.parkingconnection.com/locations/albany-alb-airport-parking/?dpnLocations=ALB&txtCheckinDt=3/4/2013&dpnCheckInTime=12:00AM&txtCheckoutDt=3/10/2013&dpnCheckOutTime=12:00AM&UnitID&FacilityID&sendbutton2"
     visit(url)
     sleep 1
     all(:css,"div.locationLot").each do |lot|
@@ -334,6 +334,7 @@ def get_results_parkingconnection(params,req, results)
       object["price"] = lot.find(:css,"div.rateInfoContainer div.rate").text
       object["source"] = "parkingconnection"         
       save_place(object,"parkingconnection",link)
+      find_place("parkingconnection", link, object)
      end
 
       
@@ -344,6 +345,7 @@ def get_results_parkingconnection(params,req, results)
   rescue Exception => e  
      puts e.message  
      puts e.backtrace.inspect  
+     results
     end
   end
 
@@ -402,6 +404,7 @@ def get_results_parkingconnection(params,req, results)
         end
         object = r
         save_place(object,"airportparkingreservations",link)
+        find_place("airportparkingreservations", link, object)
      end
   end
   #save_results(results,"airport","www.airportparkingreservations.com",req)    
@@ -409,6 +412,7 @@ def get_results_parkingconnection(params,req, results)
    rescue Exception => e  
      puts e.message  
      puts e.backtrace.inspect  
+     results
     end
   end
  #------------------------------------------------------- 
@@ -447,6 +451,7 @@ def get_results_parkingconnection(params,req, results)
      rescue Exception => e  
      puts e.message  
      puts e.backtrace.inspect  
+     results
     end
   end
 
@@ -477,7 +482,7 @@ def get_results_parkingconnection(params,req, results)
       list << "https://spothero.com/#{city}/spot/#{id}?start_date=#{params[:from].gsub("/","-")}&start_time=#{params[:Items].gsub(":","").gsub(" ","")}&end_date=#{params[:to].gsub("/","-")}&end_time=#{params[:Items2].gsub(":","").gsub(" ","")}"
     end
     list.each do |url|
-    #  begin
+      begin
         href= url.split("?start_date").first
         if Source.find_by_name("spothero").places.find_by_href(href) != nil
           object = Hash.new
@@ -499,12 +504,14 @@ def get_results_parkingconnection(params,req, results)
           object["urlimage"] = all(:css, ".slides_control img").first[:src]
           
           save_place(object, "spothero" , href)
+          find_place("spothero", href, object)
         end 
         results << object
-   #  rescue Exception => e
-   #   puts e.message  
-   #   puts e.backtrace.inspect  
-   #  end
+      rescue Exception => e
+       puts e.message  
+       puts e.backtrace.inspect  
+       results
+      end
      end
     
    # debugger
@@ -513,6 +520,7 @@ def get_results_parkingconnection(params,req, results)
    rescue Exception => e  
      puts e.message  
      puts e.backtrace.inspect  
+     results
     end
   end
 
@@ -595,6 +603,7 @@ def get_results_parkingconnection(params,req, results)
    rescue Exception => e  
      puts e.message  
      puts e.backtrace.inspect  
+     results
     end
   end
   
@@ -635,6 +644,7 @@ def get_results_parkingconnection(params,req, results)
     rescue Exception => e  
      puts e.message  
      puts e.backtrace.inspect  
+     results
     end
   results
   end                                          
@@ -749,6 +759,7 @@ def get_results_parkwhiz(params,type,req, results)
     rescue Exception => e  
      puts e.message  
      puts e.backtrace.inspect  
+     results
     end
 
 end                                              
@@ -814,9 +825,9 @@ def get_results_centralpark(params,type,req)
     rescue Exception => e  
      puts e.message  
      puts e.backtrace.inspect  
-      
      req.desc<< e.message.to_s << e.backtrace.inspect.to_s
      req.save
+     results
     end
 end
 

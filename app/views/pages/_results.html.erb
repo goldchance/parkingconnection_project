@@ -68,7 +68,6 @@ ul.simplePagerNav li.currentPage a {
 </script>
 <!-- end css for the results -->
 
-<div id="box1" onmouseover="$('#box1').stop().animate({boxShadow: '0 0 30px #44f'})" onmouseout="$('#box1').stop().animate({boxShadow: '0 0 10px #000'})">mouse over</div>
 <div id="results" title="<%#=@req.id%>" name="no">
   <% @allresults = @list.group_by{ |s| [s.latitude, s.longitude]}%>             
   <%# @allresults = @req.results.group_by{ |s| [s.latitude, s.longitude]} %>
@@ -101,23 +100,23 @@ ul.simplePagerNav li.currentPage a {
         <table style="width:100%;">
             <tr>
               <td style="width:85%;">
-                <table style="width:600px;" >
+                <table style="width:100%;" >
                   <tr>
-                    <td style="width:40%;">
+                    <td style="width:50%;">
 
                 <h4 style="float:left" class=" ui-corner-all ui-widget-header"> <%=link_to "#{hash[1].first.location}", "#", 
                         :target => "_blank", :style=>"text-decoration:none;" %> </h4>
                     </td>
-                    <td> 
-                      <span style="float:right;"> <%=  "#{hash[1].first.address}" %> </span>      
+                    <td style="width:50%;">  
+                      <span style="float:left; color:gray;"> <%=  "#{hash[1].first.address}" %> </span>      
                     </td>
                   </tr>
                   </table>
-                      <table style="width:80%;">
+                      <table style="width:100%;">
                   <% hash[1].each do |place| %>
                   <tr >
-                    <td style="width:40%;">
-                      <%= link_to  "www.#{place.source}.com", place.href  , :target =>"_blank", :style=> "text-color:light-blue; text-decoration:none;"%>
+                    <td style="width:60%;">
+                      <%= link_to  "#{place.source}.com", place.href  , :target =>"_blank", :style=> "text-color:light-blue; text-decoration:none;"%>
                     </td>
                     <td style="width:20%;">
                       <% if  place["price"] == nil %>
@@ -126,7 +125,7 @@ ul.simplePagerNav li.currentPage a {
                         <p> <strong><%= place["price"] %> </strong> </p>
                       <% end %>
                     </td>
-                    <td style="width:40%;">
+                    <td style="width:20%;">
                       <%= link_to "reserve", place.href , :target =>"_blank" %>
                     </td>
                   </tr>
