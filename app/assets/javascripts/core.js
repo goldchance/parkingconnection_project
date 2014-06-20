@@ -104,7 +104,7 @@
     $( "#wherebox" ).autocomplete({
       source: function( request, response ) {
         $.ajax({
-          url: "http://ws.geonames.org/searchJSON?country=US",
+          url: "http://ws.geonames.org/searchJSON?country=US&username=demo",
           dataType: "jsonp",
           data: {
             featureClass: "P",
