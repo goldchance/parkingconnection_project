@@ -33,7 +33,8 @@ class Spider
    #   uri = URI.parse("http://72.10.36.142:3000/faye")
    #   Net::HTTP.post_form(uri, :message => message.to_json)
     rescue Exception => e  
-     puts e.message  
+     binding.pry
+      puts e.message  
      puts e.backtrace.inspect  
      req.desc << e.message.to_s << e.backtrace.inspect.to_s
      req.save
@@ -718,7 +719,7 @@ def get_results_parkwhiz(params,type,req, results)
    sleep 1
     agent.get("#{agent.page.uri.to_s}?&start_date=#{params[:from]}&start_time=#{params[:Items].gsub(" ","")}&end_date=#{params[:to]}&end_time=#{params[:Items2].gsub(" ","")}")
     links = []
-    agent.page.search(".listing-row").each do |link|
+    agent.page.search(".search-list-card-body").each do |link|
       links << "http://www.parkwhiz.com#{link[:href]}"
     end
     links.each do |link|
