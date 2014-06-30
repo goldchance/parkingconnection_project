@@ -22,9 +22,9 @@ class Spider
       req = Request.create(:desc=>"")
       
       results = spy.get_results_centralpark(params, "daily",req)  # if params["centralpark"] == "1"
-      spy.get_results_gottapark(params,"daily", req, results)    # if params["gottapark"] == "1"
-      spy.get_results_pandaparking(params, "daily",req ,results) # if params["pandaparking"] == "1"
-      spy.get_results_parkwhiz(params, "daily",req,results)     # if params["parkwhiz"] == "1"
+     # spy.get_results_gottapark(params,"daily", req, results)    # if params["gottapark"] == "1"
+     # spy.get_results_pandaparking(params, "daily",req ,results) # if params["pandaparking"] == "1"
+     # spy.get_results_parkwhiz(params, "daily",req,results)     # if params["parkwhiz"] == "1"
       spy.get_results_spothero(params, "daily",req,results)     # if params["spothero"] == "1"
      
    #   result_string = ApplicationController.new.render_to_string(:partial => 'pages/results', :locals => { result_type: "daily" })
@@ -459,7 +459,8 @@ def get_results_parkingconnection(params,req, results)
 #--------------------------------------------------------Spothero -----------
   def get_results_spothero(params, type,req, results)
    begin 
-    location = params[:wherebox]
+    
+     location = params[:wherebox]
     if location.present?
      arr = location.split(",")
      city = arr[0].strip.gsub(" ","-")
@@ -478,9 +479,13 @@ def get_results_parkingconnection(params,req, results)
     all(:css,"#submit-search").first.click
     sleep 2
     list=[]
+    
     all(:css, ".result").each do |lot|
-      id = lot.find(:css, ".btnSpotMe")[:id]
-      list << "https://spothero.com/#{city}/spot/#{id}?start_date=#{params[:from].gsub("/","-")}&start_time=#{params[:Items].gsub(":","").gsub(" ","")}&end_date=#{params[:to].gsub("/","-")}&end_time=#{params[:Items2].gsub(":","").gsub(" ","")}"
+     # id = lot.find(:css, ".btnSpotMe")[:id]
+     # list << "https://spothero.com/#{city}/spot/#{id}?start_date=#{params[:from].gsub("/","-")}&start_time=#{params[:Items].gsub(":","").gsub(" ","")}&end_date=#{params[:to].gsub("/","-")}&end_time=#{params[:Items2].gsub(":","").gsub(" ","")}"
+      first_part = lot.find(:css, ".price")[:href].split("?start_date").first
+      list << first_part + "?start_date=#{params[:from].gsub("/","-")}&start_time=#{params[:Items].gsub(":","").gsub(" ","")}&end_date=#{params[:to].gsub("/","-")}&end_time=#{params[:Items2].gsub(":","").gsub(" ","")}"
+
     end
     list.each do |url|
       begin
@@ -494,15 +499,15 @@ def get_results_parkingconnection(params,req, results)
           object = Hash.new
           visit(url)
           sleep 2
-          object["location"] = all(:css, ".hd h1").first.text
-          object["address"] = all(:css, ".hd").first.text
+          object["location"] = all(:css, ".facility-title").first.text
+          object["address"] = all(:css, ".location-address").first.text
           if all(:css, "#hourly .priceByTimeListCheckout dt").size > 0
             object["price"] = all(:css, "#hourly .priceByTimeListCheckout dt").first.text
           else
             object["price"] = "n/a"
           end
           object["href"] = url
-          object["urlimage"] = all(:css, ".slides_control img").first[:src]
+          object["urlimage"] = all(:css, "#carousel img").first[:src] rescue nil
           
           save_place(object, "spothero" , href)
           find_place("spothero", href, object)
