@@ -22,9 +22,9 @@ class Spider
       req = Request.create(:desc=>"")
       
       results = spy.get_results_centralpark(params, "daily",req)  # if params["centralpark"] == "1"
-     # spy.get_results_gottapark(params,"daily", req, results)    # if params["gottapark"] == "1"
-     # spy.get_results_pandaparking(params, "daily",req ,results) # if params["pandaparking"] == "1"
-     # spy.get_results_parkwhiz(params, "daily",req,results)     # if params["parkwhiz"] == "1"
+      spy.get_results_gottapark(params,"daily", req, results)    # if params["gottapark"] == "1"
+      spy.get_results_pandaparking(params, "daily",req ,results) # if params["pandaparking"] == "1"
+      spy.get_results_parkwhiz(params, "daily",req,results)     # if params["parkwhiz"] == "1"
       spy.get_results_spothero(params, "daily",req,results)     # if params["spothero"] == "1"
      
    #   result_string = ApplicationController.new.render_to_string(:partial => 'pages/results', :locals => { result_type: "daily" })
