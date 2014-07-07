@@ -23,7 +23,7 @@ class Spider
       
       results = spy.get_results_centralpark(params, "daily",req)  # if params["centralpark"] == "1"
       spy.get_results_gottapark(params,"daily", req, results)    # if params["gottapark"] == "1"
-      spy.get_results_pandaparking(params, "daily",req ,results) # if params["pandaparking"] == "1"
+     # spy.get_results_pandaparking(params, "daily",req ,results) # if params["pandaparking"] == "1"
       spy.get_results_parkwhiz(params, "daily",req,results)     # if params["parkwhiz"] == "1"
       spy.get_results_spothero(params, "daily",req,results)     # if params["spothero"] == "1"
      
@@ -33,8 +33,7 @@ class Spider
    #   uri = URI.parse("http://72.10.36.142:3000/faye")
    #   Net::HTTP.post_form(uri, :message => message.to_json)
     rescue Exception => e  
-     binding.pry
-      puts e.message  
+     puts e.message  
      puts e.backtrace.inspect  
      req.desc << e.message.to_s << e.backtrace.inspect.to_s
      req.save
@@ -477,7 +476,8 @@ def get_results_parkingconnection(params,req, results)
     visit("http://www.spothero.com/")
     all(:css,"#search_string").first.set(params[:wherebox])
     all(:css,"#submit-search").first.click
-    sleep 2
+    sleep 15
+
     list=[]
     
     all(:css, ".result").each do |lot|
