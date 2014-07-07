@@ -23,7 +23,7 @@ class Spider
       
       results = spy.get_results_centralpark(params, "daily",req)  # if params["centralpark"] == "1"
       spy.get_results_gottapark(params,"daily", req, results)    # if params["gottapark"] == "1"
-     # spy.get_results_pandaparking(params, "daily",req ,results) # if params["pandaparking"] == "1"
+      spy.get_results_pandaparking(params, "daily",req ,results) # if params["pandaparking"] == "1"
       spy.get_results_parkwhiz(params, "daily",req,results)     # if params["parkwhiz"] == "1"
       spy.get_results_spothero(params, "daily",req,results)     # if params["spothero"] == "1"
      
@@ -663,16 +663,16 @@ def pickup_panda(desc,req, results)
      #object.address = item.text
        object = Hash.new
        object["location"]= item.text
-       object["address"] = item.text
+     #  object["address"] = item.text
       list<<object
     end
-    all(:xpath, "//div[@class='location-details']/p").each_slice(2).with_index do |slice,index|
-      if list[index].present?
+   # all(:xpath, "//div[@class='location-details']/p").each_slice(2).with_index do |slice,index|
+   #   if list[index].present?
       #  object.location = slice[0].text
-        object = list[index]
-        object["address"] << ", #{slice[0].text}"
-      end
-    end
+   #     object = list[index]
+   #     object["address"] << ", #{slice[0].text}"
+   #   end
+   # end
     all(:xpath, "//span[@class='location-price']").each_with_index do |item,index|
       if list[index].present?
         #object.price = item.text
@@ -685,23 +685,29 @@ def pickup_panda(desc,req, results)
       if list[index].present?
         #object.price = item.text
         object = list[index]
-        object["href"]= "https://www.parkingpanda.com#{item[:href]}"
+        #object["href"]= "https://www.parkingpanda.com#{item[:href]}"
+        object["href"]= item[:href]
         #object.save
       end
     end
     all(:css, "div.location-image img").each_with_index do |item,index|
       if list[index].present?
         #object.price = item.text
-        object = results[index]
+        object = list[index]
         object["urlimage"]= item[:src]
         #object.save
       end
     end
+    
     list.each do |object|
       href = object["href"].split("&start").first 
       if Source.find_by_name("pandaparking").places.find_by_href(href) != nil
           find_place("pandaparking", href, object)
       else
+          
+          visit(href)
+          sleep 2
+          object["address"] = find(:css,"#purchase-vehicle").text rescue nil
           save_place(object, "pandaparking" , href)
           find_place("pandaparking", href, object)
       end
