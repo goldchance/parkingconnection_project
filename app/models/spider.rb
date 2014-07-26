@@ -723,16 +723,19 @@ def get_results_parkwhiz(params,type,req, results)
     location = params[:wherebox]
     agent = Mechanize.new{|a| a.follow_meta_refresh= true}
     agent.user_agent_alias = "Linux Firefox"
-    agent.get("http://www.parkwhiz.com/")
-    form = agent.page.forms.first
-    form.destination=location
-    form.submit
+    agent.get("http://www.parkwhiz.com/search/?destination=#{params[:wherebox].split(",").first}")
+    #form = agent.page.forms[2]
+    
+    #form.destination=location
+    #form.submit
    sleep 1
-    agent.get("#{agent.page.uri.to_s}?&start_date=#{params[:from]}&start_time=#{params[:Items].gsub(" ","")}&end_date=#{params[:to]}&end_time=#{params[:Items2].gsub(" ","")}")
+   # binding.pry
+    agent.get("#{agent.page.uri.to_s}map/?&start_date=#{params[:from]}&start_time=#{params[:Items].gsub(" ","")}&end_date=#{params[:to]}&end_time=#{params[:Items2].gsub(" ","")}")
     links = []
     agent.page.search(".search-list-card-body").each do |link|
       links << "http://www.parkwhiz.com#{link[:href]}"
     end
+   # binding.pry
     links.each do |link|
       href = link.split("/?start").first
       begin
@@ -746,13 +749,14 @@ def get_results_parkwhiz(params,type,req, results)
           # debugger
           page =  agent.get(link)
           sleep 1
-          object["location"] = agent.page.search("#parking-header h1").first.text
+          object["location"] = agent.page.parser.at("[@itemprop = 'name']").text
           object["address"] =""
           agent.page.search(".address span").each do |s|
            object["address"] << s.text 
           end
-          if  agent.page.search(".money span").size > 1
-            object["price"] = "$#{agent.page.search(".money span.dollars").first.text} #{agent.page.search(".money span.cents").last.text}"
+          #binding.pry
+          if  agent.page.search(".btn-book").size > 0
+            object["price"] = "$#{agent.page.search(".btn-book span").first.text.gsub("$","") rescue ""} #{agent.page.search(".btn-book sup").last.text rescue ""}"
           end
           object["href"] = link
           if agent.page.search("#photos img").size > 0
