@@ -250,12 +250,14 @@ def get_results_airportparking(params, req, results)
       fill_in 'park_from', :with => "#{params[:from]}"
       fill_in 'park_to', :with => "#{params[:to]}"
     end
-    find_button('UPDATE SEARCH').click
+    #binding.pry
+    #find_button('Update Rates').click
+    all(:css,"#updatefrm button.btn-danger").first.click
     sleep 4
     links=[]
     all(:css,"div.lot").each do |lot|
       if lot.all(:css, "#reserve_button").size >0
-        if lot.all(:css, "#reserve_button").first.text == "RESERVE"
+        if lot.all(:css, "#reserve_button").first.text == "Park Here"
           links << "http://www.airportparking.com/#{lot.find(:css, "span.lot-title a")[:href]}"
         end
       end
@@ -288,7 +290,7 @@ def get_results_airportparking(params, req, results)
         find_place("airportparking", href, object)
         end
       end
-        results<<object
+      results<<object
     end
     results
    rescue Exception => e  
