@@ -629,20 +629,21 @@ def get_results_parkingconnection(params,req, results)
     end  
 
     if type != 'daily'
+      visit("https://www.parkingpanda.com/Search/?location=#{city}&monthly=true&daily=false")
+	    sleep 5
+      pickup_panda("monthly",req, results)
       # visit("https://www.parkingpanda.com/Search/?location=#{city}&start=#{params[:from]}&end=#{params[:to]}3&monthly=true&daily=false")
-      visit "https://www.parkingpanda.com"
-      fill_in "ctl00$container$txtSearch", :with =>"#{city}, #{state}, USA"
-      fill_in "ctl00$container$txtSearchStartDate", :with => "02/23/2013"
-      find(:xpath, '//input[@name="ctl00$container$btnSearch"]').click
-      if all(:xpath,'//a[@id="lnkMonthlyParking"]').size>0
-	      all(:xpath,'//a[@id="lnkMonthlyParking"]').first.click
-	      sleep 5
-        if all(:css, "span.location-rate").size>0
-          if all(:css, "span.location-rate").first.text=="monthly"
-            pickup_panda("monthly",req, results)
-          end
-        end
-      end
+      #visit "https://www.parkingpanda.com"
+      #fill_in "ctl00$container$txtSearch", :with =>"#{city}, #{state}, USA"
+      #fill_in "ctl00$container$txtSearchStartDate", :with => "02/23/2013"
+      #find(:xpath, '//input[@name="ctl00$container$btnSearch"]').click
+     # if all(:xpath,'//a[@id="lnkMonthlyParking"]').size>0
+	   #   all(:xpath,'//a[@id="lnkMonthlyParking"]').first.click
+      #  if all(:css, "span.location-rate").size>0
+       #   if all(:css, "span.location-rate").first.text=="monthly"
+        #  end
+        #end
+      #end
     else
       visit("https://www.parkingpanda.com/Search/?location=#{city}&monthly=false&daily=true")
       sleep 1
