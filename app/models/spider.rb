@@ -368,30 +368,36 @@ def get_results_parkingconnection(params,req, results)
     end  
     visit(url)
     sleep 1
-    all(:css, "div.sr-v3-left div.headline").each do |item|
-      object = Hash.new
-      object["location"]= item.text
-      
-      results<<object
+    #binding.pry
+    all(:css, "div.parkinglot-data").each do |item|
+      if item.all(:css, "a.parkHere").size > 0
+        object = Hash.new
+        object["location"]= item.all(:css, "h3").first.text
+        object["price"] = item.all(:css, "span.rate-iphone").first.text.insert(-3,".")
+         object["href"] = "http://www.airportparkingreservations.com/#{item.all(:css, "a.more-details").first[:href]}"  
+        
+        results<<object
+      end
     end
 
        
-    all(:css, "div.sr-v3-right div.reserve-box em.price").each_with_index do |item,index|
-      if results[index].present?
-      #  object.location = slice[0].text
-        object = results[index]
-        object["price"]= item.text
-      end
-    end
+  # all(:css, "div.sr-v3-right div.reserve-box em.price").each_with_index do |item,index|
+  #   if results[index].present?
+  #   #  object.location = slice[0].text
+  #     object = results[index]
+  #     object["price"]= item.text
+  #   end
+  # end
 
-  all(:css, "a.more-info").each_with_index do |item,index|
-      if results[index].present?
-      #  object.location = slice[0].text
-        object = results[index]
-        object["href"]= "http://www.airportparkingreservations.com#{item[:href]}"
-      end
-    end
-  results.each do |r|
+  #all(:css, "a.more-details").each_with_index do |item,index|
+  #   if results[index].present?
+  #   #  object.location = slice[0].text
+  #     object = results[index]
+  #     object["href"]= "http://www.airportparkingreservations.com#{item[:href]}"
+  #   end
+  # end
+  #binding.pry
+    results.each do |r|
     link = r["href"] 
      if Source.find_by_name("airportparkingreservations").places.find_by_href(link) != nil
         object = r
@@ -400,9 +406,9 @@ def get_results_parkingconnection(params,req, results)
         #object["href"] = link
      else
         visit(r["href"])
-        r["address"] = "#{find(:css, "span.street-address").text}, #{find(:css, "span.locality").text}"
-        if all(:css, "li.jcarousel-item img").size > 0
-          r["urlimage"] = all(:css, "li.jcarousel-item img").first[:src]
+        r["address"] = "#{all(:css, "p.address").first.text}"
+        if all(:css, "li.imgLiquidFill img").size > 0
+          r["urlimage"] = all(:css, "li.imgLiquidFill img").first[:src]
         end
         object = r
         save_place(object,"airportparkingreservations",link)
