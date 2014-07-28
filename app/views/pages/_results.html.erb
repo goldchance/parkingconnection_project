@@ -68,7 +68,7 @@ ul.simplePagerNav li.currentPage a {
 </script>
 <!-- end css for the results -->
 
-<div id="results" title="<%#=@req.id%>" name="no">
+<div id="results" title="<%=@req.id%>" name="no">
   <% @allresults = @list.group_by{ |s| [s.latitude, s.longitude]}%>             
   <%# @allresults = @req.results.group_by{ |s| [s.latitude, s.longitude]} %>
         <br />

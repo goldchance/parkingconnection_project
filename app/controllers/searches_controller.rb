@@ -4,11 +4,11 @@ class SearchesController < ApplicationController
  
 
  def daily_search
-  @req = Spider.daily_search(params)
+   results, @req = Spider.daily_search(params)
  # gon.results = @req.results.to_gmaps4rails
   Struct.new("Result", :location, :address, :price, :longitude, :latitude, :gmaps4rails_address, :source, :urlimage, :href)
   @list=[]
-  @req.each  do |r|
+  results.each  do |r|
     s = Struct::Result.new
     s.location = r["location"]
     s.address = r["address"]
@@ -36,10 +36,10 @@ class SearchesController < ApplicationController
  end
   
  def monthly_search
-  @req = Spider.monthly_search(params)
+  results, @req = Spider.monthly_search(params)
   Struct.new("Result", :location, :address, :price, :longitude, :latitude, :gmaps4rails_address, :source, :urlimage, :href)
   @list=[]
-  @req.each  do |r|
+  results.each  do |r|
     s = Struct::Result.new
     s.location = r["location"]
     s.address = r["address"]
@@ -63,10 +63,10 @@ class SearchesController < ApplicationController
 
  
  def airport_search
-  @req = Spider.airport_search(params)
+  results, @req = Spider.airport_search(params)
   Struct.new("Result", :location, :address, :price, :longitude, :latitude, :gmaps4rails_address, :source, :urlimage, :href)
   @list=[]
-  @req.each  do |r|
+  results.each  do |r|
     s = Struct::Result.new
     s.location = r["location"]
     s.address = r["address"]

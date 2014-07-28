@@ -26,7 +26,12 @@ class Spider
       spy.get_results_pandaparking(params, "daily",req ,results) # if params["pandaparking"] == "1"
       spy.get_results_parkwhiz(params, "daily",req,results)     # if params["parkwhiz"] == "1"
       spy.get_results_spothero(params, "daily",req,results)     # if params["spothero"] == "1"
-     
+      ids=""
+      results.each do |result|
+       ids << "#{result['id']},"
+      end 
+      req.desc = ids
+      req.save
    #   result_string = ApplicationController.new.render_to_string(:partial => 'pages/results', :locals => { result_type: "daily" })
    #   message = {:channel => "/searches",
    #              :data => { result_string: result_string}}
@@ -40,7 +45,7 @@ class Spider
      results
     end
    
-    results
+    [results,req]
   end
  
   def self.monthly_search(params)
@@ -57,7 +62,12 @@ class Spider
       req = Request.create(:desc=>"")
       results = spy.get_results_centralpark(params, "monthly", req) #if params["centralpark"] == "1"
       spy.get_results_pandaparking(params, "monthly",req , results) #if params["pandaparking"] == "1"
-       
+      ids=""
+      results.each do |result|
+       ids << "#{result['id']},"
+      end 
+      req.desc = ids
+      req.save
        # FayeController.publish('/searches', {result_string: result_string})
     #  result_string = ApplicationController.new.render_to_string(:partial => 'pages/results', :locals => { result_type: "monthly" })
     #  message = {:channel => "/searches",
@@ -72,7 +82,7 @@ class Spider
      results
     end
     
-    results
+    [results,req]
   end
   
     
@@ -91,7 +101,13 @@ class Spider
     spy.get_results_parkingconnection(params,req,results)          # if params["parkingconnection"] == "1"
     spy.get_results_airportparking(params,req, results)             # if params["airportparking"] == "1"
     spy.get_results_aboutairportparking(params, req, results)       # if params["aboutairportparking"] == "1"
-        # spy.get_results_pnf(params,req)                        # if params["pnf"] == "1"
+    ids=""
+    results.each do |result|
+     ids << "#{result['id']},"
+    end     
+    req.desc = ids
+    req.save
+    # spy.get_results_pnf(params,req)                        # if params["pnf"] == "1"
        # FayeController.publish('/searches', {result_string: result_string})
      
      # result_string = ApplicationController.new.render_to_string(:partial => 'pages/results', :locals => { result_type: "airport" })
@@ -108,7 +124,7 @@ class Spider
       results
     end
      
-    results
+    [results,req]
   end
 #------------------------------------airport search methods -----------------------------------------------------------
 def get_results_pnf(params, req, results)
@@ -875,6 +891,7 @@ end
 def find_place(source,href,object)
     place = Source.find_by_name(source).places.find_by_href(href)
       #    object["href"]= link
+          object["id"] = place.id rescue nil
           object["location"] = place.location if place.location != nil
           object["address"] = place.address if place.address != nil
           object["source"] = source
