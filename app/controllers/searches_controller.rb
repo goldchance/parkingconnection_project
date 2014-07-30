@@ -5,7 +5,8 @@ class SearchesController < ApplicationController
 
  def daily_search
    results, @req = Spider.daily_search(params)
- # gon.results = @req.results.to_gmaps4rails
+  
+   # gon.results = @req.results.to_gmaps4rails
   Struct.new("Result", :location, :address, :price, :longitude, :latitude, :gmaps4rails_address, :source, :urlimage, :href)
   @list=[]
   results.each  do |r|

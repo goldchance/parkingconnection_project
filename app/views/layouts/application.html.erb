@@ -53,7 +53,8 @@
 <body>
   <div id="google_map" style="position:fixed; top:100px; right:10px;  display:none;">
     Google map
-    <%= gmaps({:last_map => false}) %>
+    <%#= gmaps({:last_map => false}) %>
+    <%= gmaps("map_options" => {"auto_adjust" => true, "auto_zoom" => true, "last_map" => false }) %>
 </div>
 
 <button type="button" id="google_map_button" class="button" style="position:fixed; top:80px; right:10px; display:none;">Show Map</button>

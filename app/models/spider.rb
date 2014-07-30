@@ -22,10 +22,12 @@ class Spider
       req = Request.create(:desc=>"")
       
       results = spy.get_results_centralpark(params, "daily",req)  # if params["centralpark"] == "1"
+      spy.get_results_justpark(params,"daily", req, results)    # if params["gottapark"] == "1"
       spy.get_results_gottapark(params,"daily", req, results)    # if params["gottapark"] == "1"
       spy.get_results_pandaparking(params, "daily",req ,results) # if params["pandaparking"] == "1"
       spy.get_results_parkwhiz(params, "daily",req,results)     # if params["parkwhiz"] == "1"
       spy.get_results_spothero(params, "daily",req,results)     # if params["spothero"] == "1"
+     # spy.get_results_justpark
       ids=""
       results.each do |result|
        ids << "#{result['id']},"
@@ -42,7 +44,7 @@ class Spider
      puts e.backtrace.inspect  
      req.desc << e.message.to_s << e.backtrace.inspect.to_s
      req.save
-     results
+     [results, req]
     end
    
     [results,req]
@@ -79,7 +81,7 @@ class Spider
       puts e.backtrace
      req.desc << e.message.to_s << e.backtrace.inspect.to_s
       req.save
-     results
+     [results, req]
     end
     
     [results,req]
@@ -121,7 +123,7 @@ class Spider
       puts e.backtrace
       req.desc<< e.message.to_s << e.backtrace.inspect.to_s
       req.save
-      results
+      [results, req]
     end
      
     [results,req]
@@ -742,6 +744,47 @@ def pickup_panda(desc,req, results)
 end
 #-------------------------------------  www.centralparking.com -------------------------------------------------  
                                                
+
+
+def get_results_justpark(params,type,req, results)
+  begin  
+   location = params[:wherebox]
+    arr = location.split(",")
+    city = arr[0].strip.gsub(" ","-")
+    state = arr[1].strip 
+    agent = Mechanize.new{|a| a.follow_meta_refresh= true}
+    agent.user_agent_alias = "Linux Firefox"
+    #agent.get("https://www.justpark.com/search/?filter=1&order=&q=#{city}%2C+#{state}%2C+United+States&start_date=31+Jul+2014&start_time=07%3A00%3A00&end_date=31+Jul+2014&end_time=08%3A00%3A00")
+    agent.get("https://www.justpark.com/search/?filter=1&order=&q=#{city}%2C+#{state}%2C+United+States")
+    agent.page.search("div.listing-container").each do |container|
+      if container.search("span:contains('Long term only')").size == 0
+        object = Hash.new
+        object["href"] = "https://www.justpark.com#{container.search("span.title a").first["href"]}"
+        link = object["href"]
+        if Source.find_by_name("justpark").places.find_by_href(link) != nil
+          find_place("justpark", link, object)
+        else
+          object["location"] = "#{container.search("span.title").first.text}, #{city}, #{state}"
+          object["address"] = object["location"]
+          object["price"] =  container.search("p.price").first.text
+          object["source"] = "justpark"         
+          save_place(object,"justpark",link)
+          find_place("justpark", link, object)
+        
+        end
+        results<<object
+      end
+    end
+    #binding.pry
+    #agent.get("#{agent.page.uri.to_s}map/?&start_date=#{params[:from]}&start_time=#{params[:Items].gsub(" ","")}&end_date=#{params[:to]}&end_time=#{params[:Items2].gsub(" ","")}")
+    results
+    rescue Exception => e  
+     puts e.message  
+     puts e.backtrace.inspect  
+     results
+    end
+
+end
 def get_results_parkwhiz(params,type,req, results)
   begin  
     
@@ -749,6 +792,7 @@ def get_results_parkwhiz(params,type,req, results)
     agent = Mechanize.new{|a| a.follow_meta_refresh= true}
     agent.user_agent_alias = "Linux Firefox"
     agent.get("http://www.parkwhiz.com/search/?destination=#{params[:wherebox].split(",").first}")
+    
     #form = agent.page.forms[2]
     
     #form.destination=location
@@ -819,7 +863,7 @@ def get_results_centralpark(params,type,req)
     if city.downcase =="new-york"
       city_short = "nyc"
     else
-      city_short = city.gsub(" ","").gsub("-","") 
+      city_short = city.gsub(" ","").gsub("-"," ") 
     end
     visit("http://#{city_short}.centralparking.com/parking-near/#{city}-#{state}-USA.html")
     list=[]
@@ -844,6 +888,9 @@ def get_results_centralpark(params,type,req)
         object["href"]= "http://#{city_short}.centralparking.com#{url}#{det}"
         if all(:css,"dl.info dd").size>0
           object["address"] = all(:css,"dl.info dd").first.text
+          if object["address"].include?(city.gsub("-"," ")) == false
+            object["address"] << ", #{city}, #{state}"
+          end 
         end
         
         if all(:css, "div.column_1-5.left h1").size>0

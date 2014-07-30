@@ -30,23 +30,25 @@
     $("#effect" ).toggle( "slide", {}, 500 );
        return false;
     });
-  $( "#google_map_button" ).click(function() {
   
-    var request = $('#results').attr('title') 
-    var req_status = $('#results').attr('name')
-    if (  req_status == 'no'  ) {
-      $('#results').attr('name','yes')
-      $.getJSON('/results?request_id='+ request, function(json){
-// var json1 = gon.results
-    $(".map_container").show();
-      Gmaps.loadMaps();
-      Gmaps.map.addMarkers(json);
-    })
+    $(document).on('click', '#google_map_button',  function() {
+      //$( "#google_map_button" ).click(function() {
+    
+      var request = $('#results').attr('title') 
+      var req_status = $('#results').attr('name')
+      if (  req_status == 'no'  ) {
+        $('#results').attr('name','yes')
+        $.getJSON('/results?request_id='+ request, function(json){
+        // var json1 = gon.results
+        $(".map_container").show();
+          Gmaps.loadMaps();
+          Gmaps.map.addMarkers(json);
+        })
   
-    }
-    $( "#google_map" ).toggle( "blind", {}, 500 );
-    return false;
-  });
+      }
+       $( "#google_map" ).toggle( "blind", {}, 500 );
+       return false;
+    });
     $(".button").button()
     $(".loginform").validate({
   rules: {
