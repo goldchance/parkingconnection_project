@@ -819,10 +819,10 @@ def get_results_parkwhiz(params,type,req, results)
           page =  agent.get(link)
           sleep 1
           object["location"] = agent.page.parser.at("[@itemprop = 'name']").text
-          object["address"] =""
-          agent.page.search(".address span").each do |s|
-           object["address"] << s.text 
-          end
+          object["address"] = agent.page.search(".address").first.text
+          #agent.page.search(".address span").each do |s|
+          # object["address"] << s.text 
+          #end
           #binding.pry
           if  agent.page.search(".btn-book").size > 0
             object["price"] = "$#{agent.page.search(".btn-book span").first.text.gsub("$","") rescue ""} #{agent.page.search(".btn-book sup").last.text rescue ""}"
