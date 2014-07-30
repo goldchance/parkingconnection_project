@@ -64,6 +64,7 @@ class Spider
       req = Request.create(:desc=>"")
       results = spy.get_results_centralpark(params, "monthly", req) #if params["centralpark"] == "1"
       spy.get_results_pandaparking(params, "monthly",req , results) #if params["pandaparking"] == "1"
+      spy.get_results_justpark(params, "monthly",req , results) #if params["pandaparking"] == "1"
       ids=""
       results.each do |result|
        ids << "#{result['id']},"
@@ -757,7 +758,8 @@ def get_results_justpark(params,type,req, results)
     #agent.get("https://www.justpark.com/search/?filter=1&order=&q=#{city}%2C+#{state}%2C+United+States&start_date=31+Jul+2014&start_time=07%3A00%3A00&end_date=31+Jul+2014&end_time=08%3A00%3A00")
     agent.get("https://www.justpark.com/search/?filter=1&order=&q=#{city}%2C+#{state}%2C+United+States")
     agent.page.search("div.listing-container").each do |container|
-      if container.search("span:contains('Long term only')").size == 0
+      x = (type == "daily" ? 0 : 1)
+      if container.search("span:contains('Long term only')").size == x
         object = Hash.new
         object["href"] = "https://www.justpark.com#{container.search("span.title a").first["href"]}"
         link = object["href"]
