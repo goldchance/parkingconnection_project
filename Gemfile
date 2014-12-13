@@ -42,13 +42,12 @@ gem 'delayed_job_active_record'
   gem 'capybara'
 group :development do
 
- gem 'debugger'
+ #gem 'debugger'
  gem 'pry-debugger'
   gem "capybara-webkit"
-  gem 'sqlite3'
+  # gem 'sqlite3'
   gem 'nifty-generators'
-
-  gem "ruby-debug19"
+  #gem "ruby-debug19"
 end
 group :assets do
   gem 'sass-rails',   '~> 3.2.3'
