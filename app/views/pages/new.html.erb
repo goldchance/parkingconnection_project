@@ -1,0 +1,202 @@
+<% content_for :head do %>
+  <meta name="description" content="Compare multiple parking sites at once. Choose where to park at the best rate." />
+  <meta name="keywords" content="Parking, cheap parking, hotel parking, parking rates, rates, daily parking, monthly parking, airport parking, event parking, compare parking rates, cheap parking rates, cheap daily parking, cheap monthly parking, cheap airport parking, parking reservations, discount parking, parking deals, find parking prices, san francisco, new york, chicago, boston, baltimore" />
+  <title>ParkingCONNECT - Cheap Parking - Daily Parking -  Compare Multiple Parking Sites</title>
+<% end %>
+<script>
+   $(document).ready(function() {
+     
+        
+      $('#findbtn3').click(function(){
+        $('#centralpark_link').click();
+        $('#parkwhiz_link').click();
+        $('#parkingpanda_link').click();
+      });
+      $('#findbtn').click(function(){
+        var wherebox, city, state
+        wherebox = $('#wherebox').val();
+        city = wherebox.split(",")[0].replace(/^\s+|\s+$/g, '').replace(" ","-")
+        
+        state = wherebox.split(",")[1].replace(/^\s+|\s+$/g, '')
+        from = $('#from').val();
+        to = $('#to').val();
+        time_start = $('#Items').val();
+        time_end = $('#Items2').val();
+        if ($('#centralpark').is(':checked')) {
+          var city_short
+          if ( city.toLowerCase() == "new-york" )
+          { city_short = "nyc" }
+          else
+          { city_short = city.replace(" ","").replace("-","") }
+          url = "http://" + city_short + ".centralparking.com/parking-near/" + city + "-" + state + "-USA.html"
+         $('#centralpark_link').click(function(){
+                   window.open(url, 'blank1');
+                });
+
+
+          //window.open(url, 'window name', 'window settings');
+       
+       }
+        if ($('#parkwhiz').is(':checked')) {
+          url = "http://www.parkwhiz.com/p/"+city+"-parking/map/?&start_date="+ from
+                   +"&start_time=" + time_start +"&end_date="+ to +"&end_time="+time_end 
+        $('#parkwhiz_link').click(function(){
+            window.open(url, 'blank2');
+      });
+
+        $('#parkwhiz_link').click();
+                   // window.open(url, 'window name', 'window settings');
+        }
+        if ($('#parkingpanda').is(':checked')) {
+          url=  "https://www.parkingpanda.com/Search/?location="+ city + "%2c"+state+"%2c+USA&start=" + from 
+          +"#location="+city +"%2C%20"+state+"%2C%20USA&start="+from+"&end="+to+"&monthly=false&daily=true"
+          //window.open(url, 'window name', 'window settings');
+                $('#parkingpanda_link').click(function(){
+            window.open(url, 'blank3');
+          
+          });
+
+        $('#parkingpanda_link').click();
+        }
+      });
+   });
+</script>
+<div class="home-title">
+    <p class="fontsize-40 txtuppercase">one search connects all</p>
+    <p class="fontsize-20">	Compare multiple parking sites at once in over 40 cities and 1,000 locations.</p>
+</div>
+<div class="search-form-group">
+    <form action="/daily_search.js" method="get" data-remote='true'>
+        <input type="text" name="wherebox" id="wherebox" class="fontsize-16 " tabindex="1" placeholder="Where do you need parking?" />
+        <input type="text" id="from" name="from" class="fontsize-16 " />
+        <select name="Items" id="Items" class="fontsize-16 ">
+            <option selected value="12:01 AM">12:01 am</option>
+            <option value="12:30 AM">12:30 am</option>
+            <option value="1:00 AM">1:00 am</option>
+            <option value="1:30 AM">1:30 am</option>
+            <option value="2:00 AM">2:00 am</option>
+            <option value="2:30 AM">2:30 am</option>
+            <option value="3:00 AM">3:00 am</option>
+            <option value="3:30 AM">3:30 am</option>
+            <option value="4:00 AM">4:00 am</option>
+            <option value="4:30 AM">4:30 am</option>
+            <option value="5:00 AM">5:00 am</option>
+            <option value="5:30 AM">5:30 am</option>
+            <option value="6:00 AM">6:00 am</option>
+            <option value="6:30 AM">6:30 am</option>
+            <option value="7:00 AM">7:00 am</option>
+            <option value="7:30 AM">7:30 am</option>
+            <option value="8:00 AM">8:00 am</option>
+            <option value="8:30 AM">8:30 am</option>
+            <option value="9:00 AM">9:00 am</option>
+            <option value="9:30 AM">9:30 am</option>
+            <option value="10:00 AM">10:00 am</option>
+            <option value="10:30 AM">10:30 am</option>
+            <option value="11:00 AM">11:00 am</option>
+            <option value="11:30 AM">11:30 am</option>
+            <option value="12:00 AM">12:00 pm</option>
+            <option value="12:30 PM">12:30 pm</option>
+            <option value="1:00 PM">1:00 pm</option>
+            <option value="1:30 PM">1:30 pm</option>
+            <option value="2:00 PM">2:00 pm</option>
+            <option value="2:30 PM">2:30 pm</option>
+            <option value="3:00 PM">3:00 pm</option>
+            <option value="3:30 PM">3:30 pm</option>
+            <option value="4:00 PM">4:00 pm</option>
+            <option value="4:30 PM">4:30 pm</option>
+            <option value="5:00 PM">5:00 pm</option>
+            <option value="5:30 PM">5:30 pm</option>
+            <option value="6:00 PM">6:00 pm</option>
+            <option value="6:30 PM">6:30 pm</option>
+            <option value="7:00 PM">7:00 pm</option>
+            <option value="7:30 PM">7:30 pm</option>
+            <option value="8:00 PM">8:00 pm</option>
+            <option value="8:30 PM">8:30 pm</option>
+            <option value="9:00 PM">9:00 pm</option>
+            <option value="9:30 PM">9:30 pm</option>
+            <option value="10:00 PM">10:00 pm</option>
+            <option value="10:30 PM">10:30 pm</option>
+            <option value="11:00 PM">11:00 pm</option>
+            <option value="11:30 PM">11:30 pm</option>
+            <option value="11:59 PM">11:59 pm</option>
+        </select>
+        <input type="text" id="to" name="to" class="fontsize-16 " />
+        <select name="Items2" id="Items2" class="fontsize-16 ">
+            <option selected value="12:01 AM">12:01 am</option>
+            <option value="12:30 AM">12:30 am</option>
+            <option value="1:00 AM">1:00 am</option>
+            <option value="1:30 AM">1:30 am</option>
+            <option value="2:00 AM">2:00 am</option>
+            <option value="2:30 AM">2:30 am</option>
+            <option value="3:00 AM">3:00 am</option>
+            <option value="3:30 AM">3:30 am</option>
+            <option value="4:00 AM">4:00 am</option>
+            <option value="4:30 AM">4:30 am</option>
+            <option value="5:00 AM">5:00 am</option>
+            <option value="5:30 AM">5:30 am</option>
+            <option value="6:00 AM">6:00 am</option>
+            <option value="6:30 AM">6:30 am</option>
+            <option value="7:00 AM">7:00 am</option>
+            <option value="7:30 AM">7:30 am</option>
+            <option value="8:00 AM">8:00 am</option>
+            <option value="8:30 AM">8:30 am</option>
+            <option value="9:00 AM">9:00 am</option>
+            <option value="9:30 AM">9:30 am</option>
+            <option value="10:00 AM">10:00 am</option>
+            <option value="10:30 AM">10:30 am</option>
+            <option value="11:00 AM">11:00 am</option>
+            <option value="11:30 AM">11:30 am</option>
+            <option value="12:00 AM">12:00 pm</option>
+            <option value="12:30 PM">12:30 pm</option>
+            <option value="1:00 PM">1:00 pm</option>
+            <option value="1:30 PM">1:30 pm</option>
+            <option value="2:00 PM">2:00 pm</option>
+            <option value="2:30 PM">2:30 pm</option>
+            <option value="3:00 PM">3:00 pm</option>
+            <option value="3:30 PM">3:30 pm</option>
+            <option value="4:00 PM">4:00 pm</option>
+            <option value="4:30 PM">4:30 pm</option>
+            <option value="5:00 PM">5:00 pm</option>
+            <option value="5:30 PM">5:30 pm</option>
+            <option value="6:00 PM">6:00 pm</option>
+            <option value="6:30 PM">6:30 pm</option>
+            <option value="7:00 PM">7:00 pm</option>
+            <option value="7:30 PM">7:30 pm</option>
+            <option value="8:00 PM">8:00 pm</option>
+            <option value="8:30 PM">8:30 pm</option>
+            <option value="9:00 PM">9:00 pm</option>
+            <option value="9:30 PM">9:30 pm</option>
+            <option value="10:00 PM">10:00 pm</option>
+            <option value="10:30 PM">10:30 pm</option>
+            <option value="11:00 PM">11:00 pm</option>
+            <option value="11:30 PM">11:30 pm</option>
+            <option value="11:59 PM">11:59 pm</option>
+        </select>
+        <input type="submit" class="button2" value="Search" class="fontsize-16 "/>
+    </form>
+    <div class="select-box-style">
+	    <p class="fontsize-12">Choose Sites to Compare vs. ParkingConnects (in new windows) </p>    
+	    <table style="width:95%;">
+	        <tr>
+	            <td>
+	                <%=check_box_tag( "centralpark", value="1" , checked=false, options={ })%>
+	                    <%=label_tag "centralpark" %>
+	                        <div id="centralpark_link" style="display:none;"> </div>
+	            </td>
+	            <td>
+	                <%=check_box_tag( "parkwhiz", value="1" , checked=false , options={ })%>
+	                    <%=label_tag "parkwhiz" %>
+	                        <div id="parkwhiz_link" style="display:none;"> </div>
+	            </td>
+	            <td>
+	                <%=check_box_tag( "parkingpanda", value="1" , checked=false, options={ })%>
+	                    <%=label_tag "parkingpanda" %>
+	                        <div id="parkingpanda_link" style="display:none;"> </div>
+	            </td>
+	
+	        </tr>
+	    </table>
+	</div>
+</div>
+
+

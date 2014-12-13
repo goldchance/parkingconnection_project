@@ -33,7 +33,6 @@
   
     $(document).on('click', '#google_map_button',  function() {
       //$( "#google_map_button" ).click(function() {
-    
       var request = $('#results').attr('title') 
       var req_status = $('#results').attr('name')
       if (  req_status == 'no'  ) {

@@ -7,7 +7,7 @@ body {
 }
 #container {
 	height: auto;
-	width: 960px;
+	width: 1200px;
 	font-family: Arial, Helvetica, sans-serif;
 	margin: auto;
 	padding: 0px;
@@ -19,11 +19,11 @@ body {
 #header {
 	margin-right: auto;
 	margin-left: auto;
-	height: 90px;
-	padding-top: 30px;
-	padding-right: 0px;
+	height: 70px;
+	padding-top: 20px;
+	padding-right: 65px;
 	padding-bottom: 0px;
-	padding-left: 0px;
+	padding-left: 65px;
 }
 
 #container #header #pc-logo {
@@ -119,14 +119,13 @@ body {
 #main {
 	min-height: 640px;
 	height: auto;
-	padding: 0px;
+	padding-top: 10%;
 	margin-top: 1px;
 	margin-right: auto;
 	margin-bottom: auto;
-	margin-left: auto;
+	margin-left: auto;	
+	background-image: url(../images/home-background.png);
 }
-
-
 
 #container #main #searchbox {
 	background-color: #FFF;
@@ -207,17 +206,25 @@ body {
 #footer {
 	margin-right: auto;
 	margin-left: auto;
-	padding-top: 45px;
-	height: 170px;
+	padding-top: 90px;	
 	padding-bottom: 0px;
 	margin-top: 0px;
-	margin-bottom: 0px;
+	margin-bottom: 20px;
 	padding-right: 0px;
-	padding-left: 0px;
-	float: left;
-	width: 960px;
+	padding-left: 0px;	
+	width: 1200px;
 }
 
+.social-block {
+	float: left;
+	width: 400px;
+}
+
+.iframefb{
+	width: 100px;
+	float: left;
+	padding-left: 100px;
+}
 
 #container #footer #footnav {
 	color: #e6e6e6;
@@ -227,12 +234,11 @@ body {
 	position: relative;
 	padding-top: 0px;
 	padding-right: 0px;
-	padding-bottom: 0px;
-	padding-left: 328px;
-	width: 300px;
+	padding-bottom: 0px;	
+	width: 400px;
 	float: left;
+	text-align: center;
 }
-
 
 #container #footer #footnav ul {
 	display: inline;
@@ -259,15 +265,98 @@ body {
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 14px;
 	color: #e6e6e6;
-	text-align: right;
-	float: right;
+	text-align: center;	
 	padding-right: 0px;
 	padding-bottom: 0px;
 	padding-left: 0px;
 	margin: 0px;
-	padding-top: 4px;
+	padding-top: 4px;	
+}
+#copyright{
+	width:400px;
+	float: left;
+}
+#container .home-title{
+	text-align: center;
+	line-height: 0px;
+}
+#container .search-form-group{
+	
+}
+.fontsize-40{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 40px;
+	font-weight: bold;
+	color: white;
+}
+.fontsize-20{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 20px;	
+	color: white;
+}
+.fontsize-16{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	font-weight: bold;
+	color: #4b4b4b;
+}
+.fontsize-12{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;	
+	color: white;
+}
+.txtuppercase{
+	text-transform: uppercase;
+}
+.search-form-group{
+	margin-top: 25%;
+	text-align: center;
+	padding: 0 190px;
+	border-radius: 5px;	
+	
+}
+.search-form-group form{
+	background-color: #3f3833;
+	opacity: 0.8;
+	border-radius: 5px;
+}
+#wherebox{
+	height: 36px;
+	width: 305px;
+	margin: 10px 0;
+}
+#from{
+	height: 36px;
+	width: 95px;
+	margin: 10px 0;
+}
+#Items{
+	height: 42px;
+	margin: 10px 0;
+}
+#to{
+	height: 36px;
+	width: 95px;
+	margin: 10px 0;
+}
+#Items2{
+	height: 42px;
+	margin: 10px 0;
+}
+.select-box-style{
+	text-align:left;
+	color: white;
 }
 
+.searchbtn{		
+	background-color: #ff8400;
+	border: none;
+	border-radius: 2px;
+	height: 42px;	
+	font-family: Arial, Helvetica, sans-serif;	
+	font-weight: bold;
+	color: white;
+}
 #airport_list_table ul {list-style-type: none;}
 #airport_list_table ul li a:link {text-decoration:none;}
 #airport_list_table ul li a:hover {text-decoration:underline;}
