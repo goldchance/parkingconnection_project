@@ -21,7 +21,8 @@ gem 'hpricot'
 #gem 'scrubyt'
 #gem 'gdata_19'
 gem 'mechanize'
-gem 'mysql2', "~> 0.3.11"
+gem 'rails_12factor', group: :production
+#gem 'mysql2', "~> 0.3.11"
 #gem 'firewatir'
 #gem 'commonwatir'
 
@@ -45,7 +46,7 @@ group :development do
  #gem 'debugger'
  gem 'pry-debugger'
   gem "capybara-webkit"
-  # gem 'sqlite3'
+#  gem 'sqlite3'
   gem 'nifty-generators'
   #gem "ruby-debug19"
 end
@@ -91,3 +92,4 @@ gem 'jquery-rails'
 # gem 'debugger'
 
 gem "mocha", :group => :test
+ruby '1.9.3'
