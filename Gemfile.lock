@@ -137,8 +137,11 @@ GEM
       nokogiri (~> 1.4)
       ntlm-http (~> 0.1, >= 0.1.1)
       webrobots (~> 0.0, >= 0.0.9)
+    metaclass (0.0.1)
     method_source (0.8.1)
     mime-types (1.21)
+    mocha (0.13.2)
+      metaclass (~> 0.0.1)
     multi_json (1.6.0)
     net-http-digest_auth (1.2.1)
     net-http-persistent (2.8)
@@ -290,6 +293,7 @@ DEPENDENCIES
   json
   libv8 (~> 3.11.8)
   mechanize
+  mocha
   nested_form!
   nifty-generators
   pg
