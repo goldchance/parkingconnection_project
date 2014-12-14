@@ -46,3 +46,15 @@ production:
 # username: root
 # password: admin+
 # socket: /var/run/mysqld/mysqld.sock
+
+development:
+  adapter: postgresql
+  encoding: unicode
+  database: parking_dev_db
+  pool: 5
+  
+production:
+  adapter: postgresql
+  encoding: unicode
+  database: parking_pro_db
+  pool: 5

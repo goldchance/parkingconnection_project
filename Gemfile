@@ -46,7 +46,7 @@ group :development do
  #gem 'debugger'
  gem 'pry-debugger'
   gem "capybara-webkit"
-  #gem 'sqlite3'
+  gem 'sqlite3'
   gem 'nifty-generators'
   #gem "ruby-debug19"
 end
