@@ -9,7 +9,7 @@ gem 'cancan'
 gem 'gmaps4rails'
 #gem 'paperclip'
 gem 'taps'
-gem 'heroku'
+gem 'heroku1'
 gem 'libv8', '~> 3.11.8'
  gem 'pg'
 #gem "nested_form", :git => "git://github.com/madebydna/nested_form.git"
@@ -81,7 +81,7 @@ gem 'jquery-rails'
 
 # To use Jbuilder templates for JSON
 # gem 'jbuilder'
-
+# gem 'mysql2'
 # Use unicorn as the app server
 # gem 'unicorn'
 
